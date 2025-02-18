@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="postgres@localhost" uuid="a8f7be8b-c510-4898-8f3a-004b2817308a">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="PostgreSQL (AWS Wrapper)" uuid="168a0cff-bb73-45f8-a0c2-6c11ef6dc334">
+      <driver-ref>postgresql.aws_wrapper</driver-ref>
+      <synchronize>true</synchronize>
+      <schema-control>MANUAL</schema-control>
+      <jdbc-driver>software.amazon.jdbc.Driver</jdbc-driver>
+      <jdbc-url>postgresql://urkqi5fyhuyhnzurezgz:bQgNIHcFlxVLjjI4zojkutGhVMMehA@bipsv24bwvykjxluul6h-postgresql.services.clever-cloud.com:5432/bipsv24bwvykjxluul6h</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="bipsv24bwvykjxluul6h@bipsv24bwvykjxluul6h-postgresql.services.clever-cloud.com" uuid="dad84f32-44e2-4e66-80f7-1424586fa78e">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://bipsv24bwvykjxluul6h-postgresql.services.clever-cloud.com:50013/bipsv24bwvykjxluul6h</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
