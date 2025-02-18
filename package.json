@@ -2,6 +2,8 @@
   "name": "my-package",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "test"
+    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test"
   }
 }
