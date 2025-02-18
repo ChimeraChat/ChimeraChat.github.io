@@ -2,7 +2,6 @@
   "name": "my-package",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "babel src -d lib",
     "start": "test"
   }
 }
