@@ -4,9 +4,8 @@
   "scripts": {
       "predeploy": "yarn run build",
       "deploy": "gh-pages -d build -b main",
-      "start": "yarn && yarn build",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject"
+      "start": "yarn",
+      "build": "yarn build",
+      "test": "test"
   }
 }
