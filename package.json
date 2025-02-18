@@ -2,10 +2,10 @@
   "name": "my-package",
   "license": "UNLICENSED",
   "scripts": {
-      "predeploy": "yarn run build",
+      "predeploy": "npm install && npm run",
       "deploy": "gh-pages -d build -b main",
-      "start": "webpack-dev-server --mode development",
       "build": "yarn build",
+      "start": "yarn start",
       "test": "jest"
   }
 }
