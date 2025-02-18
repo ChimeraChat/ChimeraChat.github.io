@@ -4,6 +4,6 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "jest",
-    "start": yarn add yarn
+    "start": "add yarn"
   }
 }
