@@ -4,8 +4,8 @@
   "scripts": {
       "predeploy": "yarn run build",
       "deploy": "gh-pages -d build -b main",
-      "start": "start",
+      "start": "webpack-dev-server --mode development",
       "build": "yarn build",
-      "test": "test"
+      "test": "jest"
   }
 }
