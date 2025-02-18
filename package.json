@@ -1,11 +1,13 @@
 {
-  "name": "my-package",
-  "license": "UNLICENSED",
+  "name": "chimerachat",
+  "version": "1.0.0",
+  "main": "server.js",
   "scripts": {
-      "predeploy": "npm install && npm run",
-      "deploy": "gh-pages -d build -b main",
-      "build": "yarn build",
-      "start": "npm install pg",
-      "test": "jest"
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.1",
+    "dotenv": "^16.4.0"
   }
 }
