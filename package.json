@@ -5,7 +5,7 @@
       "predeploy": "npm install && npm run",
       "deploy": "gh-pages -d build -b main",
       "build": "yarn build",
-      "start": "yarn start",
+      "start": "start",
       "test": "jest"
   }
 }
