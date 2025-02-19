@@ -1,10 +1,12 @@
 import express from 'express';
 import path from 'path';
-import { Pool } from 'pg';
+import pkg from 'pg';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
+const { Pool } = pkg;
 
 dotenv.config();
 
