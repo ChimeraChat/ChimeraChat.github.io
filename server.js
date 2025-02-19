@@ -19,7 +19,7 @@ const pool = new Pool({
   host: process.env.POSTGRESQL_ADDON_HOST,
   database: process.env.POSTGRESQL_ADDON_DB,
   password: process.env.POSTGRESQL_ADDON_PASSWORD,
-  port: 5432, // Clever Cloud använder port 5432, inte 50013 för externa anslutningar!
+  port: process.env.POSTGRESQL_ADDON_PORT,
 });
 
 // Hantera __dirname i ESM-modul
