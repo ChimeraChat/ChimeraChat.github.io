@@ -39,7 +39,7 @@ try {
   console.error(err);
   res.status(500).send('Serverfel');
   }
-  
+
 // signup route
 const signupRoute = require('./signup');
 app.use('/signup', signupRoute);
