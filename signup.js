@@ -1,9 +1,11 @@
 import express from 'express';
-import { Pool } from 'pg';
+import pkg from 'pg';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
+
+const { Pool } = pkg;
 
 dotenv.config();
 
