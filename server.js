@@ -30,6 +30,6 @@ app.listen(port, () => {
 });
 
 app.use(cors({
-  origin: 'https://dinfrontend.github.io'
+  origin: 'https://chimerachat.github.io'
 }));
 
