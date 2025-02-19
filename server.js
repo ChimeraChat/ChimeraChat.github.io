@@ -29,7 +29,4 @@ app.listen(port, () => {
   console.log(`Servern körs på port ${port}`);
 });
 
-app.use(cors({
-  origin: 'https://chimerachat.github.io'
-}));
 
