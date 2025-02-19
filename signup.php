@@ -13,8 +13,8 @@
 <nav>
     <div class="container">
         <ul>
-            <li class="nav-item"> <a class="nav-link" href="" >Home</a></li>
-            <li class="nav-item"> <a class="nav-link" href="#" >Sign up</a></li>
+            <li class="nav-item"> <a class="nav-link" href="index.html" >Home</a></li>
+            <li class="nav-item"> <a class="nav-link" href="signup.php" >Sign up</a></li>
             <li class="nav-item"> <a class="nav-link" href="#" >Chat</a></li>
             <li class="nav-item"> <a class="nav-link" href="#" >Post</a></li>
             <li class="nav-item"> <a class="nav-link" href="#" >Log in</a></li>
@@ -30,12 +30,16 @@
             <!-- Här skapar jag input-fält för registrering av användaruppgifter till databasen -->
             <form action="signup.php" method="POST">
                 <div>
-                    <label for="user">Username:</label>
-                    <input type="text" id="user" name="user" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div>
-                    <label for="pass">Password:</label>
-                    <input type="password" id="pass" name="pass" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <div>
                     <input type="submit" name="send" value="Sign up">
@@ -45,38 +49,52 @@
     </div>
 </main>
 
-        <?php
-        //Här skapar jag funktion för registrering.
-        function register(){
-            //Här lägger jag variabler för användaruppgifterna
-            $username = $_POST['user'];
-            $password = md5($_POST['pass']);
-            //Här ansluter vi till localhost, root.
-            $con = mysqli_connect("localhost","root","");
-            //Här kopplar jag till databasen.
-            $database = mysqli_select_db($con, "skola2");
-            $sql = "select * from users2 where username = '$username'";
-            $result = mysqli_query($con, $sql);
-            /*If sats där användaruppgifterna läggs in i databasen men endast om
-            uppgifterna inte redan finns i databasen.
-            */
-            if(!($row = mysqli_fetch_array($result))){
-                $sql = "insert into users2(username, password) value('$username', '$password')";
-                mysqli_query($con, $sql);
-                echo "Registreringen lyckades!";
-            }
-            else{
-                echo "Användarnamnet är redan taget!";
-            }
-            mysqli_close($con);
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get user inputs
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $email = $_POST['email'];
+
+    // Hash the password securely
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    try {
+        // Connect to PostgreSQL database
+        $dsn = "pgsql:host=localhost;dbname=skola2;port=5432";
+        $dbuser = "root"; // Change this to your actual DB user
+        $dbpass = ""; // Change this to your actual DB password
+        $pdo = new PDO($dsn, $dbuser, $dbpass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+
+        // Insert user into `users` table
+        $stmt = $pdo->prepare("INSERT INTO users (email, username) VALUES (:email, :username) RETURNING userID");
+        $stmt->execute(['email' => $email, 'username' => $username]);
+
+        // Get the newly created userID
+        $userID = $stmt->fetchColumn();
+
+        // Insert password into `passwords` table
+        $stmt = $pdo->prepare("INSERT INTO passwords (userID, password, hashPassword) VALUES (:userID, '', :hashPassword)");
+        $stmt->execute(['userID' => $userID, 'hashPassword' => $hashedPassword]);
+
+        echo "Registreringen lyckades!";
+    } catch (PDOException $e) {
+        // Handle errors (e.g., username/email already exists)
+        if ($e->getCode() == 23505) { // PostgreSQL unique violation
+            echo "Användarnamnet eller e-posten är redan registrerad!";
+        } else {
+            echo "Fel: " . $e->getMessage();
         }
-        //If sats där användaruoppgifterna registreras OM användaren klickar på skicka/registrera.
-        if(isset($_POST['skicka'])){
-            register();
-        }
-        ?>
-        <p>Har du redan ett konto? Logga in <a href="login.php">här</a>!</p>
-    </div>
-    </body>
-    </html>
+    }
+}
+?>
+<p>Already have an account? Log in <a href="login.php">here</a>!</p>
+
+<footer>
+    <p>&copy; 2025 ChimeraChat. Alla rättigheter förbehållna.</p>
+</footer>
+</body>
+</html>
 
