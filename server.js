@@ -32,7 +32,7 @@ app.get('/users', async (req, res) => {
 });
 
 // Middleware
-app.use(cors());
+
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 
