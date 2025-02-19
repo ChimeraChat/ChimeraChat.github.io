@@ -1,8 +1,8 @@
-const express = import('express');
-const path = import('path');
-const { Pool } = import('pg');
-const bodyParser = import('body-parser');
-import('dotenv').config();
+const express = require('express');
+const path = require('path');
+const { Pool } = require('pg');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,15 +38,15 @@ try {
 } catch (err) {
   console.error(err);
   res.status(500).send('Serverfel');
-}
-
+  }
+  
 // signup route
-const signupRoute = import('./signup');
+const signupRoute = require('./signup');
 app.use('/signup', signupRoute);
 
 // Standard route
 app.get('/', (req, res) => {
-  res.sendfile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(port, () => {
