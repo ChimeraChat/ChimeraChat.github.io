@@ -25,6 +25,21 @@ app.get('/users', async (req, res) => {
   }
 });
 
+// Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
+app.use(express.static(path.join(__dirname)));
+
+// Exempel: Visa index.html vid roten
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Exempel: Endpoint för att testa PostgreSQL
+app.get('/users', async (req, res) => {
+  // Exempel-kod för att hämta users
+  res.send('Exempel /users – din databaslogik här');
+});
+
+
 app.listen(port, () => {
   console.log(`Servern körs på port ${port}`);
 });
