@@ -1,8 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const { Pool } = require('pg');
-const bcrypt = require('bcrypt');
-require('dotenv').config();
+import express from 'express';
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import bcrypt from 'bcrypt';
+
+dotenv.config();
 
 // Koppla till Clever Cloud PostgreSQL (lägg till detta om du inte har det i server.js)
 const pool = new Pool({
@@ -13,7 +16,12 @@ const pool = new Pool({
     port: 5432,
 });
 
+// Hantera __dirname i ESM-modul
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // POST /signup – Lägg till användare i databasen
+const router = express.Router();
 router.post('/', async (req, res) => {
     const { email, username, password } = req.body;
     try {
@@ -38,4 +46,4 @@ router.post('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

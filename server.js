@@ -1,8 +1,12 @@
-const express = require('express');
-const path = require('path');
-const { Pool } = require('pg');
-const bodyParser = require('body-parser');
-require('dotenv').config();
+import express from 'express';
+import path from 'path';
+import { Pool } from 'pg';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +19,10 @@ const pool = new Pool({
   password: process.env.POSTGRESQL_ADDON_PASSWORD,
   port: 5432, // Clever Cloud använder port 5432, inte 50013 för externa anslutningar!
 });
+
+// Hantera __dirname i ESM-modul
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
 app.use(express.static(path.join(__dirname)));
@@ -31,17 +39,8 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Routes
-try {
-  const result = await pool.query('SELECT * FROM users');
-  res.json(result.rows);
-} catch (err) {
-  console.error(err);
-  res.status(500).send('Serverfel');
-  }
-
 // signup route
-const signupRoute = require('./signup');
+import signupRoute from './signup.js';
 app.use('/signup', signupRoute);
 
 // Standard route
