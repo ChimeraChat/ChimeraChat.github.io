@@ -32,15 +32,13 @@ app.get('/users', async (req, res) => {
 });
 
 // Routes
-app.get('/users', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM users');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Serverfel');
-  }
-});
+try {
+  const result = await pool.query('SELECT * FROM users');
+  res.json(result.rows);
+} catch (err) {
+  console.error(err);
+  res.status(500).send('Serverfel');
+}
 
 // signup route
 const signupRoute = require('./signup');
