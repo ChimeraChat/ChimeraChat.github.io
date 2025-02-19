@@ -28,3 +28,5 @@ app.get('/users', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servern körs på port ${port}`);
 });
+
+
