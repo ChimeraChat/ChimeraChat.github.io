@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require('path');
-const { Pool } = require('pg');
-const bodyParser = require('body-parser');
+const express = import('express');
+const path = import('path');
+const { Pool } = import('pg');
+const bodyParser = import('body-parser');
 require('dotenv').config();
 
 const app = express();
