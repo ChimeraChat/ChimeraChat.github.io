@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
-require('dotenv').config();
+import('dotenv').config();
 
 // Koppla till Clever Cloud PostgreSQL (lägg till detta om du inte har det i server.js)
 const pool = new Pool({

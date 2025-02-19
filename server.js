@@ -2,7 +2,7 @@ const express = import('express');
 const path = import('path');
 const { Pool } = import('pg');
 const bodyParser = import('body-parser');
-require('dotenv').config();
+import('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
