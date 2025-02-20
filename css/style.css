@@ -44,7 +44,22 @@ header {
     height: auto;
     border-radius: 4px;
 }
+nav {
+    margin-top: 10px ;
+}
+/* Navigation hover effect */
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    padding: 10px 20px;
+    color: #554e68;
+    transition: background-color 0.2s;
+}
 
+nav a:hover {
+    background-color: rgba(246, 210, 191, 0.58);
+    color: #453e59;
+}
 /* Main content styling */
 main {
     width: 100%;
