@@ -6,20 +6,20 @@ header h1 {
     animation: headerAnimation 3s infinite;
     color: #140d5e;
 }
-/*
+
 @keyframes headerAnimation {
     0% { transform: scale(1); color: rgb(174, 91, 181); }
     50% { transform: scale(1.1); color: rgb(152, 103, 200); }
     100% { transform: scale(1); color: rgba(104, 101, 205, 0.89); }
 }
-*/
+
 
 /* General body styling */
 body {
-    max-width: 600px;
+    max-width: 90%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
     margin: 0 auto;
@@ -31,7 +31,7 @@ body {
 /* Header styling */
 header {
     text-align: center;
-    padding: 20px 0;
+    padding: 20px;
     background-color: rgba(252, 235, 253, 0.94);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -44,10 +44,51 @@ header {
     height: auto;
     border-radius: 4px;
 }
+nav .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+nav {
+    margin-top: 10px ;
+}
+nav a {
+    text-decoration: none;
+    padding: 10px 10px;
+    color: #290d73;
+    transition: background-color 0.2s;
 
+}
+
+nav a:hover {
+    background-color: rgba(235, 198, 243, 0.52);
+    color: #2b069e;
+}
 /* Main content styling */
+input{
+    border-radius: 2px;
+    color: #140d5e;
+    background-color: #fffdfe;
+}
+input[type="submit"] {
+    background-color: rgba(211, 166, 253, 0.78); /* Change to your desired color */
+    color: #140d5d; /* Text color */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+/* Change color on hover */
+input[type="submit"]:hover {
+    background-color: rgba(149, 71, 237, 0.52);
+}
 main {
     width: 100%;
+    text-align: center;
     padding: 20px;
     background-color: rgba(252, 235, 253, 0.93);
     border-radius: 8px;
@@ -59,7 +100,7 @@ main {
 /* Footer styling */
 footer {
     text-align: center;
-    padding: 10px 0;
+    padding: 20px;
     background-color: rgba(254, 241, 255, 0.94);
     border-radius: 4px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
