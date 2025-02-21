@@ -65,26 +65,48 @@ nav a:hover {
     background-color: rgba(235, 198, 243, 0.52);
     color: #2b069e;
 }
-/* Main content styling */
-input{
-    border-radius: 2px;
-    color: #140d5e;
-    background-color: #fffdfe;
+#loginForm {
+    width: 100%;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Main content styling */
+input[type="text"],
+input[type="password"],
+input[type="email"]{
+    width: 80%; /* Make inputs full width inside the form */
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Center the submit button */
 input[type="submit"] {
-    background-color: rgba(211, 166, 253, 0.78); /* Change to your desired color */
-    color: #140d5d; /* Text color */
-    padding: 10px 20px;
+    width: 70%;
+    background-color: rgba(225, 173, 241, 0.56);
+    color: rgba(35, 7, 126, 0.97);
+    padding: 10px;
+    margin-top: 10px;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    cursor: pointer;
 }
 
 /* Change color on hover */
 input[type="submit"]:hover {
     background-color: rgba(149, 71, 237, 0.52);
+    color: white;
 }
 main {
     width: 100%;
