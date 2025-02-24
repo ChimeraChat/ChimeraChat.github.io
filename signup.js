@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
             'INSERT INTO users (email, username) VALUES ($1, $2) RETURNING userid',
             [email, username]
         );
-
-        const userid = result.rows[0].userid;
+        
+        console.log("SQL Result:", result.rows);
 
         await pool.query(
             'INSERT INTO passwords (userid, password, hashpassword) VALUES ($1, $2, $3)',
