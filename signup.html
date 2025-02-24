@@ -30,6 +30,10 @@
 </header>
 <main>
     <div class="wrap">
+        <section id="messageContainer">
+            <h2 id="Välkommen"></h2>
+            <p id="message"></p>
+        </section>
         <div>
             <!-- Här skapar jag input-fält för registrering av användaruppgifter till databasen -->
             <form action="signup.html" id="signupForm" method="POST">
@@ -77,6 +81,11 @@
             if (response.ok) {
                 document.getElementById("message").textContent = data.message;
                 document.getElementById("message").style.color = "green";
+
+                // Vänta 3 sekunder och skicka användaren till inloggningssidan
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 3000);
             } else {
                 document.getElementById("message").textContent = data.message || "Error signing up!";
                 document.getElementById("message").style.color = "red";

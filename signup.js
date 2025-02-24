@@ -41,10 +41,17 @@ router.post('/', async (req, res) => {
             [userid, password, hashedPassword]
         );
 
-        res.status(201).json({ message: 'Användare skapad! Välkommen ', username });
+        res.status(201).json({
+            message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
+            redirect: 'login.html'
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Fel vid registrering');
+        res.status(500).send('Fel vid registrering')
+        res.status(201).json({
+            message: 'Fel vid registrering.',
+            redirect: 'signup.html'
+        })
     }
 });
 
