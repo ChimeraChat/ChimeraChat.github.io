@@ -30,18 +30,18 @@ router.post('/', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
-            'INSERT INTO users (email, username) VALUES ($1, $2) RETURNING userID',
+            'INSERT INTO users (email, username) VALUES ($1, $2) RETURNING userid',
             [email, username]
         );
 
-        const userID = result.rows[0].userid;
+        //const userID = result.rows[0].userid;
 
         await pool.query(
             'INSERT INTO passwords (userid, password, hashpassword) VALUES ($1, $2, $3)',
-            [userID, password, hashedPassword]
+            [userid, password, hashedPassword]
         );
 
-        res.status(201).json({ message: 'Användare skapad!', userID });
+        res.status(201).json({ message: 'Användare skapad!', userid });
     } catch (err) {
         console.error(err);
         res.status(500).send('Fel vid registrering');
