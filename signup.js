@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
             [email, username]
         );
 
-        //const userID = result.rows[0].userid;
+        const userid = result.rows[0].userid;
 
         await pool.query(
             'INSERT INTO passwords (userid, password, hashpassword) VALUES ($1, $2, $3)',
