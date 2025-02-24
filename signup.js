@@ -30,18 +30,18 @@ router.post('/', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await pool.query(
-            'INSERT INTO users (email, username) VALUES ($1, $2) RETURNING userid',
+            'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
             [email, username]
         );
-        
-        console.log("SQL Result:", result.rows);
+
+        const userid = result.rows[0].userid;
 
         await pool.query(
-            'INSERT INTO passwords (userid, password, hashpassword) VALUES ($1, $2, $3)',
+            'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2, $3)',
             [userid, password, hashedPassword]
         );
 
-        res.status(201).json({ message: 'Användare skapad!', userid });
+        res.status(201).json({ message: 'Användare skapad! Välkommen ', username });
     } catch (err) {
         console.error(err);
         res.status(500).send('Fel vid registrering');
