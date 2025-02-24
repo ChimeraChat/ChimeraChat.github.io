@@ -144,3 +144,13 @@ footer {
     color: #014a45;
     font-weight: bold;
 }
+
+#message-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#message {
+    font-size: 18px;
+    font-weight: bold;
+}
