@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // PostgreSQL connection pool
-const pool = new Pool({
+export const pool = new Pool({
   user: process.env.POSTGRESQL_ADDON_USER,
   host: process.env.POSTGRESQL_ADDON_HOST,
   database: process.env.POSTGRESQL_ADDON_DB,
@@ -27,23 +27,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
+app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
-
-// Testa att hämta alla users
-app.get('/users', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM users');
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Serverfel');
-  }
-});
 
 // signup route
 import signupRoute from './js/signup.js';
 app.use('/signup', signupRoute);
+
+// login route
+import loginRoute from './js/login.js';
+app.use('/login', loginRoute);
 
 // Standard route
 app.get('/', (req, res) => {
