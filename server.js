@@ -42,7 +42,7 @@ app.get('/users', async (req, res) => {
 });
 
 // signup route
-import signupRoute from './signup.js';
+import signupRoute from './js/signup.js';
 app.use('/signup', signupRoute);
 
 // Standard route
