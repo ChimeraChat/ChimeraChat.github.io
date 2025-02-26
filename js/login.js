@@ -26,7 +26,14 @@ async function login(event) {
             body: JSON.stringify({ username, password })
         });
 
-        const data = await response.json();
+        console.log("Response status:", response.status); // Kollar HTTP-status
+        console.log("Response headers:", response.headers);
+
+        const text = await response.text(); // Läs svaret som text
+        console.log("Raw response:", text);
+
+        const data = JSON.parse(text); // Försök tolka JSON manuellt
+        //const data = await response.json();
 
         if (response.ok) {
             sessionStorage.setItem("user", JSON.stringify(data.user));
