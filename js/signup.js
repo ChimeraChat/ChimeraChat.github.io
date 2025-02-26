@@ -24,6 +24,7 @@ const __dirname = dirname(__filename);
 
 // POST /signup – Lägg till användare i databasen
 const router = express.Router();
+
 router.post('/', async (req, res) => {
     const { email, username, password } = req.body;
     try {

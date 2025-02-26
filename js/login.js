@@ -1,61 +1,44 @@
-import express from 'express';
-import { pool } from '../server.js'; // Se till att server.js exporterar pool
-import bcrypt from 'bcrypt';
 
-const router = express.Router();
 
-/**
- * Huvudroute för inloggning.
- */
-router.post('/', async (req, res) => {
-    try {
-        const { username, password } = req.body;
 
-        // Hämta användaren från databasen
-        const user = await getUserByUsername(username);
-        if (!user) return res.status(401).json({ message: "Felaktig användarnamn eller lösenord" });
-        console.log(result.rows);
-        // Verifiera lösenordet
-        const isMatch = await verifyPassword(password, user.hashpassword);
-        if (!isMatch) return res.status(401).json({ message: "Felaktig användarnamn eller lösenord" });
-        console.log(result.rows);
-        // Skicka tillbaka användarinfo (OBS! Bäst att använda JWT eller sessionshantering för säkerhet)
-        res.json({ message: "Inloggning lyckades!", user });
-
-    } catch (err) {
-        console.error("Inloggningsfel:", err);
-        res.status(500).send("Serverfel vid inloggning");
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", login);
+    }
+    else {
+        console.error("Login not found in DOM");
     }
 });
 
-/**
- * Hämtar en användare från databasen baserat på e-post.
- * @param {string} username - Användarens e-postadress.
- * @returns {object|null} - Returnerar användarobjektet om det finns, annars null.
- */
-async function getUserByUsername(username) {
+
+// Funktion för att hantera inloggning
+async function login(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
     try {
-        const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-        return result.rows.length > 0 ? result.rows[0] : null;
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            sessionStorage.setItem("user", JSON.stringify(data.user));
+            alert("Inloggning lyckades!");
+            window.location.href = "home.html";
+        } else {
+            alert(data.message || "Inloggning misslyckades.");
+        }
     } catch (error) {
-        console.error("Fel vid hämtning av användare:", error);
-        return null;
+        console.error("Fel vid inloggning:", error);
+        alert("Serverfel vid inloggning.");
     }
 }
 
-/**
- * Jämför användarens lösenord med det hashade lösenordet i databasen.
- * @param {string} inputPassword - Användarens inskrivna lösenord.
- * @param {string} hashedPassword - Hashat lösenord från databasen.
- * @returns {boolean} - Returnerar true om lösenorden matchar, annars false.
- */
-async function verifyPassword(inputPassword, hashedPassword) {
-    try {
-        return await bcrypt.compare(inputPassword, hashedPassword);
-    } catch (error) {
-        console.error("Fel vid lösenordsverifiering:", error);
-        return false;
-    }
-}
 
-export default router;
