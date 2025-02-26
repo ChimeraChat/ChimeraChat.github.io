@@ -32,7 +32,6 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     }
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
     updateNav();
 });

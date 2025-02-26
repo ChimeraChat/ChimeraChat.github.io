@@ -33,11 +33,11 @@ app.use(bodyParser.json());
 
 // signup route
 import signupRoute from './js/signup.js';
-app.use('/signup', signupRoute);
+app.use('../signup', signupRoute);
 
 // login route
 import loginRoute from './js/login.js';
-app.use('/login', loginRoute);
+app.use('../login', loginRoute);
 
 // Standard route
 app.get('/', (req, res) => {
