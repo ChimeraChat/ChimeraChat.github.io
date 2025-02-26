@@ -14,11 +14,11 @@ router.post('/', async (req, res) => {
         // Hämta användaren från databasen
         const user = await getUserByUsername(username);
         if (!user) return res.status(401).json({ message: "Felaktig användarnamn eller lösenord" });
-
+        console.log(result.rows);
         // Verifiera lösenordet
         const isMatch = await verifyPassword(password, user.hashpassword);
         if (!isMatch) return res.status(401).json({ message: "Felaktig användarnamn eller lösenord" });
-
+        console.log(result.rows);
         // Skicka tillbaka användarinfo (OBS! Bäst att använda JWT eller sessionshantering för säkerhet)
         res.json({ message: "Inloggning lyckades!", user });
 
