@@ -54,7 +54,7 @@ app.listen(port, () => {
 
 // log in route
 // Funktion för att hantera inloggning
-router.post('/', async (req, res) => {
+app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -86,11 +86,10 @@ router.post('/', async (req, res) => {
 
   } catch (err) {
     console.error("Inloggningsfel:", err);
-    res.status(500).send("Serverfel vid inloggning");
+    res.status(500).json("Serverfel vid inloggning");
   }
 });
 
-export default router;
 
 
 
