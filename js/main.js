@@ -33,9 +33,44 @@ document.getElementById("signupForm").addEventListener("submit", async function(
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    updateNav();
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", login);
+    }
 });
 
+// Funktion för att hantera inloggning
+async function login(event) {
+    event.preventDefault(); // stoppa sidladdning
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const response = await fetch("https://chimerachat.onrender.com/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            sessionStorage.setItem("user", JSON.stringify(data.user)); // Spara användare i sessionStorage
+            alert("Inloggning lyckades!");
+            window.location.href = "home.html"; // Omdirigera till hem
+        } else {
+            alert(data.message || "Inloggning misslyckades.");
+        }
+    } catch (error) {
+        console.error("Fel vid inloggning:", error);
+        alert("Serverfel vid inloggning.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateNav();
+});
 /**
  * Uppdaterar navigationsmenyn baserat på inloggningsstatus.
  */
