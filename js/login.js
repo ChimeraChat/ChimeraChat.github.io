@@ -3,11 +3,28 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
+    const loginButton = document.querySelector('nav a[href="login.html"]');
+
+    if (sessionStorage.getItem("user")) {
+        updateLoginButton();
+    }
+
     if (loginForm) {
         loginForm.addEventListener("submit", login);
     }
     else {
         console.error("Login not found in DOM");
+    }
+
+    function updateLoginButton() {
+        if (loginButton) {
+            loginButton.textContent = "Log out";
+            loginButton.href = "#";
+            loginButton.addEventListener("click", () => {
+                sessionStorage.removeItem("user");
+                window.location.reload();
+            });
+        }
     }
 });
 
