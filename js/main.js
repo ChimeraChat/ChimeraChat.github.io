@@ -38,58 +38,58 @@ document.addEventListener("DOMContentLoaded", () => {
 /**
  * Uppdaterar navigationsmenyn baserat på inloggningsstatus.
  */
-function updateNav() {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
-    // Hämta menyn där länkarna ligger
-    const navContainer = document.querySelector("nav .container");
-
-    // Hämta eventuella existerande länkar
-    const loginLink = document.querySelector(".nav-link[href='login.html']");
-    const signupLink = document.querySelector(".nav-link[href='signup.html']");
-    const existingLogoutLink = document.querySelector(".nav-link.logout");
-
-    if (user) {
-        // Om inloggad → ta bort "Log in" och "Sign up"
-        if (loginLink) loginLink.remove();
-        if (signupLink) signupLink.remove();
-
-        // Lägg till "Log out" om den inte redan finns
-        if (!existingLogoutLink) {
-            addLogoutButton(navContainer);
-        }
-    } else {
-        // Om utloggad → säkerställ att "Log in" och "Sign up" finns
-        if (!loginLink) addLoginButton(navContainer);
-        if (!signupLink) addSignupButton(navContainer);
-
-        // Ta bort "Log out" om den finns
-        if (existingLogoutLink) existingLogoutLink.remove();
-    }
-}
+// function updateNav() {
+//     const user = JSON.parse(sessionStorage.getItem("user"));
+//
+//     // Hämta menyn där länkarna ligger
+//     const navContainer = document.querySelector("nav .container");
+//
+//     // Hämta eventuella existerande länkar
+//     const loginLink = document.querySelector(".nav-link[href='login.html']");
+//     const signupLink = document.querySelector(".nav-link[href='signup.html']");
+//     const existingLogoutLink = document.querySelector(".nav-link.logout");
+//
+//     if (user) {
+//         // Om inloggad → ta bort "Log in" och "Sign up"
+//         if (loginLink) loginLink.remove();
+//         if (signupLink) signupLink.remove();
+//
+//         // Lägg till "Log out" om den inte redan finns
+//         if (!existingLogoutLink) {
+//             addLogoutButton(navContainer);
+//         }
+//     } else {
+//         // Om utloggad → säkerställ att "Log in" och "Sign up" finns
+//         if (!loginLink) addLoginButton(navContainer);
+//         if (!signupLink) addSignupButton(navContainer);
+//
+//         // Ta bort "Log out" om den finns
+//         if (existingLogoutLink) existingLogoutLink.remove();
+//     }
+// }
 
 /**
  * Lägger till en "Log in"-knapp i navigeringen.
  * @param {HTMLElement} navContainer - Navigationscontainer.
  */
-function addLoginButton(navContainer) {
-    const loginNav = document.createElement("a");
-    loginNav.href = "login.html";
-    loginNav.textContent = "Log in";
-    loginNav.classList.add("nav-link");
-    navContainer.appendChild(loginNav);
-    }
-    /**
-     * Lägger till en "Sign up"-knapp i navigeringen.
-     * @param {HTMLElement} navContainer - Navigationscontainer.
-     */
-function addSignupButton(navContainer) {
-    const signupNav = document.createElement("a");
-    signupNav.href = "signup.html";
-    signupNav.textContent = "Sign up";
-    signupNav.classList.add("nav-link");
-    navContainer.appendChild(signupNav);
-    }
+// function addLoginButton(navContainer) {
+//     const loginNav = document.createElement("a");
+//     loginNav.href = "login.html";
+//     loginNav.textContent = "Log in";
+//     loginNav.classList.add("nav-link");
+//     navContainer.appendChild(loginNav);
+//     }
+//     /**
+//      * Lägger till en "Sign up"-knapp i navigeringen.
+//      * @param {HTMLElement} navContainer - Navigationscontainer.
+//      */
+//function addSignupButton(navContainer) {
+//     const signupNav = document.createElement("a");
+//     signupNav.href = "signup.html";
+//     signupNav.textContent = "Sign up";
+//     signupNav.classList.add("nav-link");
+//     navContainer.appendChild(signupNav);
+//     }
 
     /**
      * Lägger till en "Log out"-knapp och hanterar utloggning.
@@ -109,3 +109,4 @@ function addSignupButton(navContainer) {
     //
     // navContainer.appendChild(logoutNav);
     // }
+// test
