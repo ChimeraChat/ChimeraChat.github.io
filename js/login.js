@@ -5,9 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.querySelector('nav a[href="login.html"]');
 
-    if (sessionStorage.getItem("user")) {
-        updateLoginButton();
-    }
+    updateLoginButton();
 
     if (loginForm) {
         loginForm.addEventListener("submit", login);
@@ -17,13 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateLoginButton() {
-        if (loginButton) {
+        if (!loginButton) return;
+
+        if (sessionStorage.getItem("user")) {
+            // User is logged in → Change to "Log out"
             loginButton.textContent = "Log out";
             loginButton.href = "#";
-            loginButton.addEventListener("click", () => {
-                sessionStorage.removeItem("user");
-                window.location.reload();
-            });
+            loginButton.onclick = logout;
+        } else {
+            // User is logged out → Keep "Log in"
+            loginButton.textContent = "Log in";
+            loginButton.href = "login.html";
+            loginButton.onclick = null; // Reset to default behavior
         }
     }
 });
