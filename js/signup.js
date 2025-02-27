@@ -1,47 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
+    let isSubmitting = false;  // 🔹 Lägg till flagga
 
     if (signupForm) {
         signupForm.addEventListener("submit", async (event) => {
-            event.preventDefault(); // Förhindrar sidladdning
+            if (isSubmitting) return;  // 🔹 Stoppa om en request redan skickats
+            isSubmitting = true;
+            event.preventDefault();
 
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
             const email = document.getElementById("email").value;
 
             try {
-                const response = await fetch("https://chimerachat.onrender.com/signup", {
+                const response = await fetch("/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password, email })
                 }); //signup
 
-                console.log("Response status:", response.status); // Kollar HTTP-status
-                console.log("Response headers:", response.headers);
-
-                const data = await response.json();
                 const messageElement = document.getElementById("message");
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("❌ Registrering misslyckades:", errorData);
-                    messageElement.textContent = errorData.message || "Registrering misslyckades.";
+                if (response.ok) {
+                    console.log("✅ Registrering lyckades!");
+                    messageElement.textContent = "Registrering lyckades. Du blir strax omdirigerad till inloggningssidan";
+                    messageElement.style.color = "green";
+                } else {
+                    console.log("❌ Registrering misslyckades.");
+                    messageElement.textContent = "Registrering misslyckades.";
                     messageElement.style.color = "red";
-                    return;
                 }
+            } catch (error) {
+                console.error("❌ Fel vid registrering:", error);
+                alert("Serverfel vid registrering.");
 
-
-                messageElement.textContent = data.message;
-                messageElement.style.color = "green";
+            } finally {
+                isSubmitting = false;  // 🔹 Återställ flaggan
 
                 // Vänta 3 sekunder och skicka användaren till inloggningssidan
                 setTimeout(() => {
                     window.location.href = "login.html";
                 }, 3000);
 
-            } catch (error) {
-                console.error("Fel vid registrering:", error);
-                alert("Serverfel vid registrering.");
             }
         });
     }
