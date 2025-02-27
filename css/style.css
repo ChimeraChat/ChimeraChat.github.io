@@ -83,6 +83,7 @@ nav a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: 60%;
 }
 /* Main content styling */
 textarea,input[type="text"],
@@ -125,7 +126,10 @@ label{
 }
 main {
     width: 100%;
+    display: flex;
     text-align: center;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
     background-color: rgba(252, 235, 253, 0.93);
     border-radius: 8px;
