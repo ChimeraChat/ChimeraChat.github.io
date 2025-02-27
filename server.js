@@ -1,7 +1,4 @@
 
-
-
-
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
@@ -14,7 +11,6 @@ import bcrypt from 'bcrypt';
 const router = express.Router();
 
 const { Pool } = pkg;
-
 dotenv.config();
 
 const app = express();
@@ -38,9 +34,75 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 
-// signup route
-import signupRoute from './js/signup.js';
-app.use('/signup', signupRoute);
+
+// Använd routes
+//app.use('/signup', signupRoute);
+//app.use('/login', loginRoute);
+
+
+app.listen(port, () => {
+  console.log(`Servern körs på port ${port}`);
+});
+
+
+
+// **Registrerings-API**
+app.post('/signup', async (req, res) => {
+  console.log("👉 Mottaget POST /signup:", req.body);
+
+  const { email, username, password } = req.body;
+  try {
+    if (!email || !username || !password) {
+      return res.status(400).json({ message: "Alla fält måste fyllas i." });
+    }
+
+    const existingUser = await pool.query(
+        'SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2',
+        [email, username]
+    );
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: "E-post eller användarnamn används redan!" });
+    }
+
+    // Hasha lösenord
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("🔑 Hashed Password:", hashedPassword);
+
+
+    console.log("👉 Börjar registreringsprocessen...");
+    // Lägg till användare i databasen
+    const result = await pool.query(
+        'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
+        [email, username]
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error("Misslyckades med att skapa användaren i databasen.");
+    }
+
+    const userid = result.rows[0].userid;
+    console.log(`✅ Användare skapad med ID: ${userid}`);
+
+    // Spara lösenordet i en separat tabell
+    await pool.query(
+        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
+        [userid, hashedPassword]
+    );
+
+    console.log("✅ Lösenord sparat!");
+
+    res.status(201).json({
+      message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
+      redirect: '../login.html'
+    });
+  } catch (err) {
+    console.error("Fel vid registrering:", err);
+    res.status(500).json({
+      message: "Registrering misslyckades.",
+      error: err.message // Lägg till detaljerat felmeddelande
+    });
+  }
+});
 
 
 // Standard route
@@ -48,9 +110,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Servern körs på port ${port}`);
-});
+
+
+
 
 // log in route
 // Funktion för att hantera inloggning
