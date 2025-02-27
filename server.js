@@ -119,7 +119,7 @@ app.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     // Verifiera lösenordet
-    const isMatch = await bcrypt.compare(password, user.hashpassword);
+    const isMatch = await bcrypt.compare(user.hashpassword);
     if (!isMatch) {
       return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
     }
