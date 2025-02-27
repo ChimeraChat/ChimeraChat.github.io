@@ -95,16 +95,17 @@ function addSignupButton(navContainer) {
      * Lägger till en "Log out"-knapp och hanterar utloggning.
      * @param {HTMLElement} navContainer - Navigationscontainer.
      */
-function addLogoutButton(navContainer) {
-    const logoutNav = document.createElement("a");
-    logoutNav.href = "#";
-    logoutNav.textContent = "Log out";
-    logoutNav.classList.add("nav-link", "logout");
-
-    logoutNav.addEventListener("click", () => {
-        sessionStorage.removeItem("user");
-        window.location.href = "index.html"; // Skicka tillbaka till startsidan
-    });
-
-    navContainer.appendChild(logoutNav);
-    }
+// function addLogoutButton(navContainer)
+    //{
+    // const logoutNav = document.createElement("a");
+    // logoutNav.href = "#";
+    // logoutNav.textContent = "Log out";
+    // logoutNav.classList.add("nav-link", "logout");
+    //
+    // logoutNav.addEventListener("click", () => {
+    //     sessionStorage.removeItem("user");
+    //     window.location.href = "index.html"; // Skicka tillbaka till startsidan
+    // });
+    //
+    // navContainer.appendChild(logoutNav);
+    // }
