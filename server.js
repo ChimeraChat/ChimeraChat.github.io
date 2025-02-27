@@ -14,7 +14,6 @@ import bcrypt from 'bcrypt';
 const router = express.Router();
 
 const { Pool } = pkg;
-
 dotenv.config();
 
 const app = express();
@@ -39,8 +38,36 @@ app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 
 // signup route
-import signupRoute from './js/signup.js';
-app.use('/signup', signupRoute);
+// **Registrerings-API**
+app.post('/signup', async (req, res) => {
+  try {
+    const { email, username, password } = req.body;
+
+    // Hasha lösenord
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Lägg till användare i databasen
+    const result = await pool.query(
+        'INSERT INTO chimerachat_accounts (email, username) VALUES ($1, $2) RETURNING userid',
+        [email, username]
+    );
+
+    const userid = result.rows[0].userid;
+
+    // Spara lösenordet i en separat tabell
+    await pool.query(
+        'INSERT INTO encrypted_passwords (userid, hashpassword) VALUES ($1, $2)',
+        [userid, hashedPassword]
+    );
+
+    res.status(201).json({
+      message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
+    });
+  } catch (err) {
+    console.error("Fel vid registrering:", err);
+    res.status(500).json({ message: "Registrering misslyckades." });
+  }
+});
 
 
 // Standard route

@@ -1,59 +1,48 @@
-import express from 'express';
-import pkg from 'pg';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import bcrypt from 'bcrypt';
 
-const { Pool } = pkg;
 
-dotenv.config();
+document.addEventListener("DOMContentLoaded", () => {
+    const signupForm = document.getElementById("signupForm");
 
-// Koppla till Clever Cloud PostgreSQL (lägg till detta om du inte har det i server.js)
-const pool = new Pool({
-    user: process.env.POSTGRESQL_ADDON_USER,
-    host: process.env.POSTGRESQL_ADDON_HOST,
-    database: process.env.POSTGRESQL_ADDON_DB,
-    password: process.env.POSTGRESQL_ADDON_PASSWORD,
-    port: process.env.POSTGRESQL_ADDON_PORT,
-});
+    if (signupForm) {
+        signupForm.addEventListener("submit", async (event) => {
+            event.preventDefault(); // Förhindrar sidladdning
 
-// Hantera __dirname i ESM-modul
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
 
-// POST /signup – Lägg till användare i databasen
-const router = express.Router();
+            try {
+                const response = await fetch("/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password, email })
+                });
 
-router.post('/', async (req, res) => {
-    const { email, username, password } = req.body;
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+                console.log("Response status:", response.status); // Kollar HTTP-status
+                console.log("Response headers:", response.headers);
 
-        const result = await pool.query(
-            'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
-            [email, username]
-        );
+                const text = await response.text(); // Läs svaret som text
+                console.log("Raw response:", text);
 
-        const userid = result.rows[0].userid;
+                const data = await response.json();
 
-        await pool.query(
-            'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2, $3)',
-            [userid, password, hashedPassword]
-        );
+                const messageElement = document.getElementById("message");
+                if (response.ok) {
+                    messageElement.textContent = data.message;
+                    messageElement.style.color = "green";
 
-        res.status(201).json({
-            message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
-            redirect: '../login.html'
+                    // Vänta 3 sekunder och skicka användaren till inloggningssidan
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 3000);
+                } else {
+                    messageElement.textContent = data.message || "Error signing up!";
+                    messageElement.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Fel vid registrering:", error);
+                alert("Serverfel vid registrering.");
+            }
         });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Fel vid registrering')
-        res.status(201).json({
-            message: 'Fel vid registrering.',
-            redirect: '../signup.html'
-        })
     }
 });
-
-export default router;
