@@ -40,32 +40,46 @@ app.use(bodyParser.json());
 // signup route
 // **Registrerings-API**
 app.post('/signup', async (req, res) => {
+  const { email, username, password } = req.body;
   try {
-    const { email, username, password } = req.body;
-
+    if (!email || !username || !password) {
+      return res.status(400).json({ message: "Alla fält måste fyllas i." });
+    }
     // Hasha lösenord
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    console.log("👉 Börjar registreringsprocessen...");
     // Lägg till användare i databasen
     const result = await pool.query(
-        'INSERT INTO chimerachat_accounts (email, username) VALUES ($1, $2) RETURNING userid',
+        'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
         [email, username]
     );
 
+    if (result.rows.length === 0) {
+      throw new Error("Misslyckades med att skapa användaren i databasen.");
+    }
+
     const userid = result.rows[0].userid;
+    console.log(`✅ Användare skapad med ID: ${userid}`);
 
     // Spara lösenordet i en separat tabell
     await pool.query(
-        'INSERT INTO encrypted_passwords (userid, hashpassword) VALUES ($1, $2)',
-        [userid, hashedPassword]
+        'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2 $3)',
+        [userid, password, hashedPassword]
     );
+
+    console.log("✅ Lösenord sparat!");
 
     res.status(201).json({
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
+      redirect: '../login.html'
     });
   } catch (err) {
     console.error("Fel vid registrering:", err);
-    res.status(500).json({ message: "Registrering misslyckades." });
+    res.status(500).json({
+      message: "Registrering misslyckades.",
+      error: err.message // Lägg till detaljerat felmeddelande
+    });
   }
 });
 
