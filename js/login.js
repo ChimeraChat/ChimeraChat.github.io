@@ -29,6 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
             loginButton.onclick = null; // Reset to default behavior
         }
     }
+
+    function logout() {
+        sessionStorage.removeItem("user"); // Remove user from session storage
+        alert("You have been logged out!");
+        updateLoginButton(); // Update button back to "Log in"
+        window.location.href = "index.html"; // Redirect to homepage
+    }
 });
 
 
