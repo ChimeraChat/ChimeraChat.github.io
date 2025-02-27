@@ -1,5 +1,3 @@
-
-
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
 
@@ -12,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const email = document.getElementById("email").value;
 
             try {
-                const response = await fetch("/signup", {
+                const response = await fetch("https://chimerachat.onrender.com/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password, email })
@@ -24,21 +22,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 const text = await response.text(); // Läs svaret som text
                 console.log("Raw response:", text);
 
-                const data = await response.json();
-
                 const messageElement = document.getElementById("message");
-                if (response.ok) {
-                    messageElement.textContent = data.message;
-                    messageElement.style.color = "green";
 
-                    // Vänta 3 sekunder och skicka användaren till inloggningssidan
-                    setTimeout(() => {
-                        window.location.href = "login.html";
-                    }, 3000);
-                } else {
-                    messageElement.textContent = data.message || "Error signing up!";
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("❌ Registrering misslyckades:", errorData);
+                    messageElement.textContent = errorData.message || "Registrering misslyckades.";
                     messageElement.style.color = "red";
+                    return;
                 }
+
+                const data = await response.json();
+                messageElement.textContent = data.message;
+                messageElement.style.color = "green";
+
+                // Vänta 3 sekunder och skicka användaren till inloggningssidan
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 3000);
+
             } catch (error) {
                 console.error("Fel vid registrering:", error);
                 alert("Serverfel vid registrering.");

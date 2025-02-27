@@ -40,6 +40,8 @@ app.use(bodyParser.json());
 // signup route
 // **Registrerings-API**
 app.post('/signup', async (req, res) => {
+  console.log("👉 Mottaget POST /signup:", req.body);
+
   const { email, username, password } = req.body;
   try {
     if (!email || !username || !password) {
@@ -47,6 +49,8 @@ app.post('/signup', async (req, res) => {
     }
     // Hasha lösenord
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("🔑 Hashed Password:", hashedPassword);
+
 
     console.log("👉 Börjar registreringsprocessen...");
     // Lägg till användare i databasen
@@ -64,7 +68,7 @@ app.post('/signup', async (req, res) => {
 
     // Spara lösenordet i en separat tabell
     await pool.query(
-        'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2 $3)',
+        'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2, $3)',
         [userid, password, hashedPassword]
     );
 
