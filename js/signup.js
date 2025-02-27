@@ -14,14 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password, email })
-                });
+                }); //signup
 
                 console.log("Response status:", response.status); // Kollar HTTP-status
                 console.log("Response headers:", response.headers);
 
-                const text = await response.text(); // Läs svaret som text
-                console.log("Raw response:", text);
-
+                const data = await response.json();
                 const messageElement = document.getElementById("message");
 
                 if (!response.ok) {
@@ -32,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                const data = await response.json();
+
                 messageElement.textContent = data.message;
                 messageElement.style.color = "green";
 

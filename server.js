@@ -1,7 +1,4 @@
 
-
-
-
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
@@ -37,7 +34,18 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 
-// signup route
+
+// Använd routes
+//app.use('/signup', signupRoute);
+//app.use('/login', loginRoute);
+
+
+app.listen(port, () => {
+  console.log(`Servern körs på port ${port}`);
+});
+
+
+
 // **Registrerings-API**
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
@@ -47,6 +55,15 @@ app.post('/signup', async (req, res) => {
     if (!email || !username || !password) {
       return res.status(400).json({ message: "Alla fält måste fyllas i." });
     }
+
+    const existingUser = await pool.query(
+        'SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2',
+        [email, username]
+    );
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: "E-post eller användarnamn används redan!" });
+    }
+
     // Hasha lösenord
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("🔑 Hashed Password:", hashedPassword);
@@ -68,8 +85,8 @@ app.post('/signup', async (req, res) => {
 
     // Spara lösenordet i en separat tabell
     await pool.query(
-        'INSERT INTO encrypted_passwords(userid, password, hashpassword) VALUES ($1, $2, $3)',
-        [userid, password, hashedPassword]
+        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
+        [userid, hashedPassword]
     );
 
     console.log("✅ Lösenord sparat!");
@@ -93,9 +110,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Servern körs på port ${port}`);
-});
+
+
+
 
 // log in route
 // Funktion för att hantera inloggning
