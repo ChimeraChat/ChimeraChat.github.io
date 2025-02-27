@@ -8,12 +8,17 @@ header h1 {
 }
 
 @keyframes headerAnimation {
-    0% { transform: scale(1); color: rgb(174, 91, 181); }
-    50% { transform: scale(1.1); color: rgb(152, 103, 200); }
-    100% { transform: scale(1); color: rgba(104, 101, 205, 0.89); }
+    0% { transform: scale(1); color: rgb(34, 174, 166); }
+    25% { transform: scale(1.05); color: rgb(36, 101, 165); }
+    50% { transform: scale(1.1); color: rgb(108, 88, 186); }
+    75% { transform: scale(1.05); color: rgb(42, 89, 151); }
+    100% { transform: scale(1); color: rgba(59, 176, 181, 0.89); }
 }
 
-
+h2{
+    color: #1d7774;
+    font-family: 'Roboto', sans-serif;
+}
 /* General body styling */
 body {
     max-width: 90%;
@@ -65,7 +70,7 @@ nav a:hover {
     background-color: rgba(235, 198, 243, 0.52);
     color: #2b069e;
 }
-#loginForm,#signupForm {
+#loginForm,#signupForm,#contactForm {
     width: 100%;
     padding: 20px;
     background: #f3fffe;
@@ -80,7 +85,7 @@ nav a:hover {
     align-items: center;
 }
 /* Main content styling */
-input[type="text"],
+textarea,input[type="text"],
 input[type="password"],
 input[type="email"]{
     width: 80%; /* Make inputs full width inside the form */
@@ -92,7 +97,7 @@ input[type="email"]{
 }
 
 /* Center the submit button */
-input[type="submit"] {
+input[type="submit"],input[type="reset"] {
     width: 70%;
     background-color: rgba(225, 173, 241, 0.56);
     color: rgba(35, 7, 126, 0.97);
@@ -109,12 +114,15 @@ input[type="submit"]:hover {
     background-color: rgba(149, 71, 237, 0.52);
     color: white;
 }
+input[type="reset"]:hover {
+    background-color: rgba(149, 71, 237, 0.52);
+    color: white;
+}
 label{
     color: #1d7774;
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
 }
-
 main {
     width: 100%;
     text-align: center;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,9 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animate.css">
-    <script type="module" src="js/signup.js"></script>
     <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/login.js"></script>
+    <script type="module" src="js/signup.js"></script>
 
 </head>
 <body>
@@ -20,14 +22,13 @@
     <nav>
         <div class="container">
             <a href="index.html" >Home</a>
-            <a href="signup.html" >Sign up</a>
-            <a href="#" >Chat</a>
-            <a href="#" >Post</a>
-            <a href="login.html" >Log in</a>
-            <a href="#" >Log out</a>
-            <a href="#" >Faq</a>
+            <a href="chat.html" >Chat</a>
+            <a href="post.html" >Post</a>
+            <a href="faq.html" >Faq</a>
             <a href="contact_us.html" >Contact</a>
             <a href="about_us.html" >About us</a>
+            <a href="" >Sign up</a>
+            <a href="login.html" >Log in</a>
         </div>
     </nav>
 </header>
@@ -38,8 +39,9 @@
             <p id="message"></p>
         </section>
         <div>
-            <!-- Här skapar jag input-fält för registrering av användaruppgifter till databasen -->
-            <form id="signupForm">
+            <form action="signup.html" id="signupForm" method="POST">
+                <h2>Sign up</h2>
+
                 <div>
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" required>
