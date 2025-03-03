@@ -280,7 +280,7 @@ a{
 .dark-mode {
     background: url('../img/Banner_dark.png') no-repeat center center fixed;
     background-size: cover;
-    color: white;
+
     main, footer, header{
         background-color: rgba(35, 29, 74, 0.91);
     }
@@ -303,6 +303,48 @@ a{
     .small{
         background: rgba(34, 49, 71, 0.89);
     }
+
+    #loginForm,#signupForm,#contactForm {
+        background-color: #573f8a;
+        border-color: rgba(125, 89, 191, 0.86);
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+    }
+    label{
+        color: white;
+    }
+    input[type="submit"]:hover {
+        background-color: rgba(44, 12, 85, 0.52);
+        color: #e8dbff;
+    }
+    input[type="reset"]:hover {
+        background-color: rgba(44, 12, 85, 0.52);
+        color: #e8dbff;
+    }
+    input[type="submit"],input[type="reset"] {
+        background-color: rgb(78, 75, 177);
+        color: rgba(255, 255, 255, 0.97);
+        border: 2px solid rgba(192, 185, 255, 0.97);
+    }
+}
+
+.dark-mode a {
+    color: #8ab4f8; /* Light blue for links */
+}
+.dark-mode p{
+    color: #decef1;
+}
+.dark-mode li{
+    color: #decef1;
+}
+.dark-mode a:hover {
+    color: #bb86fc; /* Softer purple on hover */
+}
+
+/* Adjust Headings for Dark Mode */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3{
+    color: #d9cee3;
 }
 
 #darkModeToggle {
