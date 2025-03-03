@@ -280,7 +280,7 @@ a{
 .dark-mode {
     background: url('../img/Banner_dark.png') no-repeat center center fixed;
     background-size: cover;
-    color: white;
+
     main, footer, header{
         background-color: rgba(35, 29, 74, 0.91);
     }
@@ -303,6 +303,26 @@ a{
     .small{
         background: rgba(34, 49, 71, 0.89);
     }
+}
+
+.dark-mode a {
+    color: #8ab4f8; /* Light blue for links */
+}
+.dark-mode p{
+    color: #decef1;
+}
+.dark-mode li{
+    color: #decef1;
+}
+.dark-mode a:hover {
+    color: #bb86fc; /* Softer purple on hover */
+}
+
+/* Adjust Headings for Dark Mode */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3 {
+    color: #d9cee3;
 }
 
 #darkModeToggle {
