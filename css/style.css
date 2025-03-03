@@ -164,4 +164,99 @@ footer {
     font-weight: bold;
 }
 
+/* Testing grid for index and post page */
 
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    grid-template-rows: repeat(5, auto); /* 5 rows */
+    gap: 15px; /* Space between grid items */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* General Grid Item Styling */
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Image Styling */
+.grid-item img {
+    width: 100%;
+    max-height: 200px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.grid-item.tall img{
+    width: 100%;
+    max-height: 100%;
+}
+
+/* Text Blocks with Asymmetrical Layout */
+.wide {
+    grid-column: span 2; /* Spans two columns */
+    background: #e3f2fd; /* Light blue */
+}
+
+.tall {
+    grid-row: span 2; /* Spans two rows */
+    background: #fce4ec; /* Light pink */
+    font-weight: bold;
+    font-variant-caps: titling-caps;
+    font-family: Bahnschrift, Arial, sans-serif;
+}
+
+.medium {
+    background: #f3e5f5; /* Light purple */
+}
+
+.large {
+    grid-column: span 2;
+    grid-row: span 1;
+    background: #ffecb3; /* Light yellow */
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+    }
+    .wide, .large {
+        grid-column: span 1; /* Adjust for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr; /* Single column on mobile */
+    }
+}
+
+li{
+    list-style-image: repeating-linear-gradient(#c9c2da, #8b80a1, rgb(85, 78, 104), rgb(64, 62, 78));
+    list-style-position: inside;
+    margin: 0;
+    padding: 0;
+}
+ul{
+    padding: 0;
+    margin: 0;
+}
+a{
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1em;
+    font-family: Bahnschrift, Arial, sans-serif;
+    color: rgba(179, 51, 125, 0.75);
+}
