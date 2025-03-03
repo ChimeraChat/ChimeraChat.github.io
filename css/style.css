@@ -175,7 +175,17 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
 }
-
+.grid-item button{
+    width: 70%;
+    background-color: rgba(225, 173, 241, 0.56);
+    color: rgba(35, 7, 126, 0.97);
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
 /* General Grid Item Styling */
 .grid-item {
     background-color: rgba(255, 255, 255, 0.9);
@@ -259,4 +269,25 @@ a{
     font-size: 1em;
     font-family: Bahnschrift, Arial, sans-serif;
     color: rgba(179, 51, 125, 0.75);
+}
+
+/* Dark mode test */
+.dark-mode {
+    background: url('../img/Banner.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
+#darkModeToggle {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#darkModeToggle:hover {
+    transform: scale(1.1);
 }
