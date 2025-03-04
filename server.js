@@ -8,6 +8,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import multer from "multer";
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
+import fs from "fs";
 
 const router = express.Router();
 
@@ -40,6 +41,9 @@ app.use(bodyParser.json());
 //app.use('/login', loginRoute);
 
 app.post("/upload", uploadMiddleware, async (req, res) => {
+  console.log("🔍 Filinfo:", req.file);
+  console.log("🔍 Body:", req.body);
+
   if (!req.file) {
     return res.status(400).json({ message: "Ingen fil uppladdad!" });
   }
