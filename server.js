@@ -1,4 +1,3 @@
-
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
@@ -8,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import multer from "multer";
+import { uploadMiddleware, uploadFileToDrive } from "config/googleDrive.js";
 
 const router = express.Router();
 
@@ -34,31 +34,28 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
-app.use("/uploads", express.static("uploads"));
-
-// Konfigurera Multer för att lagra filer i en mapp
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Filen sparas i 'uploads/'-mappen
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Unikt filnamn
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// Skapa en route för att hantera filuppladdning
-app.post("/upload", upload.single("fileUpload"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: "Ingen fil vald." });
-  }
-  res.status(200).json({ message: "Filen har laddats upp!", filePath: req.file.path });
-});
 
 // Använd routes
 //app.use('/signup', signupRoute);
 //app.use('/login', loginRoute);
+
+app.post("/upload", uploadMiddleware, async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "Ingen fil uppladdad!" });
+  }
+
+  const fileId = await uploadFileToDrive(req.file.path, req.file.originalname);
+
+  if (!fileId) {
+    return res.status(500).json({ message: "Fel vid uppladdning." });
+  }
+
+  const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
+  res.json({ message: "Uppladdning lyckades!", fileUrl });
+
+  // Radera filen lokalt efter uppladdning
+  fs.unlinkSync(req.file.path);
+});
 
 
 app.listen(port, () => {
@@ -67,7 +64,7 @@ app.listen(port, () => {
 
 
 
-// **Registrerings-API**
+// Registrerings-API
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
 

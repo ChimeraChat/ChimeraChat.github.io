@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadButton = document.querySelector("button[type='submit']");
     const fileInput = document.getElementById("fileUpload");
 
-    uploadButton.addEventListener("click", function (event) {
+    uploadButton.addEventListener("click", async function (event) {
         event.preventDefault();
 
         const file = fileInput.files[0];
@@ -15,21 +15,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData();
         formData.append("fileUpload", file);
 
-        fetch("/upload", {
-            method: "POST",
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message || "Fil uppladdad!");
-                if (data.filePath) {
-                    const uploadedFile = document.createElement("p");
-                    uploadedFile.innerHTML = `Uppladdad fil: <a href="${data.filePath}" target="_blank">${data.filePath}</a>`;
-                    document.body.appendChild(uploadedFile);
-                }
-            })
-            .catch(error => {
-                alert("Fel vid uppladdning: " + error.message);
+        try {
+            let response = await fetch("/upload", {
+                method: "POST",
+                body: formData,
             });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`Uppladdning lyckades! Fil-URL: ${data.fileUrl}`);
+                document.getElementById("fileLink").innerHTML = `<a href="${data.fileUrl}" target="_blank">Visa fil</a>`;
+            } else {
+                alert("Fel vid uppladdning.");
+            }
+        } catch (error) {
+            console.error("Uppladdningsfel:", error);
+            alert("Serverfel vid uppladdning.");
+        }
     });
 });
