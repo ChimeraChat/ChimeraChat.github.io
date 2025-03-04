@@ -45,4 +45,4 @@ export const uploadFileToDrive = async (filePath, fileName) => {
 };
 
 // Express route för att hantera uppladdning från klienten
-export const uploadMiddleware = upload.single("file");
+export const uploadMiddleware = upload.single("fileUpload");
