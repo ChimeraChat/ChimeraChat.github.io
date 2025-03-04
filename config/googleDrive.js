@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import fs from "fs";
 import path from "path";
+import { Readable } from "stream";
 import { fileURLToPath } from "url";
 import multer from "multer";
 import dotenv from "dotenv";
@@ -12,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 // Konfigurera Google Auth
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, "../config/credentials.json"), // JSON-filen du laddade ner
+    keyFile: path.join(__dirname, "../config/credentials.json"), // JSON-fil
     scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
