@@ -30,11 +30,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // function logout() {
+    //     sessionStorage.removeItem("user"); // Remove user from session storage
+    //     alert("You have been logged out!");
+    //     updateLoginButton(); // Update button back to "Log in"
+    //     window.location.href = "index.html"; // Redirect to homepage
+    // }
     function logout() {
-        sessionStorage.removeItem("user"); // Remove user from session storage
-        alert("You have been logged out!");
-        updateLoginButton(); // Update button back to "Log in"
-        window.location.href = "index.html"; // Redirect to homepage
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        if (user) {
+            fetch("/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: user.userid })
+            }).then(() => {
+                sessionStorage.removeItem("user");
+                alert("Du har loggats ut!");
+                updateLoginButton();
+                window.location.href = "index.html";
+            }).catch(error => console.error("Fel vid utloggning:", error));
+        }
     }
 });
 

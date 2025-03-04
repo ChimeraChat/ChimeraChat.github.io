@@ -36,11 +36,31 @@
 
 <body>
 <main>
-  <section>
-    <div class="container">
-      <h2>Chat function here</h2>
+  <div class="grid-container">
+    <div class="grid-item wide">
+      <label for="searchUser">Search for online users</label>
+      <input type="text" id="searchUser" placeholder="Search online users..." />
+      <button id="searchButton">Search</button>
+      <p id="errorMessage" style="color: red;"></p>
+      <ul id="userList"></ul>
     </div>
-  </section>
+
+    <div class="grid-item tall">
+      <h3>Continue chatting...</h3>
+      <p>chat with Misse</p>
+      <p>chat with Molly</p>
+      <p>chat with Nova</p>
+      <p>chat with Luna</p>
+      <p>chat with Bean</p>
+      <ul id="chatId"></ul>
+    </div>
+
+    <div class="grid-item wide chat-container">
+      <h3>Chat</h3>
+      <p>Your messages will appear here...</p>
+    </div>
+
+  </div>
 </main>
 <footer>
   <p>&copy; 2025 ChimeraChat. Alla rättigheter förbehållna.</p>

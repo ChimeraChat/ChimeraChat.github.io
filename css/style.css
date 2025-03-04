@@ -4,15 +4,7 @@
 header h1 {
     font-family: 'Roboto', sans-serif;
     animation: headerAnimation 3s infinite;
-    color: #140d5e;
-}
-
-@keyframes headerAnimation {
-    0% { transform: scale(1); color: rgb(34, 174, 166); }
-    25% { transform: scale(1.05); color: rgb(36, 101, 165); }
-    50% { transform: scale(1.1); color: rgb(108, 88, 186); }
-    75% { transform: scale(1.05); color: rgb(42, 89, 151); }
-    100% { transform: scale(1); color: rgba(59, 176, 181, 0.89); }
+    color: #2b0b6c;
 }
 
 h2{
@@ -197,6 +189,8 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-variant-caps: titling-caps;
+    font-family: Bahnschrift, Arial, sans-serif;
 }
 
 /* Image Styling */
@@ -223,10 +217,13 @@ footer {
     grid-row: span 2; /* Spans two rows */
     background: #f4f8e1; /* Light pink */
     font-weight: bold;
-    font-variant-caps: titling-caps;
-    font-family: Bahnschrift, Arial, sans-serif;
 }
 
+.wide-tall{
+    grid-column: span 2;
+    grid-row: span 2;
+    background: #e9f5fb; /* Light blue */
+}
 .medium {
     background: #fedaff; /* Light purple */
 }
