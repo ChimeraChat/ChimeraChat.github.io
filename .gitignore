@@ -130,4 +130,3 @@ dist
 .pnp.*
 
 # private
-/config/credentials.json
