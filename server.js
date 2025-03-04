@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
+import multer from "multer";
 
 const router = express.Router();
 
@@ -33,7 +34,27 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
+app.use("/uploads", express.static("uploads"));
 
+// Konfigurera Multer för att lagra filer i en mapp
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Filen sparas i 'uploads/'-mappen
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname); // Unikt filnamn
+  }
+});
+
+const upload = multer({ storage: storage });
+
+// Skapa en route för att hantera filuppladdning
+app.post("/upload", upload.single("fileUpload"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "Ingen fil vald." });
+  }
+  res.status(200).json({ message: "Filen har laddats upp!", filePath: req.file.path });
+});
 
 // Använd routes
 //app.use('/signup', signupRoute);

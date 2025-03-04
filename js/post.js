@@ -21,10 +21,15 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => response.json())
             .then(data => {
-                alert(data.message || "File uploaded successfully!");
+                alert(data.message || "Fil uppladdad!");
+                if (data.filePath) {
+                    const uploadedFile = document.createElement("p");
+                    uploadedFile.innerHTML = `Uppladdad fil: <a href="${data.filePath}" target="_blank">${data.filePath}</a>`;
+                    document.body.appendChild(uploadedFile);
+                }
             })
             .catch(error => {
-                alert("Error: " + error.message);
+                alert("Fel vid uppladdning: " + error.message);
             });
     });
 });
