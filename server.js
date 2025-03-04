@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import multer from "multer";
-import { uploadMiddleware, uploadFileToDrive } from "config/googleDrive.js";
+import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
 
 const router = express.Router();
 
