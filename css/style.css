@@ -239,6 +239,14 @@ footer {
     grid-column: span 1;
     grid-row: span 1;
 }
+.small img {
+    width: 50%;
+    height: auto;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
 /* Responsive Grid */
 @media (max-width: 768px) {
     .grid-container {
