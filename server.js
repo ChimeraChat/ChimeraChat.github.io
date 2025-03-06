@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
+import req from "express/lib/request.js";
 
 const router = express.Router();
 
@@ -39,29 +40,29 @@ app.use(bodyParser.json());
 //app.use('/login', loginRoute);
 
 app.post("/upload", uploadMiddleware, async (req, res) => {
-  console.log("🔍 Filinfo:", req.file);
+  console.log("🔍 Filinfo:", req.file.buffer);
   console.log("🔍 Body:", req.body);
 
   if (!req.file) {
     return res.status(400).json({ message: "Ingen fil uppladdad!" });
   }
 
-  const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype);
+  const fileBuffer = req.file.buffer;
+  const fileName = req.file.originalname;
+  const mimeType = req.file.mimetype;
 
-  if (!fileId) {
-    return res.status(500).json({ message: "Fel vid uppladdning." });
+  try {
+    const fileId = await uploadFileToDrive(fileBuffer, fileName, mimeType);
+    if (!fileId) {
+      return res.status(500).json({ message: "Fel vid uppladdning." });
+    }
+    const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
+    res.json({ message: "Uppladdning lyckades!", fileUrl });
+  } catch (error) {
+    console.error("Fel vid uppladdning:", error);
+    res.status(500).json({ message: "Serverfel vid uppladdning." });
   }
-
-  const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
-  res.json({ message: "Uppladdning lyckades!", fileUrl });
-
 });
-
-
-app.listen(port, () => {
-  console.log(`Servern körs på port ${port}`);
-});
-
 
 
 // Registrerings-API
@@ -75,7 +76,7 @@ app.post('/signup', async (req, res) => {
     }
 
     const existingUser = await pool.query(
-        'SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2',
+        'SELECT userid FROM chimerachat_accounts WHERE email = $2 OR username = $3',
         [email, username]
     );
     if (existingUser.rows.length > 0) {
@@ -90,7 +91,7 @@ app.post('/signup', async (req, res) => {
     console.log("👉 Börjar registreringsprocessen...");
     // Lägg till användare i databasen
     const result = await pool.query(
-        'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
+        'INSERT INTO chimerachat_accounts(email, username) VALUES ($2, $3)',
         [email, username]
     );
 
@@ -98,12 +99,12 @@ app.post('/signup', async (req, res) => {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
 
-    console.log(`✅ Användare skapad med`);
+    console.log(`✅ Användare skapad `);
 
     // Spara lösenordet i en separat tabell
     await pool.query(
         'INSERT INTO encrypted_passwords(hashpassword) VALUES ($2)',
-        [userid, hashedPassword]
+        [hashedPassword]
     );
 
     console.log("✅ Lösenord sparat!");
@@ -112,21 +113,15 @@ app.post('/signup', async (req, res) => {
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
       redirect: '../login.html'
     });
+
   } catch (err) {
     console.error("Fel vid registrering:", err);
-    res.status(500).json({
-      message: "Registrering misslyckades.",
-      error: err.message // Lägg till detaljerat felmeddelande
+      res.status(500).json({
+        message: "Registrering misslyckades.",
+        error: err.message // Lägg till detaljerat felmeddelande
     });
   }
 });
-
-
-// Standard route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
 
 
 // log in route
@@ -167,7 +162,13 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Standard route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-
+app.listen(port, () => {
+  console.log(`Servern körs på port ${port}`);
+});
 
 
