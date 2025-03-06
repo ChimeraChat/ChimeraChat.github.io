@@ -330,24 +330,19 @@ a{
         color: rgba(255, 255, 255, 0.97);
         border: 2px solid rgba(192, 185, 255, 0.97);
     }
-    #headerImage{
-        <img src="img/logo_dark.png" alt="Logo Image" id="headerImage">
-    }
-    #headerImage2{
-    <img src="img/logo_dark.png" alt="Logo Image" id="headerImage2">
-    }
-    a {
-        color: #8ab4f8; /* Light blue for links */
-    }
-    p{
-        color: #f7ebff;
-    }
-    li{
-        color: #f0e5ff;
-    }
-    a:hover {
-        color: #bb86fc; /* Softer purple on hover */
-    }
+}
+
+.dark-mode a {
+    color: #8ab4f8; /* Light blue for links */
+}
+.dark-mode p{
+    color: #decef1;
+}
+.dark-mode li{
+    color: #decef1;
+}
+.dark-mode a:hover {
+    color: #bb86fc; /* Softer purple on hover */
 }
 .dark-mode #headerImage{
     <img src="img/logo_dark.png" alt="Logo Image" id="headerImage">
