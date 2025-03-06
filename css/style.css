@@ -344,6 +344,9 @@ a{
 .dark-mode a:hover {
     color: #bb86fc; /* Softer purple on hover */
 }
+.dark-mode #headerImage{
+    <img src="img/logo_dark.png" alt="Logo Image" id="headerImage">
+}
 
 /* Adjust Headings for Dark Mode */
 .dark-mode h1,

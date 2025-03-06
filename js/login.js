@@ -20,11 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
             loginButton.textContent = "Log out";
             loginButton.href = "#";
             loginButton.onclick = logout;
+
+            //här ta bort sign up knapp
+
         } else {
             // User is logged out → Keep "Log in"
             loginButton.textContent = "Log in";
             loginButton.href = "login.html";
             loginButton.onclick = null; // Reset to default behavior
+
         }
     }
 
