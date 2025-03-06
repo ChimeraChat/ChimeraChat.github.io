@@ -19,13 +19,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData,
             });
 
-            const data = await response.json();
-
             if (response.ok) {
+                const data = await response.json();
                 alert(`Uppladdning lyckades! Fil-URL: ${data.fileUrl}`);
                 document.getElementById("fileLink").innerHTML = `<a href="${data.fileUrl}" target="_blank">Visa fil</a>`;
             } else {
-                alert("Fel vid uppladdning.");
+                throw new Error("Server responded with an error!");
             }
         } catch (error) {
             console.error("Uppladdningsfel:", error);

@@ -1,16 +1,18 @@
 import { google } from "googleapis";
-import path from "path";
 import { fileURLToPath } from "url";
 import multer from "multer";
 import dotenv from "dotenv";
+import req from "express/lib/request.js";
 
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage();
 const upload = multer({storage: storage});
+const fileBuffer = req.file.buffer;
+const fileName = req.file.originalname;
+const mimeType = req.file.mimetype;
 
 // Konfigurera Google Auth
 const auth = new google.auth.GoogleAuth({
@@ -22,7 +24,7 @@ const auth = new google.auth.GoogleAuth({
 const drive = google.drive({ version: "v3", auth });
 
 // Funktion för att ladda upp filer till Google Drive
-export const uploadFileToDrive = async (filePath, fileName) => {
+export const uploadFileToDrive = async (fileBuffer, fileName, mimeType) => {
     try {
         const response = await drive.files.create({
             requestBody: {
@@ -30,8 +32,8 @@ export const uploadFileToDrive = async (filePath, fileName) => {
                 parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], // ID för mappen i Google Drive
             },
             media: {
-                mimeType: file.mimetype, // Använd den faktiska MIME-typen från filen
-                body: new Buffer.from(file.buffer), // Använd buffern direkt
+                mimeType: mimeType, // Använd den faktiska MIME-typen från filen
+                body: fileBuffer, // Använd buffern direkt
             },
         });
 
