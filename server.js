@@ -101,8 +101,7 @@ app.post('/signup', async (req, res) => {
     if (result.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
-
-    const userid = result.rows[0].userid;
+    
     console.log(`✅ Användare skapad med ID: ${userid}`);
 
     // Spara lösenordet i en separat tabell
@@ -131,8 +130,6 @@ app.post('/signup', async (req, res) => {
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-
 
 
 

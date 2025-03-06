@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 // Konfigurera Google Auth
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, "../config/credentials.json"), // JSON-fil
+    keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS, // länk till JSON-fil
     scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
