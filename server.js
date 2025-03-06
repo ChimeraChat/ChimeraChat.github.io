@@ -101,12 +101,12 @@ app.post('/signup', async (req, res) => {
     if (result.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
-    
-    console.log(`✅ Användare skapad med ID: ${userid}`);
+
+    console.log(`✅ Användare skapad med`);
 
     // Spara lösenordet i en separat tabell
     await pool.query(
-        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
+        'INSERT INTO encrypted_passwords(hashpassword) VALUES ($2)',
         [userid, hashedPassword]
     );
 
