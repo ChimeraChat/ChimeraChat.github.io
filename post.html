@@ -41,8 +41,10 @@
     <div class="grid-item wide">
       <h3>Upload your files here</h3>
       <p>Choose file to upload:</p>
-      <input type="file" id="fileUpload" name="fileUpload">
-      <button type="submit">Upload File</button>
+      <form id="uploadForm">
+        <input type="file" id="fileUpload" name="fileUpload" required>
+        <button type="submit">Upload File</button>
+      </form>
     </div>
 
     <div class="grid-item tall">

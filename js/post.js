@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const uploadButton = document.querySelector("button[type='submit']");
-    const fileInput = document.getElementById("fileUpload");
-
-    uploadButton.addEventListener("click", async function (event) {
+    const uploadForm = document.getElementById("uploadForm");
+    uploadForm.addEventListener("submit", async function (event) {
         event.preventDefault();
-
+        const fileInput = document.getElementById("fileUpload");
         const file = fileInput.files[0];
 
         if (!file) {

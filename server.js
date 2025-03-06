@@ -6,9 +6,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import multer from "multer";
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
-import fs from "fs";
 
 const router = express.Router();
 
@@ -48,7 +46,7 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
     return res.status(400).json({ message: "Ingen fil uppladdad!" });
   }
 
-  const fileId = await uploadFileToDrive(req.file.path, req.file.originalname);
+  const fileId = await uploadFileToDrive(req.file, req.file.originalname);
 
   if (!fileId) {
     return res.status(500).json({ message: "Fel vid uppladdning." });
@@ -57,8 +55,6 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
   const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
   res.json({ message: "Uppladdning lyckades!", fileUrl });
 
-  // Radera filen lokalt efter uppladdning
-  fs.unlinkSync(req.file.path);
 });
 
 
