@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "chimerachat",
+  "private_key_id": "66c062a18342dc4e10f6f76f19ed2e5af4a78adc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+PJoA811cS0Ax\nVBH6tcMFyylPwExSyt1MtHJWYUAa99xqxs+cdzkOzJcXyyYIIv8f7lyZfrU1d+47\nuRvgmlYEdJr2/5b50Enc8Z3VRh6k6XPV85lMx3teqg5BthCuYTG79YuzkLB6hKZ6\nZhZkPgXSqGA2Ov5z+QL1fa8359Bm5BkEvkZGBYpS1uYvV2pn+9HHHtO8CU3uwGdb\nxqlb2kgtwLLyDxn9AI/P6wplCVOx+WLlR0h52Uramvf8tOKFXcLYeFApAWDVRp+6\n0eAAEuECEBFtxO2WMQFXDUQGyDdAEqFHmKoa1DhBG7o9MoTy/m5P4f5A50h9raAC\ny+7+6tSBAgMBAAECggEAJaxVqTuIsRbb6wjlmJs3OGX/0+HWm4y+H4sam32d1tlg\nBqtBgRBhNcuRXm5mJTVdBcNMBj+//gs2nBAv855My4wWBjUefnFft0gIBCzjM7Bh\ntqyLntdgWKJfuWanTglEcp8RX+mW8WRknZeq9oYL3ChpCURMkMXu7pPJx836CO3q\nW273F6vzxp1u5hlgS1rHRW5gKoY/p2OTMShJc1tL7UuasH3uRGR57DcyIzbibnZ0\nQqLgl/hnZUIgh4yMYWtjLsk56QFORSfBm3uJftmaFiS1wEEI1jmrFazN51aDBiRu\nL7jABYQIvcNTxvZyQRLo7tQnCMiC6jP5DjdsFHZs+QKBgQDtmUQWSyR+9aFVzcWG\no/Ktu/m42A+M42zViCAgc6j7aVB9jYOIymjxPjioaKllb/EwuhHKoI6tQ5ToULjD\nYJ5ZdjYWtxvbCPPDL4C7GadkSIfOuAL2OUC4N6b0eEbGrfpsRdI4u6+w7JsW8HoD\n/jnmAb5KB5nnJ9MXO2tqIgrgxQKBgQDM+FEZkdzYEW6KB3D2BsiPE6S7uD9C3vr0\nK7FzTizqVAkCDoW7vOiVgvhFZXV3qjEXWdiIiGjRLWLpIDZj9ubUdQni2RBFYJXp\nRZ23fPVnuQN5dQ3lRSj9GxoQAAi8Wc90fRY5s+FAbs3o1Y7ZqykwSbMd5sMscFEd\nj2r3pPlojQKBgQCucLxgccLVw5kz2eOPuobNrxjk8RxZoA+jplGQAdqq2uNRirhr\nkdACbmBCpLTZ2JoH4FR3o/Gcm+WTutAsAZ/Apt2HR+CXq7bsMtAcjfUr12R+DPN/\nuwEdPx7Alh3AeLNHEuwI4yNWjiA/c0bh76CqkdUXnQUNhVuhzupJ/bxm0QKBgFlz\ncSlAj+m3yc7xKmokUbinMPg/k1QirdCLlPimQFHPdNLx9YkWC0bcjm7ytU4Q9zWi\nny4OoffP39+vkC0WHmzP2w2l/0TXvvS7zfW60fp/MrX50KOjCB1Vi406BpX0d+X1\nhRKPnxkYgkI/mQUDfok1ULcW80xcg/nrkhobZEEtAoGAUZLYeArK5BFP4LUYg7mk\ngI7dj3KQqOVAE8QPEUEyGyC8KhdWaKfJJgfvPGXg6K7PxQC/xrtwn3yl6zGCQtlb\nEUwcIEd0wInmsKHIgHCawK3IkGJVIral2/GjgdF2H1w/tpECNarrUqtGhfZfO+bc\ni7lTyLvhdINNOkWBeEJQV70=\n-----END PRIVATE KEY-----\n",
+  "client_email": "chimerachat-service@chimerachat.iam.gserviceaccount.com",
+  "client_id": "112090039408951419729",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/chimerachat-service%40chimerachat.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

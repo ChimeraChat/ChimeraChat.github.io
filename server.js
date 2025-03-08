@@ -3,6 +3,7 @@ import path from 'path';
 import pkg from 'pg';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+dotenv.config({ path: 'googledrive.env' });
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
@@ -47,10 +48,10 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
   }
 
   try {
-    const fileBuffer = req.file.buffer;
-    const fileName = req.file.originalname;
-    const mimeType = req.file.mimetype;
-    const fileId = await uploadFileToDrive(fileBuffer, fileName, mimeType);
+    const filebuffer = req.file.buffer;
+    const filename = req.file.originalname;
+    const mimetype = req.file.mimetype;
+    const fileId = await uploadFileToDrive(filebuffer, filename, mimetype);
 
     if (!fileId) {
       return res.status(500).json({ message: "Fel vid uppladdning." });

@@ -17,18 +17,28 @@ const auth = new google.auth.GoogleAuth({
 // Skapa Drive-klienten
 const drive = google.drive({ version: "v3", auth });
 
+async function listFiles() {
+    try {
+        const response = await drive.files.list({});
+        console.log(response.data);
+    } catch (error) {
+        console.error('API Error:', error);
+    }
+}
+
+listFiles();
 
 // Funktion för att ladda upp filer till Google Drive
-export const uploadFileToDrive = async (fileBuffer, fileName, mimeType) => {
+export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
     try {
         const response = await drive.files.create({
             requestBody: {
-                name: fileName,
+                name: filename,
                 parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], // ID för mappen i Google Drive
             },
             media: {
-                mimeType: mimeType, // Använd den faktiska MIME-typen från filen
-                body: Buffer.from(fileBuffer), // Använd buffern direkt
+                mimeType: mimetype, // Använd den faktiska MIME-typen från filen
+                body: Buffer.from(filebuffer), // Använd buffern direkt
             },
         });
 
