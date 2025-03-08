@@ -20,6 +20,7 @@ const drive = google.drive({ version: "v3", auth });
 async function listFiles() {
     try {
         const response = await drive.files.list({});
+        console.log("API DID NOTHING")
         console.log(response.data);
     } catch (error) {
         console.error('API Error:', error);
