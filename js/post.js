@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
     uploadForm.addEventListener("submit", async function (event) {
         event.preventDefault();
-        const fileInput = document.getElementById("fileUpload");
+        const fileInput = document.getElementById("fileupload");
         const file = fileInput.files[0];
 
         if (!file) {
