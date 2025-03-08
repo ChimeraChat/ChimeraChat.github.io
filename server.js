@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 //app.use('/signup', signupRoute);
 //app.use('/login', loginRoute);
 
-app.post('/', uploadMiddleware, async (req, res) => {
+app.post('/upload', uploadMiddleware, async (req, res) => {
   console.log("🔍 Filinfo:", req.file.buffer);
   console.log("🔍 Body:", req.body);
 
