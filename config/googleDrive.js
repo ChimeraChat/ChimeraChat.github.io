@@ -38,7 +38,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
             },
             media: {
                 mimeType: mimetype, // Använd den faktiska MIME-typen från filen
-                body: Buffer.from(filebuffer), // Använd buffern direkt
+                body: new Buffer.from(filebuffer), // Använd buffern direkt
             },
         });
 

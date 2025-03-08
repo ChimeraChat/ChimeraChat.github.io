@@ -48,10 +48,7 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
   }
 
   try {
-    const filebuffer = req.file.buffer;
-    const filename = req.file.originalname;
-    const mimetype = req.file.mimetype;
-    const fileId = await uploadFileToDrive(filebuffer, filename, mimetype);
+    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype);
 
     if (!fileId) {
       return res.status(500).json({ message: "Fel vid uppladdning." });
