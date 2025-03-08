@@ -31,6 +31,13 @@ listFiles();
 // Funktion för att ladda upp filer till Google Drive
 export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
     try {
+
+        // Skapa en läsbar stream från buffern
+        const bufferStream = new Readable();
+        bufferStream.push(filebuffer);
+        bufferStream.push(null); // Slutsignal för streamen
+        console.log("BufferStream:", bufferStream)
+
         const response = await drive.files.create({
             requestBody: {
                 name: filename,
@@ -38,7 +45,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
             },
             media: {
                 mimeType: mimetype, // Använd den faktiska MIME-typen från filen
-                body: new Buffer.from(filebuffer), // Använd buffern direkt
+                body: bufferStream, // Använd stream
             },
         });
 
