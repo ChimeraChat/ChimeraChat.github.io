@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const formData = new FormData();
-        formData.append("fileUpload", file);
+        formData.append("fileupload", file);
         console.log("FormData:", formData);
 
         try {
