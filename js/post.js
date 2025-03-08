@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("response:", response);
             if (response.ok) {
                 const data = await response.json();
-                console.log("data:", data);
+                console.log("data in post.js:", data);
                 alert(`Uppladdning lyckades!`);
             } else {
                 throw new Error("Server responded with an error!");
