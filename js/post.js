@@ -23,8 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
                 const data = await response.json();
                 console.log("data:", data);
-                alert(`Uppladdning lyckades! Fil-URL: ${data.fileUrl}`);
-                document.getElementById("fileLink").innerHTML = `<a href="${data.fileUrl}" target="_blank">Visa fil</a>`;
+                alert(`Uppladdning lyckades!`);
             } else {
                 throw new Error("Server responded with an error!");
 
