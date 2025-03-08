@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 //app.use('/signup', signupRoute);
 //app.use('/login', loginRoute);
 
-app.post("/upload", uploadMiddleware, async (req, res) => {
+app.post('/', uploadMiddleware, async (req, res) => {
   console.log("🔍 Filinfo:", req.file.buffer);
   console.log("🔍 Body:", req.body);
 
@@ -57,7 +57,7 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
     const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
     res.json({ message: "Uppladdning lyckades!", fileUrl });
   } catch (error) {
-    console.error("Fel vid uppladdning:", error);
+    console.error("Fel vid uppladdning i server.js:", error);
     res.status(500).json({ message: "Serverfel vid uppladdning." });
   }
 });

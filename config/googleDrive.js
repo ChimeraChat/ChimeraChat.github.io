@@ -20,7 +20,7 @@ const drive = google.drive({ version: "v3", auth });
 async function listFiles() {
     try {
         const response = await drive.files.list({});
-        console.log(response);
+        console.log("response in drive.js", response);
     } catch (error) {
         console.error('API Error:', error);
     }
@@ -45,7 +45,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
         console.log("Fil uppladdad:", response.data);
         return response.data.id;
     } catch (error) {
-        console.error("Fel vid uppladdning:", error);
+        console.error("Fel vid uppladdning drive.js:", error);
         return null;
     }
 };
