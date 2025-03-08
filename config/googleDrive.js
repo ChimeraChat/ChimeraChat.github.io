@@ -1,13 +1,9 @@
 import { google } from "googleapis";
-import { fileURLToPath } from "url";
 import multer from "multer";
 import dotenv from "dotenv";
-import req from "express/lib/request.js";
-
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
 const storage = multer.diskStorage();
 const upload = multer({storage: storage});
 
@@ -32,7 +28,7 @@ export const uploadFileToDrive = async (fileBuffer, fileName, mimeType) => {
             },
             media: {
                 mimeType: mimeType, // Använd den faktiska MIME-typen från filen
-                body: new Buffer.from(req.file.buffer), // Använd buffern direkt
+                body: Buffer.from(fileBuffer), // Använd buffern direkt
             },
         });
 
@@ -45,4 +41,4 @@ export const uploadFileToDrive = async (fileBuffer, fileName, mimeType) => {
 };
 
 // Express route för att hantera uppladdning från klienten
-export const uploadMiddleware = upload.single("fileUpload");
+export const uploadMiddleware = upload.single("fileupload");

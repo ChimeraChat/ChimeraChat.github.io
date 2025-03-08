@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
-import req from "express/lib/request.js";
 
 const router = express.Router();
 
@@ -47,15 +46,16 @@ app.post("/upload", uploadMiddleware, async (req, res) => {
     return res.status(400).json({ message: "Ingen fil uppladdad!" });
   }
 
-  const fileBuffer = req.file.buffer;
-  const fileName = req.file.originalname;
-  const mimeType = req.file.mimetype;
-
   try {
+    const fileBuffer = req.file.buffer;
+    const fileName = req.file.originalname;
+    const mimeType = req.file.mimetype;
     const fileId = await uploadFileToDrive(fileBuffer, fileName, mimeType);
+
     if (!fileId) {
       return res.status(500).json({ message: "Fel vid uppladdning." });
     }
+
     const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
     res.json({ message: "Uppladdning lyckades!", fileUrl });
   } catch (error) {
