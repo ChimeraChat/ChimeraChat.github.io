@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const storage = multer.diskStorage("FF");
+const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
 
 
