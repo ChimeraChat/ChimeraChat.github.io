@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const storage = multer.diskStorage();
+const storage = multer.diskStorage("FF");
 const upload = multer({storage: storage});
 
 
@@ -20,8 +20,7 @@ const drive = google.drive({ version: "v3", auth });
 async function listFiles() {
     try {
         const response = await drive.files.list({});
-        console.log("API DID NOTHING")
-        //console.log(response);
+        console.log(response);
     } catch (error) {
         console.error('API Error:', error);
     }
