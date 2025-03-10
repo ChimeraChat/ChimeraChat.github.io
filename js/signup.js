@@ -1,45 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const signupForm = document.getElementById("signupForm");
-    let isSubmitting = false;  //Lägg till flagga
+import { signupUser } from "/api.js";
 
-    if (signupForm) {
-        signupForm.addEventListener("submit", async (event) => {
-            if (isSubmitting) return;  //Stoppa om en request redan skickats
-            isSubmitting = true;
-            event.preventDefault();
+function updateMessage (message, isSuccess) {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = message;
+    messageElement.style.color = isSuccess ? "green" : "red";
+}
 
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            const email = document.getElementById("email").value;
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-            try {
-                const response = await fetch("/signup", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username, password, email })
-                }); //signup
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
 
-                const messageElement = document.getElementById("message");
+    try {
+        const data = await signupUser("/signup", { username, password, email });
 
-                if (response.ok) {
-                    messageElement.textContent = "Registrering lyckades. Du blir strax omdirigerad till inloggningssidan";
-                    messageElement.style.color = "green";
-                } else {
-                    messageElement.textContent = "Registrering misslyckades.";
-                    messageElement.style.color = "red";
-                }
-            } catch (error) {
-                alert("Serverfel vid registrering.");
-
-            } finally {
-                isSubmitting = false;  //Återställ flaggan
-
-                // Vänta 3 sekunder och skicka användaren till inloggningssidan
-                setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 3000);
-
-            }
-        });
+        if (data.ok) {
+            updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 3000);
+        } else {
+            updateMessage(data.message || "Registrering misslyckades.", false);
+        }
+    } catch (error) {
+        alert("Serverfel vid registrering.");
     }
 });
+
+
