@@ -1,3 +1,16 @@
+import { handleFileUpload, loadFiles } from 'js/files.js';
+
+document.addEventListener("DOMContentLoaded", function () {
+    const uploadForm = document.getElementById("uploadForm");
+    uploadForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        await handleFileUpload();
+        await loadFiles();
+    });
+});
+
+
+
 document.getElementById("signupForm").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent page reload
 
