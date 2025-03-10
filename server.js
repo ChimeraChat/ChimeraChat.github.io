@@ -1,6 +1,6 @@
 import express from 'express';
+import { Pool } from 'pg';
 import path from 'path';
-import pkg from 'pg';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config({ path: 'googledrive.env' });
@@ -8,23 +8,15 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
+import { dbConfig } from './config/db.js';
 
-const router = express.Router();
+const pool = new Pool(dbConfig);
 
-const { Pool } = pkg;
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// PostgreSQL connection pool
-export const pool = new Pool({
-  user: process.env.POSTGRESQL_ADDON_USER,
-  host: process.env.POSTGRESQL_ADDON_HOST,
-  database: process.env.POSTGRESQL_ADDON_DB,
-  password: process.env.POSTGRESQL_ADDON_PASSWORD,
-  port: process.env.POSTGRESQL_ADDON_PORT,
-});
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -62,62 +54,65 @@ app.post('/upload', uploadMiddleware, async (req, res) => {
   }
 });
 
-
 // Registrerings-API
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
-
   const { email, username, password } = req.body;
+
   try {
+    const client = await pool.connect();
+    await client.query('BEGIN');  // Starta en transaktion
+
     if (!email || !username || !password) {
       return res.status(400).json({ message: "Alla fält måste fyllas i." });
     }
 
     const existingUser = await pool.query(
-        'SELECT userid FROM chimerachat_accounts WHERE email = $2 OR username = $3',
+        'SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2',
         [email, username]
     );
+
     if (existingUser.rows.length > 0) {
+      await client.query('ROLLBACK');
       return res.status(400).json({ message: "E-post eller användarnamn används redan!" });
     }
 
-    // Hasha lösenord
+    // Skapa användare
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("🔑 Hashed Password:", hashedPassword);
-
-
-    console.log("👉 Börjar registreringsprocessen...");
-    // Lägg till användare i databasen
-    const result = await pool.query(
-        'INSERT INTO chimerachat_accounts(email, username) VALUES ($2, $3)',
+    const userResult = await client.query(
+        'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
         [email, username]
     );
 
-    if (result.rows.length === 0) {
+    if (userResult.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
+    const { userid } = userResult.rows[0];
 
+    // Spara det krypterade lösenordet
+    await client.query(
+        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
+        [userid, hashedPassword]
+    );
+    console.log("✅ Lösenord sparat!");
     console.log(`✅ Användare skapad `);
 
-    // Spara lösenordet i en separat tabell
-    await pool.query(
-        'INSERT INTO encrypted_passwords(hashpassword) VALUES ($2)',
-        [hashedPassword]
-    );
-
-    console.log("✅ Lösenord sparat!");
-
+    await client.query('COMMIT'); // Fullfölj transaktionen
     res.status(201).json({
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
-      redirect: '../login.html'
+      redirect: 'login.html'
     });
 
   } catch (err) {
+    await client.query('ROLLBACK'); // Ångra alla ändringar om ett fel inträffar
     console.error("Fel vid registrering:", err);
       res.status(500).json({
         message: "Registrering misslyckades.",
         error: err.message // Lägg till detaljerat felmeddelande
     });
+  } finally {
+    client.release(); // Släpp anslutningen tillbaka till poolen
   }
 });
 

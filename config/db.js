@@ -1,8 +1,7 @@
-/*
 import pkg from 'pg';
 import dotenv from 'dotenv';
+dotenv.config({ path: 'googledrive.env' });
 
-dotenv.config();
 const { Pool } = pkg;
 
 export const pool = new Pool({
@@ -12,4 +11,3 @@ export const pool = new Pool({
     password: process.env.POSTGRESQL_ADDON_PASSWORD,
     port: process.env.POSTGRESQL_ADDON_PORT,
 });
- */
