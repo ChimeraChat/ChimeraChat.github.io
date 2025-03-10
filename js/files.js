@@ -1,11 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const uploadForm = document.getElementById("uploadForm");
-    uploadForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-    });
-});
-
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];
@@ -30,7 +22,9 @@ async function handleFileUpload() {
             const data = await response.json();
             console.log("data in files.js:", data);
             alert(`Uppladdning lyckades!`);
+            setTimeout(() => {
             fileInput.value = "";
+            }, 3000);
         } else {
             throw new Error("Server responded with an error!");
         }
