@@ -1,5 +1,5 @@
 import { signupUser } from "/api.js";
-import { drive } from './config/googleDrive.js';
+import { drive } from '/config/googleDrive.js';
 
 function updateMessage (message, isSuccess) {
     const messageElement = document.getElementById("message");

@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
 document.getElementById("signupForm").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent page reload
 
