@@ -29,6 +29,27 @@ async function listFiles() {
 
 listFiles();
 
+//Skapa mapp till användare
+async function createUserFolder(username) {
+    const folderMetadata = {
+        'name': username,  // Mappens namn baserat på användarnamnet
+        'mimeType': 'application/vnd.google-apps.folder'
+    };
+
+    const driveResponse = await drive.files.create({
+        resource: folderMetadata,
+        fields: 'id'
+    });
+
+    if (driveResponse.status === 200) {
+        return driveResponse.data.id;  // Returnerar ID för den skapade mappen
+    } else {
+        throw new Error('Could not create Google Drive folder');
+    }
+}
+
+export { drive, createUserFolder };
+
 // Funktion för att ladda upp filer till Google Drive
 export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
     try {
@@ -57,6 +78,8 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
         return null;
     }
 };
+
+
 
 // Express route för att hantera uppladdning från klienten
 export const uploadMiddleware = upload.single("fileupload");

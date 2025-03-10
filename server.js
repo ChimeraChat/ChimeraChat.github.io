@@ -7,7 +7,7 @@ dotenv.config({ path: 'googledrive.env' });
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
+import { uploadMiddleware, uploadFileToDrive, createUserFolder } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 dotenv.config();
 
@@ -83,6 +83,15 @@ app.post('/signup', async (req, res) => {
         [email, username]
     );
 
+    // Skapa en mapp på Google Drive
+    const userFolderId = await createUserFolder(username);
+
+    // Lägg till användare i databasen tillsammans med deras folder ID
+    const result = await pool.query(
+        'INSERT INTO chimerachat_accounts(email, username, folder_id) VALUES ($1, $2, $3) RETURNING userid',
+        [email, username, userFolderId]
+    );
+
     if (userResult.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
@@ -93,13 +102,12 @@ app.post('/signup', async (req, res) => {
         'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
         [userid, hashedPassword]
     );
-    console.log("✅ Lösenord sparat!");
-    console.log(`✅ Användare skapad `);
+
+    console.log("✅ Användare skapad och lösenord sparat!");
 
     await client.query('COMMIT'); // Fullfölj transaktionen
     res.status(201).json({
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
-      redirect: 'login.html'
     });
 
   } catch (err) {
@@ -152,6 +160,27 @@ app.post('/login', async (req, res) => {
     res.status(500).json("Serverfel vid inloggning");
   }
 });
+
+//Get user folder ID from database
+app.get('/api/user/files', async (req, res) => {
+  const userId = req.session.userId; // Användarens ID från sessionen
+  const userFolderId = await getUserFolderId(userId); // Hämta mapp-ID från databasen
+
+  try {
+    const driveResponse = await drive.files.list({
+      pageSize: 10,
+      fields: 'nextPageToken, files(id, name)',
+      q: `'${userFolderId}' in parents`  // Listar filer i användarens mapp
+    });
+
+    const files = driveResponse.data.files;
+    res.status(200).json(files);
+  } catch (error) {
+    console.error("Error fetching files from Drive:", error);
+    res.status(500).json({ message: "Failed to fetch files." });
+  }
+});
+
 
 // Standard route
 app.get('/', (req, res) => {

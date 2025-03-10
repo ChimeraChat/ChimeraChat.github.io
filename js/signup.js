@@ -1,4 +1,5 @@
 import { signupUser } from "/api.js";
+import { drive } from './config/googleDrive.js';
 
 function updateMessage (message, isSuccess) {
     const messageElement = document.getElementById("message");
@@ -20,7 +21,7 @@ document.getElementById('signupForm').addEventListener('submit', async function(
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
             setTimeout(() => {
                 window.location.href = "login.html";
-            }, 3000);
+            }, 300);
         } else {
             updateMessage(data.message || "Registrering misslyckades.", false);
         }
@@ -29,4 +30,23 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     }
 });
 
+const userFolderId = await createUserFolder(newUser.username);
+async function createUserFolder(username) {
+    try {
+        const folderMetadata = {
+            'name': username,
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+
+        const folder = await drive.files.create({
+            resource: folderMetadata,
+            fields: 'id'
+        });
+
+        return folder.data.id;  // Returnerar ID för den skapade mappen
+    } catch (error) {
+        console.error("Could not create folder:", error);
+        throw error;
+    }
+}
 
