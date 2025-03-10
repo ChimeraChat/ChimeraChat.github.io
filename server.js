@@ -9,13 +9,12 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
-
+dotenv.config();
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 const app = express();
 const port = process.env.PORT || 3000;
-
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
