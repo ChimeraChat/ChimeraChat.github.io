@@ -1,6 +1,6 @@
 import express from 'express';
-import { Pool } from 'pg';
 import path from 'path';
+import pkg from 'pg';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 dotenv.config({ path: 'googledrive.env' });
@@ -10,10 +10,9 @@ import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 
+
+const { Pool } = pkg;
 const pool = new Pool(dbConfig);
-
-dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 3000;
 
