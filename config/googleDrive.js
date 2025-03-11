@@ -31,6 +31,7 @@ listFiles();
 
 //Skapa mapp till användare
 async function createUserFolder(username) {
+    console.log("👉 username", username);
     const folderMetadata = {
         'name': username,  // Mappens namn baserat på användarnamnet
         'mimeType': 'application/vnd.google-apps.folder'

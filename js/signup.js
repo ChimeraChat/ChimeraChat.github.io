@@ -9,7 +9,7 @@ function updateMessage (message, isSuccess) {
 
 document.getElementById('signupForm').addEventListener('submit', async function(event) {
     event.preventDefault();
-
+    console.log("Signup form submitted");
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const email = document.getElementById("email").value;
