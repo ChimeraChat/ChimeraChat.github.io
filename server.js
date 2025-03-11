@@ -107,7 +107,7 @@ app.post('/signup', async (req, res) => {
 
     // Spara det krypterade lösenordet
     await client.query(
-        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
+        'INSERT INTO encrypted_passwords(id, hashpassword) VALUES ($1, $2)',
         [id, hashedPassword]
     );
 
