@@ -1,9 +1,8 @@
 import { google } from "googleapis";
 import multer from "multer";
 import dotenv from "dotenv";
+dotenv.config({ path: 'googledrive.env' });
 import { Readable } from 'stream';
-
-dotenv.config();
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});

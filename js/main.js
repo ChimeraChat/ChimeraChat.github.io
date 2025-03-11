@@ -1,3 +1,4 @@
+const API_BASE_URL = "https://chimerachat.onrender.com";
 import { handleFileUpload, loadFiles } from './files.js';
 
 document.addEventListener("DOMContentLoaded", function () {

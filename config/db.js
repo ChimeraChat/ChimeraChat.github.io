@@ -1,6 +1,6 @@
 import pkg from 'pg';
 import dotenv from 'dotenv';
-dotenv.config({ path: 'googledrive.env' });
+dotenv.config();
 
 const { Pool } = pkg;
 

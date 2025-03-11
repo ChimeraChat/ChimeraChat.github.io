@@ -3,7 +3,6 @@ import path from 'path';
 import pkg from 'pg';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-dotenv.config({ path: 'googledrive.env' });
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
