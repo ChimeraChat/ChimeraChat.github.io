@@ -42,3 +42,14 @@ document.getElementById("signupForm").addEventListener("submit", async function(
         document.getElementById("message").style.color = "red";
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    const restrictedPages = ["chat.html", "post.html"];
+    const currentPage = window.location.pathname.split("/").pop(); // Extracts current page name
+
+    if (!user && restrictedPages.includes(currentPage)) {
+        alert("You must be logged in to access this page.");
+        window.location.href = "login.html"; // Redirect to login page
+    }
+});
