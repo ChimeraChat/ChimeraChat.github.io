@@ -16,9 +16,10 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const email = document.getElementById("email").value;
+    const messageElement = document.getElementById("message"); // Get the message element once
 
     try {
-        const response = await fetch("https://chimerachat.onrender.com/signup", {
+        const response = await fetch(`${API_BASE_URL}/signup`, { // Use API_BASE_URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password, email })
@@ -27,22 +28,30 @@ document.getElementById("signupForm").addEventListener("submit", async function(
         const data = await response.json();
 
         if (response.ok) {
-            document.getElementById("message").textContent = data.message;
-            document.getElementById("message").style.color = "green";
+            messageElement.textContent = data.message;
 
-            // Vänta 3 sekunder och skicka användaren till inloggningssidan
+            const redirectButton = document.createElement('button'); // Create a button element
+            redirectButton.textContent = 'Go to Login';
+            redirectButton.addEventListener('click', () => {
+                window.location.href = data.redirect;
+            });
+            messageElement.after(redirectButton);
+
             setTimeout(() => {
                 window.location.href = data.redirect;
             }, 3000);
         } else {
-            document.getElementById("message").textContent = data.message || "Error signing up!";
-            document.getElementById("message").style.color = "red";
+            messageElement.textContent = data.message || "Error signing up!";
+            if (data.details) {
+                messageElement.textContent = data.details;
+            }
         }
     } catch (error) {
-        document.getElementById("message").textContent = "Error connecting to server!";
-        document.getElementById("message").style.color = "red";
+        messageElement.textContent = "Error connecting to server! ";
+        console.error("Signup error:", error); // Log the detailed error to the console
     }
 });
+
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -50,7 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentPage = window.location.pathname.split("/").pop(); // Extracts current page name
 
     if (!user && restrictedPages.includes(currentPage)) {
-        alert("You must be logged in to access this page.");
+        const messageElement = document.createElement("div");
+        messageElement.textContent = "You must be logged in to access this page.";
+        messageElement.style.color = "red";
+        document.body.prepend(messageElement);
+        setTimeout(() => {
         window.location.href = "login.html"; // Redirect to login page
+        }, 3000);
     }
 });
