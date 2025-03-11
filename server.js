@@ -88,7 +88,7 @@ app.post('/signup', async (req, res) => {
 
     // Lägg till användare i databasen tillsammans med deras folder ID
     const result = await pool.query(
-        'INSERT INTO chimerachat_accounts(email, username, folder_id) VALUES ($1, $2, $3) RETURNING userid',
+        'INSERT INTO chimerachat_accounts(email, username, userFolderId) VALUES ($1, $2, $3) RETURNING userid',
         [email, username, userFolderId]
     );
 
