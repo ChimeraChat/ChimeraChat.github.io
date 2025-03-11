@@ -27,8 +27,8 @@ async function handleSignup(event) {
             await createUserFolder(newUser.username);
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
             setTimeout(() => {
-                window.location.href = "login.html";
             }, 300);
+            window.location.href = "login.html";
             // Rensar fälten efter lyckad signup.
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";
@@ -52,23 +52,4 @@ async function handleSignup(event) {
 
 document.getElementById('signupForm').addEventListener('submit', handleSignup);
 
-const userFolderId = await createUserFolder(newUser.username);
-async function createUserFolder(username) {
-    try {
-        const folderMetadata = {
-            'name': username,
-            'mimeType': 'application/vnd.google-apps.folder'
-        };
-
-        const folder = await drive.files.create({
-            resource: folderMetadata,
-            fields: 'id'
-        });
-
-        return folder.data.userFolderId;  // Returnerar ID för den skapade mappen
-    } catch (error) {
-        console.error("Could not create folder:", error);
-        throw error;
-    }
-}
 
