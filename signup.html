@@ -16,10 +16,15 @@
 </head>
 <body>
 <header>
-    <a href="index.html">
-        <img src="img/logo.png" alt="Logo Image" id="headerImage">
-    </a>
-    <h1>Chimera Chat</h1>
+    <div class="grid-container">
+        <a href="index.html">
+            <img src="img/logo.png" alt="Logo Image" id="headerImage">
+        </a>
+        <h1>Chimera Chat</h1>
+        <a href="index.html">
+            <img src="img/logo.png" alt="Logo Image" id="headerImage2">
+        </a>
+    </div>
     <button id="darkModeToggle">🌙</button>
     <nav>
         <div class="container">
@@ -56,16 +61,17 @@
                     <input type="email" id="email" name="email" required>
                 </div>
                 <div>
+                    <p>
+                        Already a user?<a href="login.html" > Log in </a>
+                    </p>
+                </div>
+                <div>
                     <input type="submit" name="send" value="Sign up">
                 </div>
             </form>
         </div>
 </main>
-
-<footer>
-    <p>&copy; 2025 ChimeraChat. All rights reserved.</p>
-</footer>
-
+    <script src="js/footer.js"></script>
 </body>
 </html>
 

@@ -17,10 +17,15 @@
 </head>
 
 <header>
-  <a href="index.html">
-    <img src="img/logo.png" alt="Logo Image" id="headerImage">
-  </a>
-  <h1>Chimera Chat</h1>
+  <div class="grid-container">
+    <a href="index.html">
+      <img src="img/logo.png" alt="Logo Image" id="headerImage">
+    </a>
+    <h1>Chimera Chat</h1>
+    <a href="index.html">
+      <img src="img/logo.png" alt="Logo Image" id="headerImage2">
+    </a>
+  </div>
   <button id="darkModeToggle">🌙</button>
   <nav>
     <div class="container">
@@ -37,28 +42,31 @@
 </header>
 
 <body>
-  <main>
-    <div class="wrap">
-        <form id="loginForm">
-          <h2>Log in</h2>
-          <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-          </div>
-          <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-          </div>
-          <div>
-            <input type="submit" name="send" value="Log in">
-          </div>
-        </form>
-        <br><p id="message"></p>
-      </div>
-  </main>
-<footer>
-  <p>&copy; 2025 ChimeraChat. Alla rättigheter förbehållna.</p>
-</footer>
+<main>
+  <div class="wrap">
+      <form id="loginForm">
+        <h2>Log in</h2>
+        <div>
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+          <p>
+            Don't have an account yet? <a href="signup.html" >Sign up</a>
+          </p>
+        </div>
+        <div>
+          <input type="submit" name="send" value="Log in">
+        </div>
+      </form>
+      <br><p id="message"></p>
+    </div>
+</main>
+  <script src="js/footer.js"></script>
 </body>
 </html>
 

@@ -1,9 +1,23 @@
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.querySelector('nav a[href="login.html"]');
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
 
     updateLoginButton();
+
+    if (!user) {
+        restrictedLinks.forEach(link => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                alert("Please log in to access this page.");
+                window.location.href = "login.html";
+            });
+        });
+    }
 
     if (loginForm) {
         loginForm.addEventListener("submit", login);
@@ -20,11 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
             loginButton.textContent = "Log out";
             loginButton.href = "#";
             loginButton.onclick = logout;
+
+            //här ta bort sign up knapp
+
         } else {
             // User is logged out → Keep "Log in"
             loginButton.textContent = "Log in";
             loginButton.href = "login.html";
             loginButton.onclick = null; // Reset to default behavior
+
         }
     }
 
