@@ -26,28 +26,27 @@ document.getElementById("signupForm").addEventListener("submit", async function(
         });
 
         const data = await response.json();
+        console.log(data);
 
         if (response.ok) {
             messageElement.textContent = data.message;
 
-            const redirectButton = document.createElement('button'); // Create a button element
-            redirectButton.textContent = 'Go to Login';
-            redirectButton.addEventListener('click', () => {
-                window.location.href = data.redirect;
-            });
-            messageElement.after(redirectButton);
-
-            setTimeout(() => {
-                window.location.href = data.redirect;
-            }, 3000);
+            if (data.redirect) {
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 3000);
+            } else {
+                console.error('Redirect URL is missing');
+                messageElement.textContent += ' But redirect URL is missing.';
+            }
         } else {
             messageElement.textContent = data.message || "Error signing up!";
             if (data.details) {
-                messageElement.textContent = data.details;
+                messageElement.textContent += ` Details: ${data.details}`;
             }
         }
     } catch (error) {
-        messageElement.textContent = "Error connecting to server! ";
+        messageElement.textContent = "Error connecting to server!";
         console.error("Signup error:", error); // Log the detailed error to the console
     }
 });
