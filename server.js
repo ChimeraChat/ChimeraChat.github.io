@@ -7,7 +7,7 @@ dotenv.config({ path: 'googledrive.env' });
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import { uploadMiddleware, uploadFileToDrive, createUserFolder } from "./config/googleDrive.js";
+import { uploadMiddleware, uploadFileToDrive, createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 dotenv.config();
 
@@ -25,10 +25,18 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 
-// Använd routes
-//app.use('/signup', signupRoute);
-//app.use('/login', loginRoute);
 
+async function getUserFolderId(userId) {
+  const query = 'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1';
+  const result = await pool.query(query, [userId]);
+  if (result.rows.length > 0) {
+    return result.rows[0].userfolderid;
+  } else {
+    throw new Error('User folder ID not found.');
+  }
+}
+
+// Upload route
 app.post('/upload', uploadMiddleware, async (req, res) => {
   console.log("🔍 Filinfo:", req.file.buffer);
   console.log("🔍 Body:", req.body);
@@ -52,7 +60,7 @@ app.post('/upload', uploadMiddleware, async (req, res) => {
   }
 });
 
-// Registrerings-API
+// Registrerings route
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
   const { email, username, password } = req.body;
@@ -85,17 +93,17 @@ app.post('/signup', async (req, res) => {
 
     // Skapa en mapp på Google Drive
     const userFolderId = await createUserFolder(username);
-
-    // Lägg till användare i databasen tillsammans med deras folder ID
-    const result = await pool.query(
-        'INSERT INTO chimerachat_accounts(email, username, userFolderId) VALUES ($1, $2, $3) RETURNING userid',
-        [email, username, userFolderId]
-    );
-
     if (userResult.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
+
+    // Lägg till användare i databasen tillsammans med deras folder ID
     const { userid } = userResult.rows[0];
+    // Add user to the database together with their folder ID
+    await client.query(
+        'UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2',
+        [userFolderId, userid]
+    );
 
     // Spara det krypterade lösenordet
     await client.query(
@@ -122,9 +130,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-
-// log in route
-// Funktion för att hantera inloggning
+// login route
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -161,12 +167,25 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//Logout route
+app.post('/logout', (req, res) => {
+  try {
+    //clearing the user's session
+    req.session.destroy();
+
+    res.status(200).json({ message: "Utloggning lyckades" });
+  } catch (error) {
+    console.error("Fel vid utloggning:", error);
+    res.status(500).json({ message: "Fel vid utloggning" });
+  }
+});
+
 //Get user folder ID from database
 app.get('/api/user/files', async (req, res) => {
   const userId = req.session.userId; // Användarens ID från sessionen
-  const userFolderId = await getUserFolderId(userId); // Hämta mapp-ID från databasen
 
   try {
+    const userFolderId = await getUserFolderId(userId); // Hämta mapp-ID från databasen
     const driveResponse = await drive.files.list({
       pageSize: 10,
       fields: 'nextPageToken, files(id, name)',

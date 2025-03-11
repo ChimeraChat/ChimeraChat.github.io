@@ -22,16 +22,21 @@ async function listFiles() {
     try {
         const response = await drive.files.list({});
         console.log("response in drive.js", response);
+        return response.data;
     } catch (error) {
         console.error('API Error:', error);
+        throw error;
     }
 }
 
-listFiles();
+
 
 //Skapa mapp till användare
 async function createUserFolder(username) {
-    console.log("👉 username", username);
+    if (!username) {
+        throw new Error("Username is not defined");
+    }
+    console.log("username", username);
     const folderMetadata = {
         'name': username,  // Mappens namn baserat på användarnamnet
         'mimeType': 'application/vnd.google-apps.folder'
@@ -49,12 +54,12 @@ async function createUserFolder(username) {
     }
 }
 
-export { drive, createUserFolder };
-
 // Funktion för att ladda upp filer till Google Drive
-export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
+export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFolderId) => {
+    if(!filebuffer || !filename || !mimetype || !parentFolderId){
+        throw new Error("Missing parameters");
+    }
     try {
-
         // Skapa en läsbar stream från buffern
         const bufferStream = new Readable();
         bufferStream.push(filebuffer);
@@ -64,14 +69,13 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
         const response = await drive.files.create({
             requestBody: {
                 name: filename,
-                parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], // ID för mappen i Google Drive
+                parents: [parentFolderId], // ID för mappen i Google Drive
             },
             media: {
                 mimeType: mimetype, // Använd den faktiska MIME-typen från filen
                 body: bufferStream, // Använd stream
             },
         });
-
         console.log("Fil uppladdad:", response.data);
         return response.data.id;
     } catch (error) {
@@ -80,6 +84,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
     }
 };
 
+export { drive, createUserFolder, listFiles };
 
 
 // Express route för att hantera uppladdning från klienten

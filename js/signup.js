@@ -1,5 +1,5 @@
 import { signupUser } from "./api.js";
-import { drive } from '../config/googleDrive.js';
+import { drive, createUserFolder } from '../config/googleDrive.js';
 
 function updateMessage (message, isSuccess) {
     const messageElement = document.getElementById("message");
@@ -7,36 +7,50 @@ function updateMessage (message, isSuccess) {
     messageElement.style.color = isSuccess ? "green" : "red";
 }
 
-document.getElementById('signupForm').addEventListener('submit', async function(event) {
+async function handleSignup(event) {
     event.preventDefault();
     console.log("Signup form submitted");
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     const email = document.getElementById("email").value;
+    let newUser;
 
     try {
-        const data = await signupUser("/signup", { username, password, email });
+        const data = await signupUser("/signup", {username, password, email});
 
         if (data.ok) {
+            newUser = {
+                username: username,
+                password: password,
+                email: email
+            };
+            await createUserFolder(newUser.username);
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
             setTimeout(() => {
                 window.location.href = "login.html";
             }, 300);
+            // Rensar fälten efter lyckad signup.
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("email").value = "";
         } else {
             setTimeout(() => {
-            updateMessage(data.message || "Registrering misslyckades.", false);
+                updateMessage(data.message || "Registrering misslyckades.", false);
             }, 3000);
-            username.value = "";
-            password.value = "";
-            email.value = "";
+            // Rensar fälten
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("email").value = "";
         }
     } catch (error) {
         alert("Serverfel vid registrering.");
-        username.value = "";
-        password.value = "";
-        email.value = "";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("email").value = "";
     }
-});
+}
+
+document.getElementById('signupForm').addEventListener('submit', handleSignup);
 
 const userFolderId = await createUserFolder(newUser.username);
 async function createUserFolder(username) {
