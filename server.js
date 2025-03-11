@@ -56,9 +56,9 @@ app.post('/upload', uploadMiddleware, async (req, res) => {
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
   const { email, username, password } = req.body;
+  const client = await pool.connect();  // Hämta en klient från poolen
 
   try {
-    const client = await pool.connect();
     await client.query('BEGIN');  // Starta en transaktion
 
     if (!email || !username || !password) {
