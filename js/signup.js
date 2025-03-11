@@ -23,10 +23,18 @@ document.getElementById('signupForm').addEventListener('submit', async function(
                 window.location.href = "login.html";
             }, 300);
         } else {
+            setTimeout(() => {
             updateMessage(data.message || "Registrering misslyckades.", false);
+            }, 3000);
+            username.value = "";
+            password.value = "";
+            email.value = "";
         }
     } catch (error) {
         alert("Serverfel vid registrering.");
+        username.value = "";
+        password.value = "";
+        email.value = "";
     }
 });
 
@@ -43,7 +51,7 @@ async function createUserFolder(username) {
             fields: 'id'
         });
 
-        return folder.data.id;  // Returnerar ID för den skapade mappen
+        return folder.data.userFolderId;  // Returnerar ID för den skapade mappen
     } catch (error) {
         console.error("Could not create folder:", error);
         throw error;
