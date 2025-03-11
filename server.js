@@ -8,6 +8,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { uploadMiddleware, uploadFileToDrive, createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
+dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
 
 const { Pool } = pkg;
