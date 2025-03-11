@@ -1,4 +1,4 @@
-import { handleFileUpload, loadFiles } from '/js/files.js';
+import { handleFileUpload, loadFiles } from './files.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");

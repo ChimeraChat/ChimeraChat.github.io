@@ -1,5 +1,3 @@
-
-
 // api.js
 async function signupUser(userData) {
     try {
