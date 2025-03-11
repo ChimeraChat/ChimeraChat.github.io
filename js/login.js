@@ -1,4 +1,5 @@
 import { loginUser } from './api.js';
+const API_BASE_URL = "https://your-api-base-url";
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
@@ -22,7 +23,7 @@ async function logout() {
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
         try {
-            const response = await fetch("/logout", {
+            const response = await fetch(`${API_BASE_URL}/logout`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({userId: user.userid})
@@ -34,12 +35,22 @@ async function logout() {
             }
 
             sessionStorage.removeItem("user");
-            alert("Du har loggats ut!");
+            const message = document.createElement("div");
+            message.textContent = "You've been logged out!";
+            document.body.prepend(message);
+            setTimeout(()=>{
+                message.remove();
+                window.location.href = "index.html";
+            }, 3000)
+
             updateLoginButton();
-            window.location.href = "index.html";
+
         } catch (error) {
-            console.error("Fel vid utloggning:", error);
-            alert(error.message || "Fel vid utloggning:");
+            console.error("Logout error:", error);
+            const message = document.createElement("div");
+            message.textContent = error.message || "Logout failed: An unexpected error occured.";
+            document.body.prepend(message);
+            setTimeout(()=>message.remove(),3000)
         }
     }
 }
@@ -48,16 +59,25 @@ function setupRestrictedLinks() {
     const user = JSON.parse(sessionStorage.getItem("user"));
     const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
 
-    if (!user) {
-        restrictedLinks.forEach(link => {
+    restrictedLinks.forEach(link => {
+        // Remove old event listeners
+        const oldLink = link.cloneNode(true);
+        link.replaceWith(oldLink);
+        if (!user) {
             link.addEventListener("click", (event) => {
                 event.preventDefault();
-                alert("Please log in to access this page.");
-                window.location.href = "login.html";
+                const message = document.createElement("div");
+                message.textContent = "Please log in to access this page.";
+                document.body.prepend(message);
+                setTimeout(()=>{
+                    message.remove();
+                    window.location.href = "login.html";
+                },3000)
             });
-        });
-    }
+        }
+    });
 }
+
 
 async function handleLogin(event) {
     event.preventDefault();
@@ -69,16 +89,27 @@ async function handleLogin(event) {
         const data = await loginUser({ username, password });
         if (data.ok) {
             sessionStorage.setItem("user", JSON.stringify(data.user));
-            alert("Inloggning lyckades!");
-            window.location.href = "home.html";
+            const message = document.createElement("div");
+            message.textContent = "Login success!";
+            document.body.prepend(message);
+            setTimeout(()=>{
+                message.remove();
+                window.location.href = "home.html";
+            }, 3000)
             updateLoginButton();
             setupRestrictedLinks();
         } else {
-            alert(data.message || "Inloggning misslyckades.");
+            const message = document.createElement("div");
+            message.textContent = data.message || "Login failed.";
+            document.body.prepend(message);
+            setTimeout(()=>message.remove(),3000)
         }
     } catch (error) {
         console.error("Fel vid inloggning:", error);
-        alert("Serverfel vid inloggning.");
+        const message = document.createElement("div");
+        message.textContent = data.message || "Login failed, Server error.";
+        document.body.prepend(message);
+        setTimeout(()=>message.remove(),3000)
     }
 }
 
