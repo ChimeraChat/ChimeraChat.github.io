@@ -28,8 +28,6 @@ async function listFiles() {
     }
 }
 
-
-
 //Skapa mapp till användare
 async function createUserFolder(username) {
     if (!username) {
