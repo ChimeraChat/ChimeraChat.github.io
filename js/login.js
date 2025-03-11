@@ -1,4 +1,6 @@
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.querySelector('nav a[href="login.html"]');
