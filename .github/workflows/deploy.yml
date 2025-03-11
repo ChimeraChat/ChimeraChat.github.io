@@ -17,4 +17,4 @@ jobs:
       - name: Use Google Cloud Credentials
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/gcp-key.json
-          # Använd dina verktyg och skript som kräver Google Cloud autentisering här
+          
