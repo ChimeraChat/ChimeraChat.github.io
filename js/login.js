@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const loginButton = document.querySelector('nav a[href="login.html"]');
     const user = JSON.parse(sessionStorage.getItem("user"));
-    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="post.html"]');
+    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
 
     updateLoginButton();
 
