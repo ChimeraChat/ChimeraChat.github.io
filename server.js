@@ -161,7 +161,10 @@ app.post('/login', async (req, res) => {
     // Ta bort lösenord innan vi skickar tillbaka data
     delete user.hashpassword;
 
-    res.json({ message: "Inloggning lyckades!", user });
+    res.json({
+      message: "Inloggning lyckades!", user,
+      redirect: "home.html"
+    });
 
   } catch (err) {
     console.error("Inloggningsfel:", err);
@@ -175,7 +178,9 @@ app.post('/logout', (req, res) => {
     //clearing the user's session
     req.session.destroy();
 
-    res.status(200).json({ message: "Utloggning lyckades" });
+    res.status(200).json({ message: "Utloggning lyckades",
+      redirect: "index.html"
+    });
   } catch (error) {
     console.error("Fel vid utloggning:", error);
     res.status(500).json({ message: "Fel vid utloggning" });

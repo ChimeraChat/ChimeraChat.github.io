@@ -98,10 +98,10 @@ async function handleLogin(event) {
             document.body.prepend(message);
             setTimeout(()=>{
                 message.remove();
-                window.location.href = "home.html";
             }, 3000)
             updateLoginButton();
             setupRestrictedLinks();
+
         } else {
             const message = document.createElement("div");
             message.textContent = data.message || "Login failed.";
