@@ -59,28 +59,6 @@ async function logout() {
     }
 }
 
-function setupRestrictedLinks() {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
-
-    restrictedLinks.forEach(link => {
-        // Remove old event listeners
-        const oldLink = link.cloneNode(true);
-        link.replaceWith(oldLink);
-        if (!user) {
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-                const message = document.createElement("div");
-                message.textContent = "Please log in to access this page.";
-                document.body.prepend(message);
-                setTimeout(()=>{
-                    message.remove();
-                    window.location.href = "login.html";
-                },3000)
-            });
-        }
-    });
-}
 
 
 async function handleLogin(event) {

@@ -39,6 +39,7 @@ document.getElementById("signupForm").addEventListener("submit", async function(
 
             setTimeout(() => {
             }, 3000);
+            window.location.href = "login.html"; // Redirect to index.html after successful signup
 
         } else {
             messageElement.textContent = data.message || "Error signing up!";
@@ -52,20 +53,28 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     }
 });
 
-/**
-document.addEventListener("DOMContentLoaded", () => {
+
+function setupRestrictedLinks() {
     const user = JSON.parse(sessionStorage.getItem("user"));
+    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
 
-    const restrictedPages = ["chat.html", "post.html"];
-    const currentPage = window.location.pathname.split("/").pop(); // Extracts current page name
+    restrictedLinks.forEach(link => {
+        // Remove old event listeners
+        const oldLink = link.cloneNode(true);
+        link.replaceWith(oldLink);
+        if (!user) {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                const message = document.createElement("div");
+                message.textContent = "Please log in to access this page.";
+                document.body.prepend(message);
+                setTimeout(()=>{
+                    message.remove();
+                    window.location.href = "login.html";
+                },3000)
+            });
+        }
+    });
+}
 
-    if (!user && restrictedPages.includes(currentPage)) {
-        const messageElement = document.createElement("div");
-        messageElement.textContent = "You must be logged in to access this page.";
-        messageElement.style.color = "red";
-        document.body.prepend(messageElement);
-        setTimeout(() => {
-        window.location.href = "login.html"; // Redirect to login page
-        }, 3000);
-    }
-}); */
+setupRestrictedLinks()

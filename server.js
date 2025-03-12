@@ -1,5 +1,4 @@
 import express from 'express';
-import { google } from "googleapis";
 import path from 'path';
 import pkg from 'pg';
 import bodyParser from 'body-parser';
@@ -45,16 +44,12 @@ app.post('/upload', uploadMiddleware, async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "Ingen fil uppladdad!" });
   }
+  const userFolderId = await getUserFolderId(req.session.userId);
 
   try {
-    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype);
-
-    if (!fileId) {
-      return res.status(500).json({ message: "Fel vid uppladdning." });
-    }
-
+    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype, userFolderId);
     const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
-    res.json({ message: "Uppladdning lyckades!", fileUrl });
+    res.json({ message: "Uppladdning lyckades!" });
   } catch (error) {
     console.error("Fel vid uppladdning i server.js:", error);
     res.status(500).json({ message: "Serverfel vid uppladdning." });
@@ -92,14 +87,14 @@ app.post('/signup', async (req, res) => {
         [email, username]
     );
 
-    // Skapa en mapp på Google Drive
-    const userFolderId = await createUserFolder(username);
     if (userResult.rows.length === 0) {
       throw new Error("Misslyckades med att skapa användaren i databasen.");
     }
-
     // Lägg till användare i databasen tillsammans med deras folder ID
     const { userid } = userResult.rows[0];
+    // Skapa en mapp på Google Drive
+    const userFolderId = await createUserFolder(username);
+
     // Add user to the database together with their folder ID
     await client.query(
         'UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2',
@@ -117,7 +112,6 @@ app.post('/signup', async (req, res) => {
     await client.query('COMMIT'); // Fullfölj transaktionen
     res.status(201).json({
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
-      redirect:'/login.html'
     });
 
   } catch (err) {
@@ -151,13 +145,11 @@ app.post('/login', async (req, res) => {
     }
 
     const user = result.rows[0];
-
     // Verifiera lösenordet
     const isMatch = await bcrypt.compare(password, user.hashpassword);
     if (!isMatch) {
       return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
     }
-
     // Ta bort lösenord innan vi skickar tillbaka data
     delete user.hashpassword;
 

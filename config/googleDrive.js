@@ -35,19 +35,19 @@ async function createUserFolder(username) {
     }
     console.log("username", username);
     const folderMetadata = {
-        'name': username,  // Mappens namn baserat på användarnamnet
+        'name': username + "'s Folder", // Mappens namn baserat på användarnamnet
         'mimeType': 'application/vnd.google-apps.folder'
     };
-
-    const driveResponse = await drive.files.create({
-        resource: folderMetadata,
-        fields: 'id'
-    });
-
-    if (driveResponse.status === 200) {
-        return driveResponse.data.id;  // Returnerar ID för den skapade mappen
-    } else {
-        throw new Error('Could not create Google Drive folder');
+    try {
+        const driveResponse = await drive.files.create({
+            resource: folderMetadata,
+            fields: 'userFolderId'
+        });
+        console.log("Mapp skapad med ID:", driveResponse.data.userFolderId);
+        return driveResponse.data.id;
+    } catch (error) {
+        console.error("Kunde inte skapa mapp:", error);
+        throw error;  // Kasta ett fel som kan fångas och hanteras uppströms
     }
 }
 
