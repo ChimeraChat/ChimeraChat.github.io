@@ -201,6 +201,25 @@ app.get('/api/user/files', async (req, res) => {
   }
 });
 
+app.get('/api/files', async (req, res) => {
+  try {
+    const userId = req.session.userId;  // Användarens ID från sessionen, se till att sessionen är korrekt inställd
+    const userFolderId = await getUserFolderId(userId);  // Hämta användarens Google Drive mapp ID från databasen
+
+    const driveResponse = await drive.files.list({
+      q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
+      fields: 'nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)',  // Ange vilka fält som ska returneras
+      pageSize: 100  // Antal filer att returnera
+    });
+
+    const files = driveResponse.data.files;
+    res.status(200).json(files);
+  } catch (error) {
+    console.error("Error fetching files from Drive:", error);
+    res.status(500).json({ message: "Failed to fetch files.", error: error.message });
+  }
+});
+
 
 // Standard route
 app.get('/', (req, res) => {
