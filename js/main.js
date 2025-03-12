@@ -26,8 +26,8 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     try {
         const response = await fetch(`${API_BASE_URL}/signup`, { // Use API_BASE_URL
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password, email })
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({username, password, email})
         });
 
         const data = await response.json();
@@ -37,16 +37,9 @@ document.getElementById("signupForm").addEventListener("submit", async function(
             messageElement.textContent = data.message;
             console.log(data.message);
 
-            if (data.redirect) {
-                console.log(data.redirect);
-                setTimeout(() => {
-                }, 3000);
-                window.location.href = "login.html";
-            } else {
-                console.error('Redirect URL is missing');
-                console.log(response);
-                messageElement.textContent += ' But redirect URL is missing.';
-            }
+            setTimeout(() => {
+            }, 3000);
+
         } else {
             messageElement.textContent = data.message || "Error signing up!";
             if (data.details) {

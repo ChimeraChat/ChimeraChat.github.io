@@ -28,7 +28,6 @@ async function handleSignup(event) {
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
             setTimeout(() => {
             }, 300);
-            window.location.href = "login.html";
             // Rensar fälten efter lyckad signup.
             document.getElementById("username").value = "";
             document.getElementById("password").value = "";

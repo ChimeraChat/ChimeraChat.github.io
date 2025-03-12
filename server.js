@@ -117,6 +117,7 @@ app.post('/signup', async (req, res) => {
     await client.query('COMMIT'); // Fullfölj transaktionen
     res.status(201).json({
       message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
+      redirect:'/login.html'
     });
 
   } catch (err) {
