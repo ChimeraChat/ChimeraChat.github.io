@@ -2,7 +2,7 @@ import { handleFileUpload, loadFiles } from './files.js';
 import { apiRequest } from './api.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-    const uploadForm = document.getElementById("fileupload");
+    const uploadForm = document.getElementById("uploadForm");
     if (uploadForm) {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
