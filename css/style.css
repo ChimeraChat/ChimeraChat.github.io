@@ -196,11 +196,10 @@ footer {
 /* Image Styling */
 .grid-item img {
     width: 100%;
-    max-height: 200px;
-    height: auto;
+    max-height: 400px;
     object-fit: cover;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 1px;
 }
 .grid-item.tall img{
     width: 100%;
@@ -239,7 +238,17 @@ footer {
     grid-column: span 1;
     grid-row: span 1;
 }
-.small img {
+.small img{
+    height: 100%;
+    width: 100%;
+}
+.profile{
+    background-color: rgb(244, 220, 251);
+    text-align: center;
+    grid-column: span 1;
+    grid-row: span 1;
+}
+.profile img {
     width: 50%;
     height: auto;
     display: flex;
@@ -310,7 +319,7 @@ a{
     }
 
     #loginForm,#signupForm,#contactForm {
-        background-color: #573f8a;
+        background-color: rgba(87, 63, 138, 0.91);
         border-color: rgba(125, 89, 191, 0.86);
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
     }
@@ -334,7 +343,7 @@ a{
         <img src="img/logo_dark.png" alt="Logo Image" id="headerImage">
     }
     #headerImage2{
-    <img src="img/logo_dark.png" alt="Logo Image" id="headerImage2">
+        <img src="img/logo_dark.png" alt="Logo Image" id="headerImage2">
     }
     a {
         color: #8ab4f8; /* Light blue for links */
