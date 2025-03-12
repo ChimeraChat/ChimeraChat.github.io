@@ -3,19 +3,23 @@ const API_BASE_URL = "https://your-api-base-url";
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
+    const signupButton = document.querySelector('nav a[href="signup.html"]');
+
     if (!loginButton) return;
+    if (!signupButton) return;
 
     if (sessionStorage.getItem("user")) {
         // User is logged in → Change to "Log out"
         loginButton.textContent = "Log out";
         loginButton.href = "#";
         loginButton.onclick = logout;
-
+        signupButton.style.visibility = 'hidden';
     } else {
         // User is logged out → Keep "Log in"
         loginButton.textContent = "Log in";
         loginButton.href = "login.html";
         loginButton.onclick = null; // Reset to default behavior
+        signupButton.style.visibility = 'visible';
     }
 }
 
