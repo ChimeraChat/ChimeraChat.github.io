@@ -24,7 +24,8 @@ async function handleSignup(event) {
                 password: password,
                 email: email
             };
-            await createUserFolder(newUser.username);
+            const folderId = await createUserFolder(newUser.username);
+            newUser.folderId = folderId;
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
             setTimeout(() => {
             }, 300);

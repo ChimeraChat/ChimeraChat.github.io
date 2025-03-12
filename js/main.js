@@ -1,8 +1,8 @@
-const API_BASE_URL = "https://chimerachat.onrender.com";
 import { handleFileUpload, loadFiles } from './files.js';
+import { apiRequest } from './api.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-    const uploadForm = document.getElementById("uploadForm");
+    const uploadForm = document.getElementById("fileupload");
     if (uploadForm) {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-
 document.getElementById("signupForm").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent page reload
 
@@ -22,29 +21,25 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     const password = document.getElementById("password").value;
     const email = document.getElementById("email").value;
     const messageElement = document.getElementById("message"); // Get the message element once
+    const signupForm = document.getElementById("signupForm");
 
     try {
-        const response = await fetch(`${API_BASE_URL}/signup`, { // Use API_BASE_URL
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username, password, email})
-        });
-
-        const data = await response.json();
-        console.log(data);
+        const response = await apiRequest('/signup', 'POST', { username, password, email });
 
         if (response.ok) {
-            messageElement.textContent = data.message;
-            console.log(data.message);
+            messageElement.textContent = response.message;
+            console.log(response.message);
 
             setTimeout(() => {
-            }, 3000);
+            }, 300);
             window.location.href = "login.html"; // Redirect to index.html after successful signup
 
+            signupForm.reset();
+
         } else {
-            messageElement.textContent = data.message || "Error signing up!";
-            if (data.details) {
-                messageElement.textContent += ` Details: ${data.details}`;
+            messageElement.textContent = response.message || "Error signing up!";
+            if (response.details) {
+                messageElement.textContent += ` Details: ${response.details}`;
             }
         }
     } catch (error) {
@@ -55,26 +50,28 @@ document.getElementById("signupForm").addEventListener("submit", async function(
 
 
 function setupRestrictedLinks() {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
+    const userString = sessionStorage.getItem("user");
+    if (userString) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
 
-    restrictedLinks.forEach(link => {
-        // Remove old event listeners
-        const oldLink = link.cloneNode(true);
-        link.replaceWith(oldLink);
-        if (!user) {
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-                const message = document.createElement("div");
-                message.textContent = "Please log in to access this page.";
-                document.body.prepend(message);
-                setTimeout(()=>{
-                    message.remove();
-                    window.location.href = "login.html";
-                },3000)
-            });
-        }
-    });
+        restrictedLinks.forEach(link => {
+            // Remove old event listeners
+            const oldLink = link.cloneNode(true);
+            link.replaceWith(oldLink);
+            if (!user) {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const message = document.createElement("div");
+                    message.textContent = "Please log in to access this page.";
+                    document.body.prepend(message);
+                    setTimeout(() => {
+                        message.remove();
+                        window.location.href = "login.html";
+                    }, 3000)
+                });
+            }
+        });
+    }
 }
-
 setupRestrictedLinks()

@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -23,7 +22,6 @@ const __dirname = dirname(__filename);
 // Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
-app.use(bodyParser.json());
 
 
 async function getUserFolderId(userId) {
@@ -35,26 +33,6 @@ async function getUserFolderId(userId) {
     throw new Error('User folder ID not found.');
   }
 }
-
-// Upload route
-app.post('/upload', uploadMiddleware, async (req, res) => {
-  console.log("🔍 Filinfo:", req.file.buffer);
-  console.log("🔍 Body:", req.body);
-
-  if (!req.file) {
-    return res.status(400).json({ message: "Ingen fil uppladdad!" });
-  }
-  const userFolderId = await getUserFolderId(req.session.userId);
-
-  try {
-    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype, userFolderId);
-    const fileUrl = `https://drive.google.com/uc?id=${fileId}`;
-    res.json({ message: "Uppladdning lyckades!" });
-  } catch (error) {
-    console.error("Fel vid uppladdning i server.js:", error);
-    res.status(500).json({ message: "Serverfel vid uppladdning." });
-  }
-});
 
 // Registrerings route
 app.post('/signup', async (req, res) => {
@@ -196,6 +174,17 @@ app.get('/api/user/files', async (req, res) => {
   } catch (error) {
     console.error("Error fetching files from Drive:", error);
     res.status(500).json({ message: "Failed to fetch files." });
+  }
+});
+
+app.get('/api/user/id', async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const userFolderId = await getUserFolderId(userId);
+    res.json({ id: userFolderId });
+  } catch (error) {
+    console.error('Error fetching userFolderId:', error);
+    res.status(500).json({ message: 'Failed to fetch userFolderId' });
   }
 });
 

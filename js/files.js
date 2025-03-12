@@ -1,36 +1,35 @@
+//files.js
+import { uploadFileToDrive } from '../config/googleDrive.js';
+
+async function getUserFolderId() {
+    const response = await fetch('/api/user/id');
+    const data = await response.json();
+    return data.id
+}
+
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];
 
-    console.log(file);
     if (!file) {
         alert("Please select a file to upload.");
         return;
     }
 
-    const formData = new FormData();
-    formData.append("fileupload", file);
-    console.log("FormData:", formData);
-
     try {
-        let response = await fetch("/upload", {
-            method: "POST",
-            body: formData,
-        });
-        console.log("response:", response);
-        if (response.ok) {
-            const data = await response.json();
-            console.log("data in files.js:", data);
-            alert(`Uppladdning lyckades!`);
-            setTimeout(() => {
+        const userFolderId = await getUserFolderId();
+        const filebuffer = await file.arrayBuffer();
+        const fileId = await uploadFileToDrive(filebuffer, file.name, file.type, userFolderId);
+        if(fileId){
+            alert("File uploaded successfully!");
+            // Reset the file input
             fileInput.value = "";
-            }, 3000);
         } else {
-            throw new Error("Server responded with an error!");
+            alert("Error uploading the file.")
         }
     } catch (error) {
         console.error("Uppladdningsfel:", error);
-        alert("Serverfel vid uppladdning.");
+        alert("An error occurred while uploading the file.");
     }
 }
 
