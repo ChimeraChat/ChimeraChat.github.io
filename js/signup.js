@@ -16,7 +16,7 @@ async function handleSignup(event) {
     let newUser;
 
     try {
-        const data = await signupUser("/signup", {username, password, email});
+        const data = await signupUser({username, password, email});
 
         if (data.ok) {
             newUser = {
