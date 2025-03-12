@@ -21,7 +21,7 @@ body {
     min-height: 100vh;
     margin: 0 auto;
     font-family: Arial, sans-serif;
-    background: url('../img/Banner.png') no-repeat center center fixed;
+    background: url('../img/Banner_dark.png') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -272,16 +272,6 @@ footer {
     }
 }
 
-li{
-    list-style-image: repeating-linear-gradient(#c9c2da, #8b80a1, rgb(85, 78, 104), rgb(64, 62, 78));
-    list-style-position: inside;
-    margin: 0;
-    padding: 0;
-}
-ul{
-    padding: 0;
-    margin: 0;
-}
 a{
     text-decoration: none;
     font-weight: bold;
@@ -338,12 +328,6 @@ a{
         background-color: rgb(78, 75, 177);
         color: rgba(255, 255, 255, 0.97);
         border: 2px solid rgba(192, 185, 255, 0.97);
-    }
-    #headerImage{
-        <img src="img/logo_dark.png" alt="Logo Image" id="headerImage">
-    }
-    #headerImage2{
-        <img src="img/logo_dark.png" alt="Logo Image" id="headerImage2">
     }
     a {
         color: #8ab4f8; /* Light blue for links */
