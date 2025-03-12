@@ -3,12 +3,17 @@ import { handleFileUpload, loadFiles } from './files.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
-    uploadForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
-        await handleFileUpload();
-        await loadFiles();
-    });
+    if (uploadForm) {
+        uploadForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            await handleFileUpload();
+            await loadFiles();
+        });
+    } else {
+        console.error("uploadForm not found in DOM");
+    }
 });
+
 
 document.getElementById("signupForm").addEventListener("submit", async function(event) {
     event.preventDefault(); // Prevent page reload
@@ -30,13 +35,16 @@ document.getElementById("signupForm").addEventListener("submit", async function(
 
         if (response.ok) {
             messageElement.textContent = data.message;
+            console.log(data.message);
 
             if (data.redirect) {
+                console.log(data.redirect);
                 setTimeout(() => {
-                    window.location.href = data.redirect;
                 }, 3000);
+                window.location.href = "login.html";
             } else {
                 console.error('Redirect URL is missing');
+                console.log(response);
                 messageElement.textContent += ' But redirect URL is missing.';
             }
         } else {
@@ -51,6 +59,7 @@ document.getElementById("signupForm").addEventListener("submit", async function(
     }
 });
 
+/**
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -66,4 +75,4 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "login.html"; // Redirect to login page
         }, 3000);
     }
-});
+}); */
