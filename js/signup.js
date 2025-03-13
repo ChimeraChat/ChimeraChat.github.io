@@ -9,6 +9,22 @@ function updateMessage(message, isSuccess) {
     messageElement.style.color = isSuccess ? "green" : "red";
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    const signupForm = document.getElementById("signupForm");
+    if (signupForm) {
+        signupForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent page reload
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+            await handleSignup(username, password, email);
+            signupForm.reset(); // Rensa formuläret efter försök till registrering
+        });
+    } else {
+        console.error("Signup form not found in DOM");
+    }
+});
+
 
 async function handleSignup(username, password, email) {
     try {
