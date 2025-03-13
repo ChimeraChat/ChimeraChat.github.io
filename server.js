@@ -7,6 +7,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
+import {getUserFolderId} from "./js/api.js";
 dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
 

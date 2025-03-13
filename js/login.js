@@ -1,4 +1,4 @@
-import { loginUser } from './api.js';
+
 import { setupRestrictedLinks } from './main.js';
 const API_BASE_URL = "https://your-api-base-url";
 
@@ -28,10 +28,8 @@ async function logout() {
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
         try {
-            const response = await fetch(`${API_BASE_URL}/logout`, {
+            const response = await fetch('/logout', {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({userId: user.userid})
             });
 
             if (!response.ok) {
@@ -67,7 +65,14 @@ async function handleLogin(event) {
     const password = document.getElementById("password").value;
 
     try {
-        const data = await loginUser({ username, password });
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+            const data = await response.json();
         if (data.ok) {
             sessionStorage.setItem("user", JSON.stringify(data.user));
             const message = document.createElement("div");
