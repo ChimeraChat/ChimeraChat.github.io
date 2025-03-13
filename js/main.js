@@ -51,27 +51,35 @@ document.getElementById("signupForm").addEventListener("submit", async function(
 
 function setupRestrictedLinks() {
     const userString = sessionStorage.getItem("user");
-    if (userString) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
+    let user = null;
 
+    // Parse the user data if it's available
+    if (userString) {
+        try {
+            user = JSON.parse(userString);
+        } catch (error) {
+            console.error('Error parsing user data from session storage:', error);
+        }
+    }
+
+    // If a user is not logged in, handle restricted links
+    if (!user) {
+        const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
         restrictedLinks.forEach(link => {
-            // Remove old event listeners
-            const oldLink = link.cloneNode(true);
-            link.replaceWith(oldLink);
-            if (!user) {
-                link.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    const message = document.createElement("div");
-                    message.textContent = "Please log in to access this page.";
-                    document.body.prepend(message);
-                    setTimeout(() => {
-                        message.remove();
-                        window.location.href = "login.html";
-                    }, 3000)
-                });
-            }
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                const message = document.createElement("div");
+                message.textContent = "Please log in to access this page.";
+                document.body.prepend(message);
+
+                // Redirect to login after 3 seconds
+                setTimeout(() => {
+                    message.remove();
+                    window.location.href = "login.html";
+                }, 3000);
+            });
         });
     }
 }
-setupRestrictedLinks()
+
+setupRestrictedLinks();
