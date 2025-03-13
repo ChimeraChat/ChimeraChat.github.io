@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import { uploadMiddleware, uploadFileToDrive, createUserFolder, drive } from "./config/googleDrive.js";
+import { createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 
-async function getUserFolderId(userId) {
+/*async function getUserFolderId(userId) {
   const query = 'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1';
   const result = await pool.query(query, [userId]);
   if (result.rows.length > 0) {
@@ -32,9 +32,47 @@ async function getUserFolderId(userId) {
   } else {
     throw new Error('User folder ID not found.');
   }
-}
+}*/
 
-// Registrerings route
+// Signup route
+app.post('/signup', async (req, res) => {
+  const { email, username, password } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const userExists = await client.query('SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2', [email, username]);
+
+    if (userExists.rows.length > 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ message: "Email or username already exists!" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userResult = await client.query('INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid', [email, username]);
+
+    if (userResult.rows.length === 0) {
+      throw new Error("Failed to create user in the database.");
+    }
+
+    const { userid } = userResult.rows[0];
+    const userFolderId = await createUserFolder(username); // This should catch errors internally and handle them appropriately
+
+    await client.query('UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2', [userFolderId, userid]);
+    await client.query('INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)', [userid, hashedPassword]);
+    await client.query('COMMIT');
+
+    res.status(201).json({ message: 'Your account has been created! Redirecting to the login page...', redirect: '/login.html' });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error("Error during registration:", err);
+    res.status(500).json({ message: "Registration failed.", error: err.message });
+  } finally {
+    client.release();
+  }
+});
+
+
+/*/ Registrerings route
 app.post('/signup', async (req, res) => {
   console.log("👉 Mottaget POST /signup:", req.body);
   const { email, username, password } = req.body;
@@ -102,7 +140,7 @@ app.post('/signup', async (req, res) => {
   } finally {
     client.release(); // Släpp anslutningen tillbaka till poolen
   }
-});
+});*/
 
 // login route
 app.post('/login', async (req, res) => {
