@@ -196,7 +196,7 @@ app.get('/api/files', async (req, res) => {
     const driveResponse = await drive.files.list({
       q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
       fields: 'nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)',  // Ange vilka fält som ska returneras
-      pageSize: 100  // Antal filer att returnera
+      pageSize: 10  // Antal filer att returnera
     });
 
     const files = driveResponse.data.files;
