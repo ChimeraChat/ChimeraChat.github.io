@@ -1,7 +1,6 @@
 // api.js
 const API_BASE_URL = "https://chimerachat.onrender.com";
 
-
 async function apiRequest(endpoint, method, userData) {
     try {
         const response = await fetch(endpoint, {
@@ -26,6 +25,12 @@ async function apiRequest(endpoint, method, userData) {
     }
 }
 
+async function getUserFolderId() {
+    const response = await fetch('/api/user/id');
+    const data = await response.json();
+    return data.id
+}
+
 async function signupUser(userData) {
     return apiRequest('/signup', 'POST', userData);
 }
@@ -34,39 +39,9 @@ async function loginUser(userData) {
     return apiRequest('/login', 'POST', userData);
 }
 
-export { signupUser, loginUser, apiRequest };
+export { getUserFolderId, signupUser, loginUser, apiRequest };
 
 
-/**
- *
- // api.js
- const API_BASE_URL = "https://chimerachat.onrender.com";
-
- export async function signup(username, password, email) {
- const response = await fetch(`${API_BASE_URL}/signup`, {
- method: "POST",
- headers: { "Content-Type": "application/json" },
- body: JSON.stringify({ username, password, email })
- });
- return response.json();
- }
-
- export async function login(username, password) {
- const response = await fetch(`${API_BASE_URL}/login`, {
- method: "POST",
- headers: { "Content-Type": "application/json" },
- body: JSON.stringify({ username, password })
- });
- return response.json();
- }
-
- export async function uploadFile(file) {
- const formData = new FormData();
- formData.append('file', file);
- const response = await fetch(`${API_BASE_URL}/upload`, {
- method: "POST",
- body: formData,
- });
  return response.json();
  }
 
@@ -83,4 +58,3 @@ export { signupUser, loginUser, apiRequest };
  });
  return response.json();
  }
- */

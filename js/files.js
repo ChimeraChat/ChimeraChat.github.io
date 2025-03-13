@@ -1,12 +1,6 @@
 //files.js
 import { uploadFileToDrive } from '../config/googleDrive.js';
 
-async function getUserFolderId() {
-    const response = await fetch('/api/user/id');
-    const data = await response.json();
-    return data.id
-}
-
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];

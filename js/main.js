@@ -1,7 +1,5 @@
 import { handleFileUpload, loadFiles } from './files.js';
-import { apiRequest } from './api.js';
-
-setupRestrictedLinks();
+import { handleSignup } from './signup.js'; // Importera handleSignup från signup.js
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
@@ -16,37 +14,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-document.getElementById("signupForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent page reload
-
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const email = document.getElementById("email").value;
-    const messageElement = document.getElementById("message"); // Get the message element once
+document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
-
-    try {
-        const response = await apiRequest('/signup', 'POST', { username, password, email });
-
-        if (response.ok) {
-            messageElement.textContent = response.message;
-            console.log(response.message);
-
-            setTimeout(() => {
-            }, 300);
-            window.location.href = "login.html"; // Redirect to index.html after successful signup
-
-            signupForm.reset();
-
-        } else {
-            messageElement.textContent = response.message || "Error signing up!";
-            if (response.details) {
-                messageElement.textContent += ` Details: ${response.details}`;
-            }
-        }
-    } catch (error) {
-        messageElement.textContent = "Error connecting to server!";
-        console.error("Signup error:", error); // Log the detailed error to the console
+    if (signupForm) {
+        signupForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent page reload
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+            await handleSignup(username, password, email);
+            signupForm.reset(); // Rensa formuläret efter försök till registrering
+        });
+    } else {
+        console.error("Signup form not found in DOM");
     }
 });
 
