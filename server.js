@@ -38,17 +38,6 @@ app.use(session({
   }
 }));
 
-
-async function getUserFolderId(userid) {
-  const query = 'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1';
-  const result = await pool.query(query, [userid]);
-  if (result.rows.length > 0) {
-    return result.rows[0].userfolderid;
-  } else {
-    throw new Error('User folder ID not found.');
-  }
-}
-
 // Signup route
 app.post('/signup', async (req, res) => {
   console.log("Received POST /signup:", req.body);
