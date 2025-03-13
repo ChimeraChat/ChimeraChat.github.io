@@ -17,3 +17,22 @@ jobs:
       - name: Use Google Cloud Credentials
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/gcp-key.json
+
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        run: npm run deploy
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

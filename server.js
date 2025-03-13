@@ -7,7 +7,6 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
-import {getUserFolderId} from "./js/api.js";
 import session from 'express-session';
 
 dotenv.config({ path: 'googledrive.env' });
@@ -28,7 +27,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Add express-session middleware
 app.use(session({
-  secret: 'y91fe56e84cs6682ebc9!643rh89le22lut', // random secret
+  secret: process.env.SESSION_SECRET, // random secret
   resave: false,
   saveUninitialized: false,
   cookie: {
