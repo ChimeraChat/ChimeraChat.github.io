@@ -28,7 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function handleSignup(username, password, email) {
     try {
-        const data = await signupUser({username, password, email});
+        const signupData = {
+            data: { username, password, email },
+            salt: "staticSaltForNow"  // Generate an actual salt value in the future
+        };
+        const data = await signupUser(signupData);
         if (data.ok) {
             folderId = await createUserFolder(username);
             updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
