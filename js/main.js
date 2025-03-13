@@ -1,6 +1,8 @@
 import { handleFileUpload, loadFiles } from './files.js';
 import { apiRequest } from './api.js';
 
+setupRestrictedLinks();
+
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
     if (uploadForm) {
@@ -82,4 +84,4 @@ function setupRestrictedLinks() {
     }
 }
 
-setupRestrictedLinks();
+
