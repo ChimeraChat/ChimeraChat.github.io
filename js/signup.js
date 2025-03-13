@@ -49,3 +49,4 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Signup form not found in DOM");
     }
 });
+

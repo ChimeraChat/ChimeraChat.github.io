@@ -1,5 +1,5 @@
 import { handleFileUpload, displayUserFiles, renderFiles  } from './files.js';
-import { handleSignup } from './signup.js'; // Importera handleSignup från signup.js
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");

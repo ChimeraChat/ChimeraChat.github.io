@@ -99,6 +99,60 @@ async function handleLogin(event) {
     }
 }
 
+async function getUserFiles() {
+    try {
+        // 1. Get User's Folder ID
+        const userFolderResponse = await fetch(`/api/user/id`, { // Changed the request
+            method: "GET",
+        });
+
+        if (!userFolderResponse.ok) {
+            const errorData = await userFolderResponse.json();
+            throw new Error(
+                errorData.message || `Server error: ${userFolderResponse.status}`
+            );
+        }
+
+        const userFolderData = await userFolderResponse.json();
+        const userFolderId = userFolderData.id; // Assuming the server returns { id: "..." }
+
+        // 2. Get Files from User's Folder
+        const filesResponse = await fetch(`${API_BASE_URL}/api/files`, { // Changed the request
+            method: "GET",
+        });
+
+        if (!filesResponse.ok) {
+            const errorData = await filesResponse.json();
+            throw new Error(
+                errorData.message || `Server error: ${filesResponse.status}`
+            );
+        }
+
+        const filesData = await filesResponse.json();
+        return filesData; // Returns the list of files
+    } catch (error) {
+        console.error("Error in getUserFiles:", error);
+        throw error; // Re-throw to let the caller handle it
+    }
+}
+
+async function loadFilesPage() {
+    try {
+        const files = await getUserFiles();
+        // ... display the files on the page ...
+        console.log("Files:", files);
+    } catch (error) {
+        // ... handle the error (e.g., show an error message) ...
+        console.error("Error getting files:", error)
+    }
+}
+
+// Call loadFilesPage() when the user navigates to the files page
+if (window.location.pathname === '/files.html') {
+    loadFilesPage();
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 

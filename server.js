@@ -8,6 +8,8 @@ import bcrypt from 'bcrypt';
 import { createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 import {getUserFolderId} from "./js/api.js";
+import session from 'express-session';
+
 dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
 
@@ -24,16 +26,28 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// Add express-session middleware
+app.use(session({
+  secret: 'y91fe56e84cs6682ebc9!643rh89le22lut', // random secret
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    secure: false, // Set to true if using HTTPS
+    httpOnly: true // Set to true for improved security
+  }
+}));
 
-/*async function getUserFolderId(userId) {
+
+async function getUserFolderId(userid) {
   const query = 'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1';
-  const result = await pool.query(query, [userId]);
+  const result = await pool.query(query, [userid]);
   if (result.rows.length > 0) {
     return result.rows[0].userfolderid;
   } else {
     throw new Error('User folder ID not found.');
   }
-}*/
+}
 
 // Signup route
 app.post('/signup', async (req, res) => {
@@ -177,6 +191,9 @@ app.post('/login', async (req, res) => {
     // Ta bort lösenord innan vi skickar tillbaka data
     delete user.hashpassword;
 
+    // Store user ID in the session
+    req.session.userId = user.userid;
+
     res.json({
       message: "Inloggning lyckades!", user,
       redirect: "home.html"
@@ -190,21 +207,29 @@ app.post('/login', async (req, res) => {
 
 //Logout route
 app.post('/logout', (req, res) => {
-  try {
-    //clearing the user's session
-    req.session.destroy();
-
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error during logout:", err);
+        return res.status(500).json({ message: "Failed to log out" });
+      }
+      res.status(200).json({ message: "Utloggning lyckades",
+        redirect: "index.html"
+      });
+    });
+  } else {
     res.status(200).json({ message: "Utloggning lyckades",
       redirect: "index.html"
     });
-  } catch (error) {
-    console.error("Fel vid utloggning:", error);
-    res.status(500).json({ message: "Fel vid utloggning" });
   }
+
 });
 
 //Get user folder ID from database
 app.get('/api/user/files', async (req, res) => {
+  if(!req.session.userId){
+    return res.status(401).json({message: "You are not logged in"});
+  }
   const userId = req.session.userId; // Användarens ID från sessionen
 
   try {
@@ -224,6 +249,9 @@ app.get('/api/user/files', async (req, res) => {
 });
 
 app.get('/api/user/id', async (req, res) => {
+  if(!req.session.userId){
+    return res.status(401).json({message: "You are not logged in"});
+  }
   try {
     const userId = req.session.userId;
     const userFolderId = await getUserFolderId(userId);
@@ -235,6 +263,9 @@ app.get('/api/user/id', async (req, res) => {
 });
 
 app.get('/api/files', async (req, res) => {
+  if(!req.session.userId){
+    return res.status(401).json({message: "You are not logged in"});
+  }
   try {
     const userId = req.session.userId;  // Användarens ID från sessionen, se till att sessionen är korrekt inställd
     const userFolderId = await getUserFolderId(userId);  // Hämta användarens Google Drive mapp ID från databasen
