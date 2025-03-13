@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
             await handleFileUpload();
-            await loadFiles();
+            await renderFiles();
         });
     } else {
         console.error("uploadForm not found in DOM");

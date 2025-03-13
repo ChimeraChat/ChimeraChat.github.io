@@ -36,7 +36,14 @@ app.use(express.static(path.join(__dirname)));
 
 // Signup route
 app.post('/signup', async (req, res) => {
+  console.log("Received POST /signup:", req.body);
   const { email, username, password } = req.body;
+
+  if (!email || !username || !password) {
+    return res.status(400).json({ message: "All fields must be filled." });
+  }
+  console.log("Email:", email, "Username:", username, "Password:", password);
+
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
