@@ -60,8 +60,6 @@ async function logout() {
     }
 }
 
-
-
 async function handleLogin(event) {
     event.preventDefault();
 

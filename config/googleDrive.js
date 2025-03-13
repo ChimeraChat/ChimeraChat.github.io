@@ -41,7 +41,7 @@ async function createUserFolder(username) {
     try {
         const driveResponse = await drive.files.create({
             resource: folderMetadata,
-
+            fields: 'id'
         });
         console.log("Mapp skapad:", driveResponse.data);
         return driveResponse.data.id;

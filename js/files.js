@@ -1,5 +1,7 @@
 //files.js
 import { uploadFileToDrive } from '../config/googleDrive.js';
+import { getUserFolderId, getUserFiles } from "./api.js";
+
 
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
@@ -16,8 +18,7 @@ async function handleFileUpload() {
         const fileId = await uploadFileToDrive(filebuffer, file.name, file.type, userFolderId);
         if(fileId){
             alert("File uploaded successfully!");
-            // Reset the file input
-            fileInput.value = "";
+            fileInput.value = ""; // Reset the file input
         } else {
             alert("Error uploading the file.")
         }
@@ -27,27 +28,33 @@ async function handleFileUpload() {
     }
 }
 
-export { handleFileUpload };
+async function displayUserFiles() {
+    try {
+        // First get the user's folder ID
+        const folderId = await getUserFolderId();
+        console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
 
-// fileManager.js
-async function loadFiles() {
-    fetch('/api/files', {
-        method: 'GET'
-    })
-        .then(response => response.json())
-        .then(files => {
-            const list = document.getElementById('fileList');
-            list.innerHTML = '';  // Clear the list before updating
-            files.forEach(file => {
-                const listItem = document.createElement('li');
-                listItem.textContent = file.name;  // Assuming 'name' is a property of the file objects
-                list.appendChild(listItem);
-            });
-        })
-        .catch(error => {
-            console.error("Failed to load files:", error);
-            alert("Error loading files.");
-        });
+        // Then fetch the files using that folder ID
+        const files = await getUserFiles();
+        renderFiles(files);
+    } catch (error) {
+        console.error("Error handling files:", error);
+        alert("Error loading files: " + error.message);
+    }
 }
 
-export { loadFiles };
+function renderFiles(files) {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';  // Clear the list before updating
+
+    files.forEach(file => {
+        const listItem = document.createElement('li');
+        listItem.textContent = file.name;  // Assuming 'name' is a property of the file objects
+        fileList.appendChild(listItem);
+    });
+}
+
+
+
+
+export { handleFileUpload, renderFiles, displayUserFiles };

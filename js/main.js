@@ -1,5 +1,6 @@
-import { handleFileUpload, loadFiles } from './files.js';
+import { handleFileUpload, displayUserFiles, renderFiles  } from './files.js';
 import { handleSignup } from './signup.js'; // Importera handleSignup från signup.js
+
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
@@ -66,3 +67,8 @@ function setupRestrictedLinks() {
 
 export { setupRestrictedLinks };
 
+document.addEventListener("DOMContentLoaded", async function() {
+    await displayUserFiles();
+    await renderFiles();
+    await setupRestrictedLinks();
+});

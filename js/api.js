@@ -3,7 +3,7 @@ const API_BASE_URL = "https://chimerachat.onrender.com";
 
 async function apiRequest(endpoint, method, userData) {
     try {
-        const response = await fetch(endpoint, {
+        const response = await fetch(API_BASE_URL + endpoint,{
             method: method,
             headers: {
                 'Content-Type': 'application/json'
@@ -26,9 +26,12 @@ async function apiRequest(endpoint, method, userData) {
 }
 
 async function getUserFolderId() {
-    const response = await fetch('/api/user/id');
+    const response = await fetch(`${API_BASE_URL}/api/user/id`);
     const data = await response.json();
-    return data.id
+    if (!response.ok) {
+        throw new Error(data.message || `Server error: ${response.status}`);
+    }
+    return data.id;
 }
 
 async function signupUser(userData) {
@@ -39,22 +42,26 @@ async function loginUser(userData) {
     return apiRequest('/login', 'POST', userData);
 }
 
-export { getUserFolderId, signupUser, loginUser, apiRequest };
+async function logout() {
+    const response = await fetch(`${API_BASE_URL}/logout`, {
+        method: "POST",
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || `Server error: ${response.status}`);
+    }
+    return data;
+}
 
+async function getUserFiles() {
+    const response = await fetch(`${API_BASE_URL}/api/user/files`, {
+        method: "GET",
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || `Server error: ${response.status}`);
+    }
+    return data;
+}
 
- return response.json();
- }
-
- export async function logout() {
- const response = await fetch(`${API_BASE_URL}/logout`, {
- method: "POST",
- });
- return response.json();
- }
-
- export async function getUserFiles(){
- const response = await fetch(`${API_BASE_URL}/api/user/files`, {
- method: "GET",
- });
- return response.json();
- }
+export { getUserFolderId, signupUser, loginUser, logout, getUserFiles };
