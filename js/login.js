@@ -1,4 +1,5 @@
 import { loginUser } from './api.js';
+import { setupRestrictedLinks } from './main.js';
 const API_BASE_URL = "https://your-api-base-url";
 
 function updateLoginButton() {

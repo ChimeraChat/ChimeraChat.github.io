@@ -84,4 +84,5 @@ function setupRestrictedLinks() {
     }
 }
 
+export { setupRestrictedLinks };
 
