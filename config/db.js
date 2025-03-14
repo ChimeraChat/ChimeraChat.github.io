@@ -10,4 +10,5 @@ export const dbConfig  = {
     database: process.env.POSTGRESQL_ADDON_DB,
     password: process.env.POSTGRESQL_ADDON_PASSWORD,
     port: process.env.POSTGRESQL_ADDON_PORT,
+    ssl: { rejectUnauthorized: false }
 };

@@ -1,5 +1,4 @@
 import {setupRestrictedLinks} from './main.js';
-import {data} from "express-session/session/cookie.js";
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');

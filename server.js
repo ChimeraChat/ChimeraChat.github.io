@@ -12,6 +12,7 @@ import session from 'express-session';
 
 dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
+console.log("Session Secret:", process.env.SESSION_SECRET);
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
@@ -113,8 +114,13 @@ app.post('/login', async (req, res) => {
     // Ta bort lösenord innan vi skickar tillbaka data
     delete user.hashpassword;
 
-    // Store user ID in the session
-    req.session.userId = user.userid;
+    // Store user in session
+    req.session.user = {
+      id: user.userid,
+      username: user.username
+    };
+
+    console.log("Session after login:", req.session); // Debugging
 
     res.json({
       message: "Inloggning lyckades!", user,

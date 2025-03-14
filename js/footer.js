@@ -10,6 +10,7 @@ function createFooter() {
 // Run the function when the page loads
 let lastSoundIndex = -1;
 
+
 document.getElementById("videoButton").addEventListener("click", function(event) {
     event.stopPropagation();
     const soundPool = [

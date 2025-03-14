@@ -1,6 +1,5 @@
 //files.js
-import { uploadFileToDrive } from '../config/googleDrive.js';
-import { getUserFolderId, getUserFiles } from "./api.js";
+import { uploadFileToDrive, createUserFolder, listFiles } from '../config/googleDrive.js';
 
 
 async function handleFileUpload() {
@@ -13,7 +12,7 @@ async function handleFileUpload() {
     }
 
     try {
-        const userFolderId = await getUserFolderId();
+        const userFolderId = await createUserFolder();
         const filebuffer = await file.arrayBuffer();
         const fileId = await uploadFileToDrive(filebuffer, file.name, file.type, userFolderId);
         if(fileId){
@@ -31,11 +30,11 @@ async function handleFileUpload() {
 async function displayUserFiles() {
     try {
         // First get the user's folder ID
-        const folderId = await getUserFolderId();
+        const folderId = await createUserFolder();
         console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
 
         // Then fetch the files using that folder ID
-        const files = await getUserFiles();
+        const files = await listFiles();
         renderFiles(files);
     } catch (error) {
         console.error("Error handling files:", error);
