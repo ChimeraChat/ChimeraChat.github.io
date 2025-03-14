@@ -1,6 +1,5 @@
-
-import { setupRestrictedLinks } from './main.js';
-const API_BASE_URL = "https://your-api-base-url";
+import {setupRestrictedLinks} from './main.js';
+import {data} from "express-session/session/cookie.js";
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
@@ -99,6 +98,7 @@ async function handleLogin(event) {
     }
 }
 
+
 async function getUserFiles() {
     try {
         // 1. Get User's Folder ID
@@ -117,7 +117,7 @@ async function getUserFiles() {
         const userFolderId = userFolderData.id; // Assuming the server returns { id: "..." }
 
         // 2. Get Files from User's Folder
-        const filesResponse = await fetch(`${API_BASE_URL}/api/files`, { // Changed the request
+        const filesResponse = await fetch(`/files`, { // Changed the request
             method: "GET",
         });
 
@@ -128,8 +128,7 @@ async function getUserFiles() {
             );
         }
 
-        const filesData = await filesResponse.json();
-        return filesData; // Returns the list of files
+        return await filesResponse.json(); // Returns the list of files
     } catch (error) {
         console.error("Error in getUserFiles:", error);
         throw error; // Re-throw to let the caller handle it
