@@ -154,9 +154,8 @@ app.post('/signup', async (req, res) => {
 
 // login route
 app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const { username, password } = req.body;
-
     const query = `
             SELECT chimerachat_accounts.userid, chimerachat_accounts.username, 
                    chimerachat_accounts.email, encrypted_passwords.hashpassword 
