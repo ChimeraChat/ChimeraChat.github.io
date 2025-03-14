@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
-import session from 'express-session';
 import pgSession from 'connect-pg-simple';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
