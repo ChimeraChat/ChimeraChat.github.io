@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Add express-session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET, // random secret
+  secret: 'djklkuyhvfsry56778533', // random secret
   resave: false,
   saveUninitialized: false,
   cookie: {
