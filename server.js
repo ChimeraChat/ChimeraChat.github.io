@@ -6,12 +6,13 @@ import pgSession from 'connect-pg-simple';
 import dotenv from 'dotenv';
 dotenv.config();
 dotenv.config({ path: 'googledrive.env' });
+
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import { createUserFolder } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
+import { drive, uploadMiddleware, uploadFileToDrive, createUserFolder } from "./config/googleDrive.js";
 
 
 const { Pool } = pkg;
@@ -170,6 +171,64 @@ app.post('/logout', (req, res) => {
 
 });
 
+app.post('/api/create-folder', async (req, res) => {
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
+  }
+
+  const userId = req.session.user.id;
+
+
+  try {
+    //Check if the user already has a folder in the database
+    const folderQuery = "SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1";
+    const folderResult = await pool.query(folderQuery, [userId]);
+
+    if (folderResult.rows.length > 0 && folderResult.rows[0].userfolderid) {
+      return res.json({ message: "Folder already exists", folderId: folderResult.rows[0].userfolderid });
+    }
+    //Create folder
+    const usernameQuery = "SELECT username FROM chimerachat_accounts WHERE userid = $1";
+    const usernameResult = await pool.query(usernameQuery, [userId]);
+
+    if (usernameResult.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const username = usernameResult.rows[0].username;
+    const folderId = await createUserFolder(username); // Create Google Drive folder
+
+    //store the folder ID in the database
+    await pool.query("UPDATE chimerachat_accounts SET userfolderid = $1 WHERE userid = $2", [folderId, userId]);
+
+    res.json({ message: "Folder created successfully", folderId });
+
+  } catch (error) {
+    console.error("Error creating user folder:", error);
+    res.status(500).json({ message: "Failed to create folder." });
+  }
+});
+
+app.post('/api/upload', uploadMiddleware, async (req, res) => {
+  try {
+    const { parentFolderId } = req.body;
+    if (!req.file || !parentFolderId) {
+      return res.status(400).json({ message: "Missing file or folder ID." });
+    }
+
+    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype, parentFolderId);
+
+    if (!fileId) {
+      return res.status(500).json({ message: "File upload failed." });
+    }
+
+    res.json({ message: "Upload successful!", fileId });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Server error during upload." });
+  }
+});
+
+
 //Get user folder ID from database
 app.get('/api/user/files', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
@@ -197,13 +256,19 @@ app.get('/api/user/id', async (req, res) => {
     return res.status(401).json({ message: "You are not logged in" });
   }
   const userId = req.session.user.id;
-    try {
-      const userFolderId = await createUserFolder(userId);
-      res.json({ id: userFolderId });
-    } catch (error) {
-      console.error('Error fetching userFolderId:', error);
-      res.status(500).json({ message: 'Failed to fetch userFolderId' });
+  try {
+    const query = "SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1";
+    const result = await pool.query(query, [userId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User folder ID not found." });
     }
+
+    res.json({ id: result.rows[0].userfolderid });
+  } catch (error) {
+    console.error('Error fetching userFolderId:', error);
+    res.status(500).json({ message: 'Failed to fetch userFolderId' });
+  }
 });
 
 app.get('/api/files', async (req, res) => {

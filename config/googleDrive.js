@@ -30,16 +30,16 @@ async function listFiles() {
         throw error;
     }
 }
-
-//Skapa mapp till användare
 async function createUserFolder(username) {
     if (!username) {
         throw new Error("Username is not defined");
     }
     console.log("Creating Google Drive folder for:", username);
+
     const folderMetadata = {
         'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
-        'mimeType': 'application/vnd.google-apps.folder'
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
     };
 
     try {
@@ -48,13 +48,14 @@ async function createUserFolder(username) {
             fields: 'id'
         });
 
-        console.log("Mapp skapad:", driveResponse.data);
+        console.log("Mapp skapad i Google Drive:", driveResponse.data);
         return driveResponse.data.id;
     } catch (error) {
-        console.error("Kunde inte skapa mapp:", error.message);
-        throw new Error("Google Drive folder creation failed"); // Kasta ett fel som kan fångas och hanteras uppströms
+        console.error("Kunde inte skapa mapp i Google Drive:", error.message);
+        return null;
     }
 }
+
 
 // Funktion för att ladda upp filer till Google Drive
 export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFolderId) => {
@@ -62,6 +63,10 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
         throw new Error("Missing parameters");
     }
     try {
+        let userFolderId = await createUserFolder(username);
+        if (!userFolderId) {
+            throw new Error("Failed to create/find user folder.");
+        }
         // Skapa en läsbar stream från buffern
         const bufferStream = new Readable();
         bufferStream.push(filebuffer);
@@ -86,7 +91,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
     }
 };
 
-export { createUserFolder, listFiles };
+export { listFiles, createUserFolder, drive };
 
 
 // Express route för att hantera uppladdning från klienten

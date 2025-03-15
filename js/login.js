@@ -1,5 +1,4 @@
 //login.js
-import {setupRestrictedLinks} from './main.js';
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
@@ -91,7 +90,6 @@ async function handleLogin(event) {
             }, 3000);
 
             updateLoginButton();
-            setupRestrictedLinks();
 
         } else {
             console.error("Login failed:", data.message);
@@ -160,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
     updateLoginButton();
-    setupRestrictedLinks();
 
     if (loginForm) {
         loginForm.addEventListener("submit", handleLogin);

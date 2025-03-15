@@ -1,19 +1,5 @@
 //main.js
-import { handleFileUpload, displayUserFiles, renderFiles  } from './files.js';
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const uploadForm = document.getElementById("uploadForm");
-    if (uploadForm) {
-        uploadForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            await handleFileUpload();
-            await renderFiles();
-        });
-    } else {
-        console.error("uploadForm not found in DOM");
-    }
-});
+import { displayUserFiles, renderFiles  } from './files.js';
 
 function setupRestrictedLinks() {
     setTimeout(() => {  // Delay to ensure sessionStorage is updated

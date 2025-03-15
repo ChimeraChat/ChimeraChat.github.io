@@ -34,4 +34,5 @@ jobs:
 
       - name: Deploy
         run: npm run deploy
-
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
