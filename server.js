@@ -49,6 +49,9 @@ app.use(session({
   }
 }));
 
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded secret" : "Not Found sec");
+console.log("Session Secret:", process.env.SESSION_SECRET);
+
 app.set('trust proxy', 1); // Trust first proxy
 
 // Signup route
