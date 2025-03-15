@@ -222,8 +222,8 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
     if (folderResult.rows.length === 0 || !folderResult.rows[0].userfolderid) {
       return res.status(400).json({ message: "No folder found for this user." });
     }
-    const userFolderId = folderResult.rows[0].userfolderid;
-    console.log("User Folder ID:", userFolderId);
+    const parentFolderId = folderResult.rows[0].userfolderid; // Fix the missing variable
+    console.log("User Folder ID:", parentFolderId);
 
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
