@@ -48,10 +48,14 @@ function setupRestrictedLinks() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Running setupRestrictedLinks...");
+    setupRestrictedLinks();
+});
+
 export { setupRestrictedLinks };
 
 document.addEventListener("DOMContentLoaded", async function() {
     await displayUserFiles();
     await renderFiles();
-    await setupRestrictedLinks();
 });

@@ -38,11 +38,15 @@ async function handleFileUpload() {
 
 async function displayUserFiles() {
     try {
-        // First get the user's folder ID
-        const folderId = await createUserFolder(username);
+        const folderResponse = await fetch('/api/user/id');
+        const folderData = await folderResponse.json();
+        if (!folderResponse.ok) {
+            throw new Error(folderData.message || "Failed to get folder ID.");
+        }
+
+        const folderId = folderData.id;
         console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
 
-        // Then fetch the files using that folder ID
         const files = await listFiles();
         renderFiles(files);
     } catch (error) {
@@ -61,8 +65,5 @@ function renderFiles(files) {
         fileList.appendChild(listItem);
     });
 }
-
-
-
 
 export { handleFileUpload, renderFiles, displayUserFiles };
