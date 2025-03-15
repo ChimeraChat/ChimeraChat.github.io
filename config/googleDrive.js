@@ -36,13 +36,19 @@ async function createUserFolder(username) {
     }
     console.log("Creating Google Drive folder for:", username);
 
-    const folderMetadata = {
-        'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
-        'mimeType': 'application/vnd.google-apps.folder',
-        'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
-    };
-
     try {
+        const result = await pool.query('SELECT userfolderid FROM chimerachat_accounts WHERE username = $1', [username]);
+        if (result.rows.length > 0 && result.rows[0].userfolderid) {
+            console.log("✅ Folder already exists for", username);
+            return result.rows[0].userfolderid;  // Return existing folder ID
+        }
+        else {
+            console.log("❌ No folder found, creating a new one...");
+            const folderMetadata = {
+                'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
+                'mimeType': 'application/vnd.google-apps.folder',
+                'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
+            };
         const driveResponse = await drive.files.create({
             resource: folderMetadata,
             fields: 'id'
@@ -63,10 +69,8 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
         throw new Error("Missing parameters");
     }
     try {
-        let userFolderId = await createUserFolder(username);
-        if (!userFolderId) {
-            throw new Error("Failed to create/find user folder.");
-        }
+        console.log(`Uploading file: ${filename} to folder: ${parentFolderId}`);
+        
         // Skapa en läsbar stream från buffern
         const bufferStream = new Readable();
         bufferStream.push(filebuffer);

@@ -175,9 +175,7 @@ app.post('/api/create-folder', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
     return res.status(401).json({ message: "You are not logged in" });
   }
-
   const userId = req.session.user.id;
-
 
   try {
     //Check if the user already has a folder in the database
@@ -209,12 +207,27 @@ app.post('/api/create-folder', async (req, res) => {
 });
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
+  }
   try {
-    const { parentFolderId } = req.body;
-    if (!req.file || !parentFolderId) {
-      return res.status(400).json({ message: "Missing file or folder ID." });
-    }
+    const userId = req.session.user.id;
+    const username = req.session.user.username;
 
+    console.log(`Uploading file for user: ${username}`);
+    const folderResult = await pool.query(
+        'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
+        [userId]
+    );
+    if (folderResult.rows.length === 0 || !folderResult.rows[0].userfolderid) {
+      return res.status(400).json({ message: "No folder found for this user." });
+    }
+    const userFolderId = folderResult.rows[0].userfolderid;
+    console.log("User Folder ID:", userFolderId);
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
     const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype, parentFolderId);
 
     if (!fileId) {
@@ -223,8 +236,8 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
 
     res.json({ message: "Upload successful!", fileId });
   } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).json({ message: "Server error during upload." });
+      console.error("Upload error:", error);
+      res.status(500).json({ message: "Server error during upload." });
   }
 });
 
@@ -257,14 +270,16 @@ app.get('/api/user/id', async (req, res) => {
   }
   const userId = req.session.user.id;
   try {
-    const query = "SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1";
-    const result = await pool.query(query, [userId]);
+    const folderResult = await pool.query(
+        'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
+        [userId]
+    );
 
-    if (result.rows.length === 0) {
+    if (folderResult.rows.length === 0 || !folderResult.rows[0].userfolderid) {
       return res.status(404).json({ message: "User folder ID not found." });
     }
 
-    res.json({ id: result.rows[0].userfolderid });
+    res.json({ id: folderResult.rows[0].userfolderid });
   } catch (error) {
     console.error('Error fetching userFolderId:', error);
     res.status(500).json({ message: 'Failed to fetch userFolderId' });
