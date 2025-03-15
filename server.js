@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import { createUserFolder } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
+import {drive} from "googleapis/build/src/apis/drive/index.js";
 
 dotenv.config({ path: 'googledrive.env' });
 dotenv.config();
