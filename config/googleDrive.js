@@ -42,13 +42,13 @@ async function createUserFolder(username) {
             console.log("✅ Folder already exists for", username);
             return result.rows[0].userfolderid;  // Return existing folder ID
         }
-        else {
-            console.log("❌ No folder found, creating a new one...");
-            const folderMetadata = {
-                'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
-                'mimeType': 'application/vnd.google-apps.folder',
-                'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
-            };
+        
+        console.log("No folder found, creating a new one...");
+        const folderMetadata = {
+            'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
+            'mimeType': 'application/vnd.google-apps.folder',
+            'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
+        };
         const driveResponse = await drive.files.create({
             resource: folderMetadata,
             fields: 'id'
@@ -70,7 +70,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
     }
     try {
         console.log(`Uploading file: ${filename} to folder: ${parentFolderId}`);
-        
+
         // Skapa en läsbar stream från buffern
         const bufferStream = new Readable();
         bufferStream.push(filebuffer);
