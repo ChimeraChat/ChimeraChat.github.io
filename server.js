@@ -285,6 +285,34 @@ app.get('/api/files/:folderId', async (req, res) => {
   }
 });
 
+// Get files from a user's Google Drive folder
+app.get('/api/files', async (req, res) => {
+  const userFolderId = req.query.folderId; // Get folderId from query parameters
+
+  if (!userFolderId) {
+    return res.status(400).json({ message: "Folder ID is required." });
+  }
+
+  try {
+    console.log("Fetching files for Folder ID:", userFolderId);
+
+    const driveResponse = await drive.files.list({
+      q: `'${userFolderId}' in parents`,
+      fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
+      pageSize: 10
+    });
+
+    const files = driveResponse.data.files;
+    console.log("Files found:", files);
+
+    res.status(200).json(files);
+  } catch (error) {
+    console.error("Error fetching files from Google Drive:", error);
+    res.status(500).json({ message: "Failed to fetch files." });
+  }
+});
+
+
 
 app.get('/api/user/id', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {

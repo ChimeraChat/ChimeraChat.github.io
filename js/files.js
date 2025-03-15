@@ -61,6 +61,12 @@ async function displayUserFiles() {
             throw new Error(files.message || "Failed to retrieve files.");
         }
 
+        console.log("Files received:", files);
+        if (files.length === 0) {
+            console.log("No files found");
+            return;
+        }
+
         renderFiles(files);  // ✅ Call function to render files
     } catch (error) {
         console.error("Error handling files:", error);
