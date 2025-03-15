@@ -45,7 +45,6 @@ app.use(session({
   }
 }));
 
-
 app.set('trust proxy', 1); // Trust first proxy
 
 // Signup route
