@@ -30,9 +30,12 @@ async function listFiles() {
         throw error;
     }
 }
-async function createUserFolder(username) {
+async function createUserFolder(username, pool) {
     if (!username) {
         throw new Error("Username is not defined");
+    }
+    if (!pool) {
+        throw new Error("Database pool is not available.");
     }
     console.log("Creating Google Drive folder for:", username);
 
@@ -42,7 +45,7 @@ async function createUserFolder(username) {
             console.log("✅ Folder already exists for", username);
             return result.rows[0].userfolderid;  // Return existing folder ID
         }
-        
+
         console.log("No folder found, creating a new one...");
         const folderMetadata = {
             'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet

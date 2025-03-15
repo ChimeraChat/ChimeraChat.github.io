@@ -81,7 +81,7 @@ app.post('/signup', async (req, res) => {
     let userFolderId = null;
 
     try {
-      userFolderId = await createUserFolder(username);
+      userFolderId = await createUserFolder(username, pool);
     } catch (error) {
         console.error("Error creating Google Drive folder:", error.message);
         userFolderId = null; // Allow signup even if folder creation fails
@@ -193,7 +193,7 @@ app.post('/api/create-folder', async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     const username = usernameResult.rows[0].username;
-    const folderId = await createUserFolder(username); // Create Google Drive folder
+    const folderId = await createUserFolder(username, pool); // Create Google Drive folder
 
     //store the folder ID in the database
     await pool.query("UPDATE chimerachat_accounts SET userfolderid = $1 WHERE userid = $2", [folderId, userId]);
@@ -249,7 +249,7 @@ app.get('/api/user/files', async (req, res) => {
   }
   const userId = req.session.user.id; // Användarens ID från sessionen
     try {
-      const userFolderId = await createUserFolder(userId); // Hämta mapp-ID från databasen
+      const userFolderId = await createUserFolder(userId, pool); // Hämta mapp-ID från databasen
       const driveResponse = await drive.files.list({
         pageSize: 10,
         fields: 'nextPageToken, files(id, name)',
@@ -293,7 +293,7 @@ app.get('/api/files', async (req, res) => {
   const userId = req.session.user.id;
     try {
        // Användarens ID från sessionen, se till att sessionen är korrekt inställd
-      const userFolderId = await createUserFolder(userId);  // Hämta användarens Google Drive mapp ID från databasen
+      const userFolderId = await createUserFolder(userId, pool);  // Hämta användarens Google Drive mapp ID från databasen
 
       const driveResponse = await drive.files.list({
         q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
