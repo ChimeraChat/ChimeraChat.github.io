@@ -33,7 +33,7 @@ async function createUserFolder(username) {
     if (!username) {
         throw new Error("Username is not defined");
     }
-    console.log("username", username);
+    console.log("Creating Google Drive folder for:", username);
     const folderMetadata = {
         'name': username + "'s Folder", // Mappens namn baserat på användarnamnet
         'mimeType': 'application/vnd.google-apps.folder'
@@ -46,8 +46,8 @@ async function createUserFolder(username) {
         console.log("Mapp skapad:", driveResponse.data);
         return driveResponse.data.id;
     } catch (error) {
-        console.error("Kunde inte skapa mapp:", error);
-        throw error;  // Kasta ett fel som kan fångas och hanteras uppströms
+        console.error("Kunde inte skapa mapp:", error.message);
+        throw new Error("Google Drive folder creation failed"); // Kasta ett fel som kan fångas och hanteras uppströms
     }
 }
 

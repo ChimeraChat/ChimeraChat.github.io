@@ -75,7 +75,14 @@ app.post('/signup', async (req, res) => {
     }
 
     const { userid } = userResult.rows[0];
-    const userFolderId = await createUserFolder(username); // This should catch errors internally and handle them appropriately
+
+    let userFolderId;
+    try {
+      userFolderId = await createUserFolder(username);
+    } catch (error) {
+      console.error("❌ Error creating Google Drive folder:", error.message);
+      userFolderId = null; // Allow signup even if folder creation fails
+    }
 
     await client.query('UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2', [userFolderId, userid]);
     await client.query('INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)', [userid, hashedPassword]);
@@ -93,47 +100,44 @@ app.post('/signup', async (req, res) => {
 
 // login route
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body; // Ensure username and password exist
   try {
-    const query = `
-            SELECT chimerachat_accounts.userid, chimerachat_accounts.username, 
-                   chimerachat_accounts.email, encrypted_passwords.hashpassword 
-            FROM chimerachat_accounts
-            JOIN encrypted_passwords ON chimerachat_accounts.userid = encrypted_passwords.userid
-            WHERE chimerachat_accounts.username = $1
-        `;
-    const result = await pool.query(query, [username]);
+      const query = `
+              SELECT chimerachat_accounts.userid, chimerachat_accounts.username, 
+                     chimerachat_accounts.email, encrypted_passwords.hashpassword 
+              FROM chimerachat_accounts
+              JOIN encrypted_passwords ON chimerachat_accounts.userid = encrypted_passwords.userid
+              WHERE chimerachat_accounts.username = $1
+          `;
+      const result = await pool.query(query, [username]);
 
-    if (result.rows.length === 0) {
-      return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      if (result.rows.length === 0) {
+        return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      }
+
+      const user = result.rows[0];
+      // Verifiera lösenordet
+      const isMatch = await bcrypt.compare(password, user.hashpassword);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      }
+      // Ta bort lösenord innan vi skickar tillbaka data
+      //delete user.hashpassword;
+
+      // Store user in session
+      req.session.user = {
+        id: user.userid,
+        username: user.username
+      };
+
+      console.log("Session after login:", req.session); // Debugging
+
+    res.json({ message: "Login successful!", user, redirect: "home.html" });
+
+    } catch (err) {
+      console.error("Inloggningsfel:", err);
+      res.status(500).json("Serverfel vid inloggning");
     }
-
-    const user = result.rows[0];
-    // Verifiera lösenordet
-    const isMatch = await bcrypt.compare(password, user.hashpassword);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
-    }
-    // Ta bort lösenord innan vi skickar tillbaka data
-    delete user.hashpassword;
-
-    // Store user in session
-    req.session.user = {
-      id: user.userid,
-      username: user.username
-    };
-
-    console.log("Session after login:", req.session); // Debugging
-
-    res.json({
-      message: "Inloggning lyckades!", user,
-      redirect: "home.html"
-    });
-
-  } catch (err) {
-    console.error("Inloggningsfel:", err);
-    res.status(500).json("Serverfel vid inloggning");
-  }
 });
 
 //Logout route
@@ -158,61 +162,61 @@ app.post('/logout', (req, res) => {
 
 //Get user folder ID from database
 app.get('/api/user/files', async (req, res) => {
-  if(!req.session.userId){
-    return res.status(401).json({message: "You are not logged in"});
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
   }
-  const userId = req.session.userId; // Användarens ID från sessionen
+  const userId = req.session.user.id; // Användarens ID från sessionen
+    try {
+      const userFolderId = await createUserFolder(userId); // Hämta mapp-ID från databasen
+      const driveResponse = await drive.files.list({
+        pageSize: 10,
+        fields: 'nextPageToken, files(id, name)',
+        q: `'${userFolderId}' in parents`  // Listar filer i användarens mapp
+      });
 
-  try {
-    const userFolderId = await getUserFolderId(userId); // Hämta mapp-ID från databasen
-    const driveResponse = await drive.files.list({
-      pageSize: 10,
-      fields: 'nextPageToken, files(id, name)',
-      q: `'${userFolderId}' in parents`  // Listar filer i användarens mapp
-    });
-
-    const files = driveResponse.data.files;
-    res.status(200).json(files);
-  } catch (error) {
-    console.error("Error fetching files from Drive:", error);
-    res.status(500).json({ message: "Failed to fetch files." });
-  }
+      const files = driveResponse.data.files;
+      res.status(200).json(files);
+    } catch (error) {
+      console.error("Error fetching files from Drive:", error);
+      res.status(500).json({ message: "Failed to fetch files." });
+    }
 });
 
 app.get('/api/user/id', async (req, res) => {
-  if(!req.session.userId){
-    return res.status(401).json({message: "You are not logged in"});
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
   }
-  try {
-    const userId = req.session.userId;
-    const userFolderId = await getUserFolderId(userId);
-    res.json({ id: userFolderId });
-  } catch (error) {
-    console.error('Error fetching userFolderId:', error);
-    res.status(500).json({ message: 'Failed to fetch userFolderId' });
-  }
+  const userId = req.session.user.id;
+    try {
+      const userFolderId = await createUserFolder(userId);
+      res.json({ id: userFolderId });
+    } catch (error) {
+      console.error('Error fetching userFolderId:', error);
+      res.status(500).json({ message: 'Failed to fetch userFolderId' });
+    }
 });
 
 app.get('/api/files', async (req, res) => {
-  if(!req.session.userId){
-    return res.status(401).json({message: "You are not logged in"});
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
   }
-  try {
-    const userId = req.session.userId;  // Användarens ID från sessionen, se till att sessionen är korrekt inställd
-    const userFolderId = await getUserFolderId(userId);  // Hämta användarens Google Drive mapp ID från databasen
+  const userId = req.session.user.id;
+    try {
+       // Användarens ID från sessionen, se till att sessionen är korrekt inställd
+      const userFolderId = await createUserFolder(userId);  // Hämta användarens Google Drive mapp ID från databasen
 
-    const driveResponse = await drive.files.list({
-      q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
-      fields: 'nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)',  // Ange vilka fält som ska returneras
-      pageSize: 10  // Antal filer att returnera
-    });
+      const driveResponse = await drive.files.list({
+        q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
+        fields: 'nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)',  // Ange vilka fält som ska returneras
+        pageSize: 10  // Antal filer att returnera
+      });
 
-    const files = driveResponse.data.files;
-    res.status(200).json(files);
-  } catch (error) {
-    console.error("Error fetching files from Drive:", error);
-    res.status(500).json({ message: "Failed to fetch files.", error: error.message });
-  }
+      const files = driveResponse.data.files;
+      res.status(200).json(files);
+    } catch (error) {
+      console.error("Error fetching files from Drive:", error);
+      res.status(500).json({ message: "Failed to fetch files.", error: error.message });
+    }
 });
 
 
