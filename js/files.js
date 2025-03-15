@@ -46,24 +46,22 @@ async function displayUserFiles() {
         const folderResponse = await fetch('/api/user/id');
         const folderData = await folderResponse.json();
 
-        if (!folderResponse.ok) {
+        if (!folderResponse.ok || !folderData.id) {
             throw new Error(folderData.message || "Failed to get folder ID.");
         }
 
-        const folderId = folderData.id;
-        console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
+        const userFolderId = folderData.id;  // ✅ Ensure the variable is properly set
+        console.log("User Folder ID:", userFolderId); // Debugging
 
-        // Get the files from the user's folder
-        const filesResponse = await fetch(`/api/files/${userFolderId}`);
-        if (!filesResponse.ok) {
-            throw new Error("Failed to fetch files.");
-        }
-
+        // Fetch the files list from Google Drive
+        const filesResponse = await fetch(`/api/files?folderId=${userFolderId}`);
         const files = await filesResponse.json();
+
         if (!filesResponse.ok) {
-            throw new Error(files.message || "Failed to load files.");
+            throw new Error(files.message || "Failed to retrieve files.");
         }
-        renderFiles(files);
+
+        renderFiles(files);  // ✅ Call function to render files
     } catch (error) {
         console.error("Error handling files:", error);
         alert("Error loading files: " + error.message);
@@ -94,8 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
             await handleFileUpload();
             await renderFiles();
         });
-    } else {
-        console.error("uploadForm not found in DOM");
     }
 });
 

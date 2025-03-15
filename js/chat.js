@@ -6,7 +6,7 @@ async function sendMessage() {
     if (!chatUser || !message) return;
 
     try {
-        const response = await fetch("/send-message", { ... });
+        const response = await fetch("/send-message", );
         if (!response.ok) throw new Error("Failed to send message");
     } catch (error) {
         console.error("Message send error:", error);
