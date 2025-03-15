@@ -42,7 +42,7 @@ async function logout() {
             message.textContent = "You've been logged out!";
             document.body.prepend(message);
             setTimeout(()=>{
-            }, 3000)
+            }, 3000);
             message.remove();
             window.location.href = "index.html";
 
@@ -53,7 +53,7 @@ async function logout() {
             const message = document.createElement("div");
             message.textContent = error.message || "Logout failed: An unexpected error occured.";
             document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000)
+            setTimeout(()=>message.remove(),3000);
         }
     }
 }
@@ -83,7 +83,7 @@ async function handleLogin(event) {
 
             setTimeout(()=>{
                 message.remove();
-            }, 3000)
+            }, 3000);
             window.location.href = "home.html";
 
             updateLoginButton();
@@ -93,14 +93,14 @@ async function handleLogin(event) {
             const message = document.createElement("div");
             message.textContent = data.message || "Login failed.";
             document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000)
+            setTimeout(()=>message.remove(),3000);
         }
     } catch (error) {
         console.error("Fel vid inloggning:", error);
         const message = document.createElement("div");
         message.textContent = data.message || "Login failed, Server error.";
         document.body.prepend(message);
-        setTimeout(()=>message.remove(),3000)
+        setTimeout(()=>message.remove(),3000);
     }
 }
 

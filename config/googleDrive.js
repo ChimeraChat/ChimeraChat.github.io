@@ -61,7 +61,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
         const bufferStream = new Readable();
         bufferStream.push(filebuffer);
         bufferStream.push(null); // Slutsignal för streamen
-        console.log("BufferStream:", bufferStream)
+        console.log("BufferStream:", bufferStream);
 
         const response = await drive.files.create({
             requestBody: {

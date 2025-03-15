@@ -19,7 +19,7 @@ async function handleFileUpload() {
             alert("File uploaded successfully!");
             fileInput.value = ""; // Reset the file input
         } else {
-            alert("Error uploading the file.")
+            alert("Error uploading the file.");
         }
     } catch (error) {
         console.error("Uppladdningsfel:", error);
