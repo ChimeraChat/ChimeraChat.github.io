@@ -73,7 +73,9 @@ async function handleLogin(event) {
             },
             body: JSON.stringify({ username, password })
         });
+
         const data = await response.json();
+        console.log("Login Response:", data); // Debugging
 
         if (response.ok) {
             console.log("Login Response:", data);
@@ -85,24 +87,19 @@ async function handleLogin(event) {
 
             setTimeout(()=>{
                 message.remove();
+                window.location.href = "home.html";
             }, 3000);
-            window.location.href = "home.html";
 
             updateLoginButton();
             setupRestrictedLinks();
 
         } else {
-            const message = document.createElement("div");
-            message.textContent = data.message || "Login failed.";
-            document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000);
+            console.error("Login failed:", data.message);
+            alert(data.message || "Login failed.");
         }
     } catch (error) {
-        console.error("Fel vid inloggning:", error);
-        const message = document.createElement("div");
-        message.textContent = error.message || "Login failed, Server error.";
-        document.body.prepend(message);
-        setTimeout(()=>message.remove(),3000);
+        console.error("Error during login:", error);
+        alert("Login failed due to server error.");
     }
 }
 

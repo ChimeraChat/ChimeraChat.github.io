@@ -12,9 +12,18 @@ async function handleFileUpload() {
     }
 
     try {
-        const userFolderId = await createUserFolder(username);
+        const folderResponse = await fetch('/api/user/id');
+        const folderData = await folderResponse.json();
+        if (!folderResponse.ok) {
+            throw new Error(folderData.message || "Failed to get folder ID.");
+        }
+
+        const userFolderId = folderData.id;
+        console.log("User Folder ID:", userFolderId);
+
         const filebuffer = await file.arrayBuffer();
         const fileId = await uploadFileToDrive(filebuffer, file.name, file.type, userFolderId);
+
         if(fileId){
             alert("File uploaded successfully!");
             fileInput.value = ""; // Reset the file input
