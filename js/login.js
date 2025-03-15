@@ -98,13 +98,12 @@ async function handleLogin(event) {
     } catch (error) {
         console.error("Fel vid inloggning:", error);
         const message = document.createElement("div");
-        message.textContent = data.message || "Login failed, Server error.";
+        message.textContent = error.message || "Login failed, Server error.";
         document.body.prepend(message);
         setTimeout(()=>message.remove(),3000);
     }
 }
 
-/*
 async function getUserFiles() {
     try {
         // 1. Get User's Folder ID
@@ -156,7 +155,7 @@ async function loadFilesPage() {
 if (window.location.pathname === '/files.html') {
     loadFilesPage();
 }
-*/
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
