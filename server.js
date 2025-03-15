@@ -34,12 +34,12 @@ app.use(session({
     pool: pool, // Use your PostgreSQL pool connection
     tableName: 'session' // This is the default table name; change it if needed
   }),
-  secret: process.env.SESSION_SECRET, // Use the secret stored in GitHub Secrets
+  secret: process.env.SESSION_SECRET || "fallback_secret", // Use the secret stored in GitHub Secrets
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
-    secure: false, // Set to true if using HTTPS
+    secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
     httpOnly: true
   }
 }));
