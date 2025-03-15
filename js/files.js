@@ -1,5 +1,5 @@
 //files.js
-import { uploadFileToDrive, createUserFolder, listFiles } from '../config/googleDrive.js';
+import { uploadFileToDrive, listFiles } from '../config/googleDrive.js';
 
 
 async function handleFileUpload() {

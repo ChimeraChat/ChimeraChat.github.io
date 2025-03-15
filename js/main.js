@@ -16,37 +16,31 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function setupRestrictedLinks() {
-    const userString = sessionStorage.getItem("user");
-    let user = null;
+    setTimeout(() => {  // Delay to ensure sessionStorage is updated
+        const userString = sessionStorage.getItem("user");
+        let user = null;
 
-    // Parse the user data if it's available
-    if (userString) {
-        try {
-            user = JSON.parse(userString);
-        } catch (error) {
-            console.error('Error parsing user data from session storage:', error);
+        if (userString) {
+            try {
+                user = JSON.parse(userString);
+            } catch (error) {
+                console.error('Error parsing user data from session storage:', error);
+            }
         }
-    }
 
-    // If a user is not logged in, handle restricted links
-    if (!user) {
-        const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
-        restrictedLinks.forEach(link => {
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-                const message = document.createElement("div");
-                message.textContent = "Please log in to access this page.";
-                document.body.prepend(message);
-
-                // Redirect to login after 3 seconds
-                setTimeout(() => {
-                    message.remove();
+        if (!user) {
+            const restrictedLinks = document.querySelectorAll('a[href="chat.html"], a[href="files.html"]');
+            restrictedLinks.forEach(link => {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    alert("Please log in to access this page.");
                     window.location.href = "login.html";
-                }, 3000);
+                });
             });
-        });
-    }
+        }
+    }, 500); // Delay 500ms to let sessionStorage update
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Running setupRestrictedLinks...");

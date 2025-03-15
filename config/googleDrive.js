@@ -4,7 +4,6 @@ import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config({ path: 'googledrive.env' });
 import { Readable } from 'stream';
-import {file} from "googleapis/build/src/apis/file/index.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -18,6 +17,8 @@ const auth = new google.auth.GoogleAuth({
 
 // Skapa Drive-klienten
 const drive = google.drive({ version: "v3", auth });
+
+console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
 async function listFiles() {
     try {
@@ -47,7 +48,7 @@ async function createUserFolder(username) {
             fields: 'id'
         });
 
-        console.log("Mapp skapad:", driveResponse.data, file.data.id);
+        console.log("Mapp skapad:", driveResponse.data);
         return driveResponse.data.id;
     } catch (error) {
         console.error("Kunde inte skapa mapp:", error.message);

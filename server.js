@@ -4,16 +4,15 @@ import path from 'path';
 import pkg from 'pg';
 import pgSession from 'connect-pg-simple';
 import dotenv from 'dotenv';
+dotenv.config();
+dotenv.config({ path: 'googledrive.env' });
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { createUserFolder } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
-import {drive} from "googleapis/build/src/apis/drive/index.js";
 
-dotenv.config({ path: 'googledrive.env' });
-dotenv.config();
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
@@ -47,6 +46,7 @@ app.use(session({
   }
 }));
 
+console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 app.set('trust proxy', 1); // Trust first proxy
 
 // Signup route
@@ -77,13 +77,13 @@ app.post('/signup', async (req, res) => {
     }
 
     const { userid } = userResult.rows[0];
+    let userFolderId = null;
 
-    let userFolderId;
     try {
       userFolderId = await createUserFolder(username);
     } catch (error) {
-      console.error("Error creating Google Drive folder:", error.message);
-      userFolderId = null; // Allow signup even if folder creation fails
+        console.error("Error creating Google Drive folder:", error.message);
+        userFolderId = null; // Allow signup even if folder creation fails
     }
 
     await client.query('UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2', [userFolderId, userid]);
@@ -134,7 +134,15 @@ app.post('/login', async (req, res) => {
 
       console.log("Session after login:", req.session); // Debugging
 
-    res.json({ message: "Login successful!", user, redirect: "home.html" });
+      res.json({
+        message: "Login successful!",
+        user: {
+          id: user.userid,
+          username: user.username,
+          email: user.email
+        },
+        redirect: "home.html"
+      });
 
     } catch (err) {
       console.error("Inloggningsfel:", err);

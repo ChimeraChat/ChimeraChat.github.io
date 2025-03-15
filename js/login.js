@@ -77,7 +77,7 @@ async function handleLogin(event) {
         const data = await response.json();
         console.log("Login Response:", data); // Debugging
 
-        if (response.ok) {
+        if (response.ok && data.user) {
             console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
 
