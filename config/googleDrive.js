@@ -1,8 +1,10 @@
+//googleDrive.js
 import { google } from "googleapis";
 import multer from "multer";
 import dotenv from "dotenv";
 dotenv.config({ path: 'googledrive.env' });
 import { Readable } from 'stream';
+import {file} from "googleapis/build/src/apis/file/index.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -35,15 +37,17 @@ async function createUserFolder(username) {
     }
     console.log("Creating Google Drive folder for:", username);
     const folderMetadata = {
-        'name': username + "'s Folder", // Mappens namn baserat på användarnamnet
+        'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
         'mimeType': 'application/vnd.google-apps.folder'
     };
+
     try {
         const driveResponse = await drive.files.create({
             resource: folderMetadata,
             fields: 'id'
         });
-        console.log("Mapp skapad:", driveResponse.data);
+
+        console.log("Mapp skapad:", driveResponse.data, file.data.id);
         return driveResponse.data.id;
     } catch (error) {
         console.error("Kunde inte skapa mapp:", error.message);

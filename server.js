@@ -1,3 +1,4 @@
+//server.js
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';

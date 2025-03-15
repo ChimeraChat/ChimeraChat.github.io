@@ -1,3 +1,4 @@
+//main.js
 import { handleFileUpload, displayUserFiles, renderFiles  } from './files.js';
 
 

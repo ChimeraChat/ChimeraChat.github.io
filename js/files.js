@@ -12,7 +12,7 @@ async function handleFileUpload() {
     }
 
     try {
-        const userFolderId = await createUserFolder();
+        const userFolderId = await createUserFolder(username);
         const filebuffer = await file.arrayBuffer();
         const fileId = await uploadFileToDrive(filebuffer, file.name, file.type, userFolderId);
         if(fileId){
@@ -30,7 +30,7 @@ async function handleFileUpload() {
 async function displayUserFiles() {
     try {
         // First get the user's folder ID
-        const folderId = await createUserFolder();
+        const folderId = await createUserFolder(username);
         console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
 
         // Then fetch the files using that folder ID

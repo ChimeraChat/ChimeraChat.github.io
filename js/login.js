@@ -1,3 +1,4 @@
+//login.js
 import {setupRestrictedLinks} from './main.js';
 
 function updateLoginButton() {
@@ -75,6 +76,7 @@ async function handleLogin(event) {
         const data = await response.json();
 
         if (response.ok) {
+            console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
 
             const message = document.createElement("div");
