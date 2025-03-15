@@ -11,11 +11,7 @@ import { dbConfig } from './config/db.js';
 import session from 'express-session';
 
 dotenv.config({ path: 'googledrive.env' });
-
-console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded" : "Not Found");
-
 dotenv.config();
-console.log("Session Secret:", process.env.SESSION_SECRET);
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
@@ -39,7 +35,7 @@ app.use(session({
     pool: pool, // Use your PostgreSQL pool connection
     tableName: 'session' // This is the default table name; change it if needed
   }),
-  secret: process.env.SESSION_SECRET || "fallback_secret", // Use the secret stored in GitHub Secrets
+  secret: process.env.SESSION_SECRET, // Use the secret stored in GitHub Secrets
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -49,8 +45,6 @@ app.use(session({
   }
 }));
 
-console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded secret" : "Not Found sec");
-console.log("Session Secret:", process.env.SESSION_SECRET);
 
 app.set('trust proxy', 1); // Trust first proxy
 
