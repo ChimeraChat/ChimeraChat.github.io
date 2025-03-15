@@ -81,7 +81,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
     }
 };
 
-export { drive, createUserFolder, listFiles };
+export { createUserFolder, listFiles };
 
 
 // Express route för att hantera uppladdning från klienten

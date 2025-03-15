@@ -73,14 +73,19 @@ async function handleLogin(event) {
             body: JSON.stringify({ username, password })
         });
         const data = await response.json();
-        if (data.ok) {
+
+        if (response.ok) {
             sessionStorage.setItem("user", JSON.stringify(data.user));
+
             const message = document.createElement("div");
             message.textContent = "Login success!";
             document.body.prepend(message);
+
             setTimeout(()=>{
                 message.remove();
             }, 3000)
+            window.location.href = "home.html";
+
             updateLoginButton();
             setupRestrictedLinks();
 
