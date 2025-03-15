@@ -28,6 +28,8 @@ async function logout() {
         try {
             const response = await fetch('/logout', {
                 method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({userId: user.userid})
             });
 
             if (!response.ok) {
@@ -40,9 +42,9 @@ async function logout() {
             message.textContent = "You've been logged out!";
             document.body.prepend(message);
             setTimeout(()=>{
-                message.remove();
-                window.location.href = "index.html";
             }, 3000)
+            message.remove();
+            window.location.href = "index.html";
 
             updateLoginButton();
 
@@ -70,7 +72,7 @@ async function handleLogin(event) {
             },
             body: JSON.stringify({ username, password })
         });
-            const data = await response.json();
+        const data = await response.json();
         if (data.ok) {
             sessionStorage.setItem("user", JSON.stringify(data.user));
             const message = document.createElement("div");
@@ -97,7 +99,7 @@ async function handleLogin(event) {
     }
 }
 
-
+/*
 async function getUserFiles() {
     try {
         // 1. Get User's Folder ID
@@ -149,7 +151,7 @@ async function loadFilesPage() {
 if (window.location.pathname === '/files.html') {
     loadFilesPage();
 }
-
+*/
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");

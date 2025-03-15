@@ -80,7 +80,7 @@ app.post('/signup', async (req, res) => {
     try {
       userFolderId = await createUserFolder(username);
     } catch (error) {
-      console.error("❌ Error creating Google Drive folder:", error.message);
+      console.error("Error creating Google Drive folder:", error.message);
       userFolderId = null; // Allow signup even if folder creation fails
     }
 
