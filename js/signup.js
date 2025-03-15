@@ -38,6 +38,7 @@ function updateMessage(message, isSuccess) {
 }
 document.addEventListener("DOMContentLoaded", () => {
     const signupForm = document.getElementById("signupForm");
+
     if (signupForm) {
         signupForm.addEventListener("submit", async function (event) {
             event.preventDefault(); // Prevent page reload
@@ -47,8 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
             await handleSignup(username, password, email);
             signupForm.reset(); // Clear the form after signup attempt
         });
-    } else {
-        console.error("Signup form not found in DOM");
     }
 });
 

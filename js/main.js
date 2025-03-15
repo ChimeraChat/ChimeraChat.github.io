@@ -29,7 +29,6 @@ function setupRestrictedLinks() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Running setupRestrictedLinks...");
     setupRestrictedLinks();
 });
 

@@ -45,6 +45,7 @@ async function displayUserFiles() {
     try {
         const folderResponse = await fetch('/api/user/id');
         const folderData = await folderResponse.json();
+
         if (!folderResponse.ok) {
             throw new Error(folderData.message || "Failed to get folder ID.");
         }
@@ -53,9 +54,10 @@ async function displayUserFiles() {
         console.log("Folder ID:", folderId); // Log or handle the folder ID if needed
 
         // Get the files from the user's folder
-        const filesResponse = await fetch(`/api/files?folderId=${folderId}`, {
-            method: "GET"
-        });
+        const filesResponse = await fetch(`/api/files/${userFolderId}`);
+        if (!filesResponse.ok) {
+            throw new Error("Failed to fetch files.");
+        }
 
         const files = await filesResponse.json();
         if (!filesResponse.ok) {
@@ -69,6 +71,11 @@ async function displayUserFiles() {
 }
 
 function renderFiles(files) {
+    if (!files || files.length === 0) {
+        console.log("No files found.");
+        return;
+    }
+
     const fileList = document.getElementById('fileList');
     fileList.innerHTML = '';  // Clear the list before updating
 

@@ -161,8 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (loginForm) {
         loginForm.addEventListener("submit", handleLogin);
-    } else {
-        console.error("Login form not found in DOM");
     }
 });
 
