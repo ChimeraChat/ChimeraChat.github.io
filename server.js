@@ -11,6 +11,9 @@ import { dbConfig } from './config/db.js';
 import session from 'express-session';
 
 dotenv.config({ path: 'googledrive.env' });
+
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded" : "Not Found");
+
 dotenv.config();
 console.log("Session Secret:", process.env.SESSION_SECRET);
 
@@ -28,6 +31,8 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded secret" : "Not Found sec");
+
 // Add express-session middleware
 app.use(session({
   store: new PgSession({
@@ -43,6 +48,8 @@ app.use(session({
     httpOnly: true
   }
 }));
+
+app.set('trust proxy', 1); // Trust first proxy
 
 // Signup route
 app.post('/signup', async (req, res) => {

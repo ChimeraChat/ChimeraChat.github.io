@@ -29,6 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create .env file  # <-- Ensure SESSION_SECRET is available at runtime
+        run: |
+            echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" > .env
+            cat .env  # Debugging: Remove this line after testing
+
       - name: Build
         run: npm run build
 
