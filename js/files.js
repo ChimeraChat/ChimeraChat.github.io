@@ -2,7 +2,6 @@
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];
-    const fileType = document.getElementById("fileType").value;
 
     if (!file) {
         alert("Please select a file to upload.");
@@ -12,7 +11,6 @@ async function handleFileUpload() {
     try {
         const formData = new FormData();
         formData.append("fileupload", file);
-        formData.append("fileType", fileType);
 
         const uploadResponse = await fetch('/api/upload', {
             method: "POST",
