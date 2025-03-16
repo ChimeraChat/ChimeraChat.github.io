@@ -102,7 +102,6 @@ async function handleLogin(event) {
     }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 

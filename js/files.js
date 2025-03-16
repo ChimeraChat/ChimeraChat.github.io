@@ -24,7 +24,6 @@ async function handleFileUpload() {
             alert("File uploaded successfully!");
             fileInput.value = ""; // Reset input
             await displayUserFiles();
-            await displaySharedFiles();
         } else {
             throw new Error(uploadData.message || "Error uploading file.");
         }
