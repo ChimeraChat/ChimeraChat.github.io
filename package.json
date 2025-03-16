@@ -4,7 +4,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js & node chatServer.js"
+    "start": "node server.js & node config/chatServer.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
