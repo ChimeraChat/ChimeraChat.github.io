@@ -12,7 +12,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
-import { drive, uploadMiddleware, uploadFileToDrive, createUserFolder, createSharedFolder } from "./config/googleDrive.js";
+import { drive, uploadMiddleware, uploadFileToDrive  } from "./config/googleDrive.js";
 
 
 const { Pool } = pkg;
@@ -50,13 +50,7 @@ app.use(session({
 console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 app.set('trust proxy', 1); // Trust first proxy
 
-(async () => {
-  try {
-    global.sharedFolderId = await createSharedFolder();
-  } catch (error) {
-    console.error("Error initializing shared folder:", error.message);
-  }
-})();
+
 
 // Signup route
 app.post('/signup', async (req, res) => {
@@ -86,16 +80,7 @@ app.post('/signup', async (req, res) => {
     }
 
     const { userid } = userResult.rows[0];
-    let userFolderId;
 
-    try {
-        userFolderId = await createUserFolder(username, pool);
-    } catch (error) {
-        console.error("Error creating Google Drive folder:", error.message);
-        userFolderId = null; // Allow signup even if folder creation fails
-    }
-
-    await client.query('UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2', [userFolderId, userid]);
     await client.query('INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)', [userid, hashedPassword]);
     await client.query('COMMIT');
 
@@ -178,7 +163,8 @@ app.post('/logout', (req, res) => {
   }
 
 });
-
+/*
+// Create folder route
 app.post('/api/create-folder', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
     return res.status(401).json({ message: "You are not logged in" });
@@ -213,6 +199,7 @@ app.post('/api/create-folder', async (req, res) => {
     res.status(500).json({ message: "Failed to create folder." });
   }
 });
+ */
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
