@@ -41,7 +41,7 @@ socket.on("receiveMessage", displayMessage);
 
 // Update online users list
 socket.on("updateOnlineUsers", (userList) => {
-    const userListContainer = document.getElementById("userList");
+    const userListContainer = document.getElementById("onlineUsers");
     userListContainer.innerHTML = "";
 
     userList.forEach(user => {
