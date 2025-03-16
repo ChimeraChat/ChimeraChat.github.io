@@ -133,6 +133,7 @@ async function getUserFiles() {
     }
 }
 
+/*
 async function loadFilesPage() {
     try {
         const files = await getUserFiles();
@@ -148,7 +149,7 @@ async function loadFilesPage() {
 if (window.location.pathname === '/files.html') {
     loadFilesPage();
 }
-
+*/
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
