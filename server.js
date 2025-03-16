@@ -319,50 +319,7 @@ app.get('/api/user/files', async (req, res) => {
     }
 });
 */
-app.get('/api/user/files', async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
 
-  const userId = req.session.user.id;
-
-  try {
-    const result = await pool.query(
-        'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
-        [userId]
-    );
-
-    if (result.rows.length === 0 || !result.rows[0].userfolderid) {
-      return res.status(404).json({ message: "User folder ID not found" });
-    }
-
-    const userFolderId = result.rows[0].userfolderid;
-
-    const driveResponse = await drive.files.list({
-      q: `'${userFolderId}' in parents`,
-      fields: 'files(id, name, webViewLink, webContentLink)'
-    });
-
-    res.status(200).json(driveResponse.data.files);
-  } catch (error) {
-    console.error("Error fetching user files:", error);
-    res.status(500).json({ message: "Failed to fetch user files." });
-  }
-});
-
-app.get('/api/shared/files', async (req, res) => {
-  try {
-    const driveResponse = await drive.files.list({
-      q: `'${process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID}' in parents`,
-      fields: 'files(id, name, webViewLink, webContentLink)'
-    });
-
-    res.status(200).json(driveResponse.data.files);
-  } catch (error) {
-    console.error("Error fetching shared files:", error);
-    res.status(500).json({ message: "Failed to fetch shared files." });
-  }
-});
 
 
 app.get('/api/files/:folderId', async (req, res) => {

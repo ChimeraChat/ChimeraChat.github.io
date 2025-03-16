@@ -22,6 +22,53 @@ let sharedFolderId = process.env.SHARED_FOLDER_ID || null; // Store shared folde
 
 console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
+async function listAllFiles() {
+    try {
+        const res = await drive.files.list({
+            fields: "files(id, name)",
+            pageSize: 1000, // Adjust if needed
+        });
+
+        if (!res.data.files.length) {
+            console.log("No files found.");
+            return;
+        }
+
+        console.log("Files in Drive:");
+        res.data.files.forEach(file => console.log(`ID: ${file.id}, Name: ${file.name}`));
+
+    } catch (error) {
+        console.error("Error listing files:", error.message);
+    }
+}
+
+listAllFiles();
+
+async function deleteAllFiles() {
+    try {
+        const res = await drive.files.list({
+            fields: "files(id, name)",
+            pageSize: 1000, // Adjust if needed
+        });
+
+        if (!res.data.files.length) {
+            console.log("No files found.");
+            return;
+        }
+
+        for (const file of res.data.files) {
+            console.log(`Deleting file: ${file.name} (ID: ${file.id})`);
+            await drive.files.delete({ fileId: file.id });
+        }
+
+        console.log("✅ All files deleted successfully!");
+    } catch (error) {
+        console.error("Error deleting files:", error.message);
+    }
+}
+
+deleteAllFiles();
+
 async function createSharedFolder() {
     if (sharedFolderId) {
         console.log("✅ Shared folder already exists:", sharedFolderId);

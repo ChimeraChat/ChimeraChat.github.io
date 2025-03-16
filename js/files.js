@@ -23,8 +23,8 @@ async function handleFileUpload() {
         if (uploadResponse.ok) {
             alert("File uploaded successfully!");
             fileInput.value = ""; // Reset input
-            displayUserFiles();
-            displaySharedFiles();
+            await displayUserFiles();
+            await displaySharedFiles();
         } else {
             throw new Error(uploadData.message || "Error uploading file.");
         }
@@ -180,7 +180,17 @@ async function displaySharedFiles() {
 
 function renderFiles(files, elementId) {
     const fileList = document.getElementById(elementId);
+
+    if (!fileList) {
+        console.error("Error: 'fileList' element not found in the DOM.");
+        return; // Exit function if fileList is null
+    }
     fileList.innerHTML = '';  // Clear previous list
+
+    if (!files || files.length === 0) {
+        fileList.innerHTML = "<p>No files found.</p>";
+        return;
+    }
 
     files.forEach(file => {
         const listItem = document.createElement('li');
