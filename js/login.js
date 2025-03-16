@@ -89,9 +89,9 @@ async function handleLogin(event) {
             setTimeout(()=>{
                 message.remove();
                 window.location.href = "home.html";
-            }, 1000);
+            }, 3000);
 
-            window.location.href = "home.html";
+            window.location.href = "index.html";
 
         } else {
             console.error("Login failed:", data.message);
