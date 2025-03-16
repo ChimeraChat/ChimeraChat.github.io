@@ -20,16 +20,7 @@ const drive = google.drive({ version: "v3", auth });
 
 console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
-async function listFiles() {
-    try {
-        const response = await drive.files.list({});
-        console.log("response in drive.js", response);
-        return response.data;
-    } catch (error) {
-        console.error('API Error:', error);
-        throw error;
-    }
-}
+
 async function createUserFolder(username, pool) {
     if (!username) {
         throw new Error("Username is not defined");
@@ -98,7 +89,7 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
     }
 };
 
-export { listFiles, createUserFolder, drive };
+export { createUserFolder, drive };
 
 
 // Express route för att hantera uppladdning från klienten

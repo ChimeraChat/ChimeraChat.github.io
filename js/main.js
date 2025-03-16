@@ -1,5 +1,5 @@
 //main.js
-import { displayUserFiles, renderFiles  } from './files.js';
+//import { displayUserFiles, renderFiles  } from './files.js';
 
 function setupRestrictedLinks() {
     setTimeout(() => {  // Delay to ensure sessionStorage is updated
@@ -34,8 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 export { setupRestrictedLinks };
 
+/*
 document.addEventListener("DOMContentLoaded", async function() {
     console.log("DOM Loaded, running displayUserFiles()");
     await displayUserFiles();
     await renderFiles();
-});
+});*/

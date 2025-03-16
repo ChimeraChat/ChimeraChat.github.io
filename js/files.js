@@ -95,9 +95,10 @@ document.addEventListener("DOMContentLoaded", function () {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
             await handleFileUpload();
+            await displayUserFiles();
             await renderFiles();
         });
     }
 });
 
-export { handleFileUpload, renderFiles, displayUserFiles };
+//export { handleFileUpload };
