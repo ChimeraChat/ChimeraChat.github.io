@@ -101,6 +101,8 @@ async function handleLogin(event) {
     }
 }
 
+/*
+
 async function getUserFiles() {
     try {
         const response = await fetch('/api/user/id');
