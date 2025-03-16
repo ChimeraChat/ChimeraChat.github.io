@@ -90,7 +90,9 @@ async function handleLogin(event) {
                 message.remove();
                 window.location.href = "home.html";
             }, 1000);
-            
+
+            window.location.href = "home.html";
+
         } else {
             console.error("Login failed:", data.message);
             alert(data.message || "Login failed.");
