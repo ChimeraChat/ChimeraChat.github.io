@@ -1,5 +1,9 @@
 import { Server } from "socket.io";
-import { dbConfig } from './db.js'; // Import the database connection
+import {dbConfig} from './db.js'; // Import the database connection
+import pkg from 'pg';
+const { Pool } = pkg;
+
+const pool = new Pool(dbConfig);
 
 let io;
 let onlineUsers = {}; // Store online users

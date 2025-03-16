@@ -15,7 +15,7 @@ import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
 import http from "http"; // Required for WebSockets
-import { initializeChat } from "./chatBackend.js"; // Import the chat system
+import { initializeChat } from "./config/chatBackend.js"; // Import the chat system
 
 const server = http.createServer(app); // Wrap Express with HTTP server
 
