@@ -250,6 +250,4 @@ app.listen(port, () => {
   console.log(`appservern körs på port ${port}`);
 });
 
-server.listen(port, () => {
-  console.log(`chatserver running on port ${port}`);
-});
+
