@@ -71,19 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*async function sendMessage() {
     const chatUser = sessionStorage.getItem("chatWith") ? JSON.parse(sessionStorage.getItem("chatWith")) : null;
     const messageInput = document.getElementById("messageInput");
