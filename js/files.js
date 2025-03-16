@@ -122,7 +122,8 @@ function renderFiles(files) {
 
     files.forEach(file => {
         const listItem = document.createElement('li');
-        listItem.textContent = file.name;
+        listItem.innerHTML = `<a href="${file.webViewLink}" target="_blank">${file.name}</a>`;
+        //listItem.textContent = file.name;
 
         // Create Download button
         const downloadBtn = document.createElement('button');
@@ -150,36 +151,21 @@ function renderFiles(files) {
 
 async function displayUserFiles() {
     try {
-        const response = await fetch('/api/user/files');
+        const response = await fetch('/api/files');
         const files = await response.json();
 
         if (!response.ok) {
             throw new Error(files.message || "Failed to load files.");
         }
 
-        renderFiles(files, 'fileList');
+        renderFiles(files);
     } catch (error) {
         console.error("Error handling user files:", error);
     }
 }
 
-async function displaySharedFiles() {
-    try {
-        const response = await fetch('/api/shared/files');
-        const files = await response.json();
-
-        if (!response.ok) {
-            throw new Error(files.message || "Failed to load shared files.");
-        }
-
-        renderFiles(files, 'sharedList');
-    } catch (error) {
-        console.error("Error handling shared files:", error);
-    }
-}
-
 function renderFiles(files, elementId) {
-    const fileList = document.getElementById(elementId);
+    const fileList = document.getElementById('sharedList');
 
     if (!fileList) {
         console.error("Error: 'fileList' element not found in the DOM.");

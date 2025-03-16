@@ -220,18 +220,11 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
       return res.status(401).json({ message: "You are not logged in" });
     }
 
-    const userId = req.session.user.id;
     const file = req.file;
-    const parentFolderId = req.body.parentFolderId; // Folder ID from the request body
-
-    if (!file || !parentFolderId) {
-      return res.status(400).json({ message: "Missing file or parent folder ID" });
-    }
-
-    console.log("Uploading file:", file.originalname, "to folder:", parentFolderId);
+    console.log("Uploading file:", file.originalname, "to shared folder.");
 
     // Upload file to Google Drive
-    const uploadResult = await uploadFileToDrive(file.buffer, file.originalname, file.mimetype, parentFolderId);
+    const uploadResult = await uploadFileToDrive(file.buffer, file.originalname, file.mimetype);
 
     if (!uploadResult) {
       return res.status(500).json({ message: "File upload failed" });
@@ -246,68 +239,7 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
 });
 
 
-
 /*
-app.post('/api/upload', uploadMiddleware, async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
-  try {
-    const userId = req.session.user.id;
-    const username = req.session.user.username;
-
-    console.log(`Uploading file for user: ${username}`);
-    const folderResult = await pool.query(
-        'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
-        [userId]
-    );
-    if (folderResult.rows.length === 0 || !folderResult.rows[0].userfolderid) {
-      return res.status(400).json({ message: "No folder found for this user." });
-    }
-    const parentFolderId = folderResult.rows[0].userfolderid; // Fix the missing variable
-    console.log("User Folder ID:", parentFolderId);
-
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
-    const fileId = await uploadFileToDrive(req.file.buffer, req.file.originalname, req.file.mimetype, parentFolderId);
-
-    if (!fileId) {
-      return res.status(500).json({ message: "File upload failed." });
-    }
-
-    res.json({ message: "Upload successful!", fileId });
-  } catch (error) {
-      console.error("Upload error:", error);
-      res.status(500).json({ message: "Server error during upload." });
-  }
-});
-
-
-
-//Get user folder ID from database
-app.get('/api/user/files', async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
-  const userId = req.session.user.id; // Användarens ID från sessionen
-    try {
-      const userFolderId = await createUserFolder(userId, pool); // Hämta mapp-ID från databasen
-      const driveResponse = await drive.files.list({
-        pageSize: 10,
-        fields: 'nextPageToken, files(id, name)',
-        q: `'${userFolderId}' in parents`  // Listar filer i användarens mapp
-      });
-
-      const files = driveResponse.data.files;
-      res.status(200).json(files);
-    } catch (error) {
-      console.error("Error fetching files from Drive:", error);
-      res.status(500).json({ message: "Failed to fetch files." });
-    }
-});
-*/
-
 app.get('/api/user/files', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
     return res.status(401).json({ message: "You are not logged in" });
@@ -366,33 +298,27 @@ app.get('/api/files/:folderId', async (req, res) => {
     res.status(500).json({ message: "Failed to fetch files." });
   }
 });
+*/
 
 // Get files from a user's Google Drive folder
 app.get('/api/files', async (req, res) => {
-  const userFolderId = req.query.folderId; // Get folderId from query parameters
-
-  if (!userFolderId) {
-    return res.status(400).json({ message: "Folder ID is required." });
-  }
-
   try {
-    console.log("Fetching files for Folder ID:", userFolderId);
-
     const driveResponse = await drive.files.list({
-      q: `'${userFolderId}' in parents`,
+      q: `'${sharedFolderId}' in parents`,
       fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
-      pageSize: 10
+      pageSize: 50
     });
 
     const files = driveResponse.data.files;
     console.log("Files found:", files);
-
     res.status(200).json(files);
+
   } catch (error) {
     console.error("Error fetching files from Google Drive:", error);
     res.status(500).json({ message: "Failed to fetch files." });
   }
 });
+
 
 app.get('/api/download/:fileId', async (req, res) => {
   try {
@@ -409,7 +335,7 @@ app.get('/api/download/:fileId', async (req, res) => {
   }
 });
 
-
+/*
 app.get('/api/user/id', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
     return res.status(401).json({ message: "You are not logged in" });
@@ -431,7 +357,7 @@ app.get('/api/user/id', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch userFolderId' });
   }
 });
-
+*/
 
 // Standard route
 app.get('/', (req, res) => {

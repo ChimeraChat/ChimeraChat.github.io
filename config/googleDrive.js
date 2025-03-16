@@ -18,7 +18,7 @@ const auth = new google.auth.GoogleAuth({
 // Skapa Drive-klienten
 const drive = google.drive({ version: "v3", auth });
 
-let sharedFolderId = process.env.SHARED_FOLDER_ID || null; // Store shared folder ID
+const sharedFolderId = process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID; // Store shared folder ID
 
 console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
@@ -42,7 +42,9 @@ async function listAllFiles() {
     }
 }
 
-listAllFiles();
+// Function to list all files in Google Drive
+// listAllFiles();
+
 
 async function deleteAllFiles() {
     try {
@@ -61,7 +63,7 @@ async function deleteAllFiles() {
             await drive.files.delete({ fileId: file.id });
         }
 
-        console.log("✅ All files deleted successfully!");
+        console.log("All files deleted successfully!");
     } catch (error) {
         console.error("Error deleting files:", error.message);
     }
@@ -71,112 +73,35 @@ async function deleteAllFiles() {
 // deleteAllFiles();
 
 
-async function createSharedFolder() {
-    if (sharedFolderId) {
-        console.log("✅ Shared folder already exists:", sharedFolderId);
-        return sharedFolderId;
+
+export const uploadFileToDrive = async (filebuffer, filename, mimetype) => {
+    if (!filebuffer || !filename || !mimetype) {
+        throw new Error("Missing parameters for file upload.");
     }
 
-    console.log("🔄 Creating a shared folder...");
-
-    const folderMetadata = {
-        name: "ChimeraChat Shared Files",
-        mimeType: "application/vnd.google-apps.folder",
-    };
-
     try {
-        const response = await drive.files.create({
-            resource: folderMetadata,
-            fields: "id",
-        });
+        console.log("Uploading file:", filename, "to shared folder:", SHARED_FOLDER_ID);
 
-        sharedFolderId = response.data.id;
+        const bufferStream = new Readable();
+        bufferStream.push(filebuffer);
+        bufferStream.push(null); // End signal
 
-        // Make the folder public
-        await drive.permissions.create({
-            fileId: sharedFolderId,
+        const fileResponse = await drive.files.create({
             requestBody: {
-                role: "reader",
-                type: "anyone",
+                name: filename,
+                parents: [SHARED_FOLDER_ID], // Use the shared folder
             },
-        });
-
-        console.log("✅ Shared folder created:", sharedFolderId);
-        return sharedFolderId;
-    } catch (error) {
-        console.error("❌ Failed to create shared folder:", error.message);
-        throw new Error("Shared folder creation failed.");
-    }
-}
-
-async function createUserFolder(username, pool) {
-    if (!username) {
-        throw new Error("Username is not defined");
-    }
-    if (!pool) {
-        throw new Error("Database pool is not available.");
-    }
-    console.log("Creating Google Drive folder for:", username);
-
-    try {
-        const result = await pool.query('SELECT userfolderid FROM chimerachat_accounts WHERE username = $1', [username]);
-        if (result.rows.length > 0 && result.rows[0].userfolderid) {
-            console.log("✅ Folder already exists for", username);
-            return result.rows[0].userfolderid;  // Return existing folder ID
-        }
-
-        console.log("No folder found, creating a new one...");
-        const folderMetadata = {
-            'name': `${username}'s Folder`, // Mappens namn baserat på användarnamnet
-            'mimeType': 'application/vnd.google-apps.folder',
-            'parents': [process.env.GOOGLE_DRIVE_PARENT_FOLDER_ID] // Set a parent folder if needed
-        };
-        const driveResponse = await drive.files.create({
-            resource: folderMetadata,
+            media: {
+                mimeType: mimetype,
+                body: bufferStream,
+            },
             fields: 'id'
         });
 
-        console.log("Mapp skapad i Google Drive:", driveResponse.data);
-        return driveResponse.data.id;
-    } catch (error) {
-        console.error("Kunde inte skapa mapp i Google Drive:", error.message);
-        return null;
-    }
-}
-
-
-// Funktion för att ladda upp filer till Google Drive
-export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFolderId) => {
-    if(!filebuffer || !filename || !mimetype || !parentFolderId){
-        throw new Error("Missing parameters");
-    }
-    try {
-        console.log(`Uploading file: ${filename} to folder: ${parentFolderId}`);
-
-        // Skapa en läsbar stream från buffern
-        const bufferStream = new Readable();
-        bufferStream.push(filebuffer);
-        bufferStream.push(null); // Slutsignal för streamen
-        console.log("BufferStream:", bufferStream);
-
-        console.log("Uploading file:", filename, "to folder:", parentFolderId);
-
-        const response = await drive.files.create({
-            requestBody: {
-                name: filename,
-                parents: [parentFolderId], // ID för mappen i Google Drive
-                mimeType: mimetype,
-            },
-            media: {
-                mimeType: mimetype, // Använd den faktiska MIME-typen från filen
-                body: bufferStream, // Använd stream
-            },
-            fields: 'id',
-        });
-        const fileId = response.data.id;
+        const fileId = fileResponse.data.id;
         console.log("File uploaded:", fileId);
 
-        // **Make the file publicly accessible**
+        // Make file publicly accessible
         await drive.permissions.create({
             fileId: fileId,
             requestBody: {
@@ -185,14 +110,17 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
             }
         });
 
+        const fileLink = `https://drive.google.com/uc?id=${fileId}&export=download`;
+        console.log("Public File Link:", fileLink);
+
+        return { fileId, fileLink };
+
     } catch (error) {
-        console.error("Fel vid uppladdning drive.js:", error);
+        console.error("Error uploading to Drive:", error);
         return null;
     }
 };
 
-export { createUserFolder, createSharedFolder, drive };
-
-
+export { drive }
 // Express route för att hantera uppladdning från klienten
 export const uploadMiddleware = upload.single("fileupload");
