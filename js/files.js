@@ -36,8 +36,13 @@ async function displayUserFiles() {
         const response = await fetch('/api/files');
         const files = await response.json();
 
+        console.log("📁 Files received:", files);
+
         if (!response.ok) {
             throw new Error(files.message || "Failed to load files.");
+        }
+        if (!files || files.length === 0) {
+            console.log("⚠ No files found in API response.");
         }
 
         renderFiles(files);
@@ -53,6 +58,8 @@ function renderFiles(files) {
         console.error("Error: 'fileList' element not found in the DOM.");
         return; // Exit function if fileList is null
     }
+
+    fileList.innerHTML = ""; // Clear the list before updating
 
     if (!files || files.length === 0) {
         fileList.innerHTML = "<p>No files found.</p>";
@@ -70,13 +77,11 @@ function renderFiles(files) {
 document.addEventListener("DOMContentLoaded", async function () {
     const uploadForm = document.getElementById("uploadForm");
     await displayUserFiles();
-    await renderFiles();
     if (uploadForm) {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
             await handleFileUpload();
             await displayUserFiles();
-            await renderFiles();
         });
     }
 });

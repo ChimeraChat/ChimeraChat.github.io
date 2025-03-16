@@ -50,8 +50,6 @@ app.use(session({
 console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 app.set('trust proxy', 1); // Trust first proxy
 
-const SHARED_FOLDER_ID = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID;
-
 // Signup route
 app.post('/signup', async (req, res) => {
   console.log("Received POST /signup:", req.body);
@@ -163,43 +161,7 @@ app.post('/logout', (req, res) => {
   }
 
 });
-/*
-// Create folder route
-app.post('/api/create-folder', async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
-  const userId = req.session.user.id;
 
-  try {
-    //Check if the user already has a folder in the database
-    const folderQuery = "SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1";
-    const folderResult = await pool.query(folderQuery, [userId]);
-
-    if (folderResult.rows.length > 0 && folderResult.rows[0].userfolderid) {
-      return res.json({ message: "Folder already exists", folderId: folderResult.rows[0].userfolderid });
-    }
-    //Create folder
-    const usernameQuery = "SELECT username FROM chimerachat_accounts WHERE userid = $1";
-    const usernameResult = await pool.query(usernameQuery, [userId]);
-
-    if (usernameResult.rows.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const username = usernameResult.rows[0].username;
-    const folderId = await createUserFolder(username, pool); // Create Google Drive folder
-
-    //store the folder ID in the database
-    await pool.query("UPDATE chimerachat_accounts SET userfolderid = $1 WHERE userid = $2", [folderId, userId]);
-
-    res.json({ message: "Folder created successfully", folderId });
-
-  } catch (error) {
-    console.error("Error creating user folder:", error);
-    res.status(500).json({ message: "Failed to create folder." });
-  }
-});
- */
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
@@ -226,72 +188,11 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
 });
 
 
-/*
-app.get('/api/user/files', async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
-
-  const userId = req.session.user.id;
-  try {
-    // Get the user's Google Drive folder ID from the database
-    const result = await pool.query('SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1', [userId]);
-    if (result.rows.length === 0 || !result.rows[0].userfolderid) {
-      return res.status(404).json({ message: "User folder ID not found." });
-    }
-
-    const userFolderId = result.rows[0].userfolderid;
-    console.log("Fetching files for folder:", userFolderId);
-
-    // Fetch files from Google Drive
-    const driveResponse = await drive.files.list({
-      q: `'${userFolderId}' in parents`,
-      fields: 'files(id, name, webViewLink, webContentLink)',
-      pageSize: 50
-    });
-
-    const files = driveResponse.data.files.map(file => ({
-      id: file.id,
-      name: file.name,
-      downloadLink: `https://drive.google.com/uc?id=${file.id}&export=download`
-    }));
-
-    res.status(200).json(files);
-  } catch (error) {
-    console.error("Error fetching files from Drive:", error);
-    res.status(500).json({ message: "Failed to fetch files.", error: error.message });
-  }
-});
-
-
-
-app.get('/api/files/:folderId', async (req, res) => {
-  const { folderId } = req.params;
-
-  if (!folderId) {
-    return res.status(400).json({ message: "Folder ID is required." });
-  }
-
-  try {
-    const driveResponse = await drive.files.list({
-      q: `'${folderId}' in parents`,
-      fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
-      pageSize: 10
-    });
-
-    res.status(200).json(driveResponse.data.files);
-  } catch (error) {
-    console.error("Error fetching files from Drive:", error);
-    res.status(500).json({ message: "Failed to fetch files." });
-  }
-});
-*/
-
 // Get files from a user's Google Drive folder
 app.get('/api/files', async (req, res) => {
   try {
     const driveResponse = await drive.files.list({
-      q: `'${SHARED_FOLDER_ID}' in parents`,
+      q: `'${process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID}' in parents`,
       fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
       pageSize: 50
     });
@@ -322,29 +223,7 @@ app.get('/api/download/:fileId', async (req, res) => {
   }
 });
 
-/*
-app.get('/api/user/id', async (req, res) => {
-  if (!req.session.user || !req.session.user.id) {
-    return res.status(401).json({ message: "You are not logged in" });
-  }
-  const userId = req.session.user.id;
-  try {
-      const folderResult = await pool.query(
-          'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
-          [userId]
-      );
 
-      if (folderResult.rows.length === 0 || !folderResult.rows[0].userfolderid) {
-        return res.status(404).json({ message: "User folder ID not found." });
-      }
-
-      res.json({ id: folderResult.rows[0].userfolderid });
-  } catch (error) {
-    console.error('Error fetching userFolderId:', error);
-    res.status(500).json({ message: 'Failed to fetch userFolderId' });
-  }
-});
-*/
 
 // Standard route
 app.get('/', (req, res) => {
