@@ -34,9 +34,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 export { setupRestrictedLinks };
 
-/*
-document.addEventListener("DOMContentLoaded", async function() {
-    console.log("DOM Loaded, running displayUserFiles()");
-    await displayUserFiles();
-    await renderFiles();
-});*/

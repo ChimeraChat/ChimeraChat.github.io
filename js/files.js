@@ -123,4 +123,3 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-//export { handleFileUpload };
