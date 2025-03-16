@@ -12,7 +12,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
-import { drive, uploadMiddleware, uploadFileToDrive  } from "./config/googleDrive.js";
+import {drive, uploadMiddleware, uploadFileToDrive, SHARED_FOLDER_ID} from "./config/googleDrive.js";
 
 
 const { Pool } = pkg;
@@ -291,7 +291,7 @@ app.get('/api/files/:folderId', async (req, res) => {
 app.get('/api/files', async (req, res) => {
   try {
     const driveResponse = await drive.files.list({
-      q: `'${sharedFolderId}' in parents`,
+      q: `'${SHARED_FOLDER_ID}' in parents`,
       fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
       pageSize: 50
     });
