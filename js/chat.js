@@ -1,5 +1,5 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
-const socket = io("https://chimerachat.onrender.com:3001");
+const socket = io();
 
 async function loadChatHistory() {
     try {
@@ -18,29 +18,54 @@ function displayMessage(message) {
     chatBox.appendChild(msgElement);
 }
 
+socket.on("receiveMessage", displayMessage);
+
+// Send message on form submit
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const messageInput = document.getElementById("messageInput");
     const message = messageInput.value.trim();
 
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        const messageData = {
-            senderId: user.id,
-            senderUsername: user.username,
-            message,
-        };
+    if (!message) return;
 
-        socket.emit("sendMessage", messageData);
-        messageInput.value = ""; // Clear input
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    if (!user || !user.username) {
+        console.error("User not found in session storage.");
+        alert("You must be logged in to send messages.");
+        return;
     }
+
+    const messageData = {
+        senderId: user.id,
+        senderUsername: user.username,
+        message,
+    };
+
+    socket.emit("sendMessage", messageData);
+    messageInput.value = ""; // Clear input
 });
 
-socket.on("receiveMessage", displayMessage);
+// Update online users list
+socket.on("updateOnlineUsers", (userList) => {
+    const userListContainer = document.getElementById("userList");
+    userListContainer.innerHTML = "";
 
+    userList.forEach(user => {
+        const listItem = document.createElement("li");
+        listItem.textContent = user.username;
+        userListContainer.appendChild(listItem);
+    });
+});
 
-document.addEventListener("DOMContentLoaded", loadChatHistory);
-
+// Notify server when user logs in
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user) {
+        socket.emit("userLoggedIn", user);
+    }
+    loadChatHistory();
+});
 
 
 

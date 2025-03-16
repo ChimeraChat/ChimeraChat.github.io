@@ -4,8 +4,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import {dbConfig} from './db.js'; // Import the database connection
 import pkg from 'pg';
-const { Pool } = pkg;
 
+const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 
 dotenv.config();
@@ -26,8 +26,11 @@ io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
 
     // When a user logs in, store their username
-    socket.on("userLoggedIn", (username) => {
-        onlineUsers[socket.id] = username;
+    socket.on("userLoggedIn", (userData) => {
+        const { userId, username } = userData;
+        onlineUsers[socket.id] = { userId, username };
+
+        console.log(` ${username} is now online`);
         io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Broadcast updated list
     });
 
@@ -37,7 +40,7 @@ io.on("connection", (socket) => {
             const {senderId, senderUsername, message} = messageData;
 
             //Save to database
-            await pool.query('INSERT INTO chat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
+            await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
                 [senderId, senderUsername, message]);
 
             console.log("Message saved to database:", messageData);
@@ -68,7 +71,7 @@ app.get("/api/chat/history", async (req, res) => {
 });
 
 // Start the chat server
-const CHAT_PORT = process.env.CHAT_PORT || 3001;
+const CHAT_PORT = process.env.PORT || 3000;
 server.listen(CHAT_PORT, () => {
     console.log(`🚀 Chat server is running on port ${CHAT_PORT}`);
 });
