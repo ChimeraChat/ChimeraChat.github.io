@@ -11,13 +11,13 @@ async function handleSignup(username, password, email) {
         });
 
         const data = await response.json();
-            updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 3000);
-        } else {
-            updateMessage(data.message || "Registrering misslyckades.", false);
-        }
+        updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 3000);
+
+        updateMessage(data.message || "Registrering misslyckades.", false);
+
     } catch (error) {
         updateMessage("Serverfel vid registrering.", false);
         console.error("Signup error:", error);
