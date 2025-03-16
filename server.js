@@ -17,8 +17,7 @@ import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.j
 import http from "http"; // Required for WebSockets
 import { initializeChat } from "./config/chatBackend.js"; // Import the chat system
 
-const server = http.createServer(app); // Wrap Express with HTTP server
-
+const server = http.createServer(); // Wrap Express with HTTP server
 // Initialize Chat WebSockets
 initializeChat(server);
 
