@@ -16,15 +16,15 @@ import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.j
 import { createServer } from "http";
 import { startChat } from "./config/chatBackend.js"; // Import the chat system
 
-const server = createServer(app); // Wrap Express with HTTP server
-// Initialize Chat WebSockets
-startChat(server);
-
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 const PgSession = pgSession(session);
 const app = express();
 const port = process.env.PORT || 3000;
+const server = createServer(app); // Wrap Express with HTTP server
+
+// Initialize Chat WebSockets
+startChat(server);
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -33,6 +33,7 @@ const __dirname = dirname(__filename);
 // Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+app.use(express.static('public'));
 
 console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded secret" : "Not Found sec");
 
@@ -238,6 +239,11 @@ app.get("/api/chat/history", async (req, res) => {
     console.error("Error fetching chat history:", error);
     res.status(500).json({ message: "Failed to fetch chat history." });
   }
+});
+
+// Sample route
+app.get("/", (req, res) => {
+  res.send("ChimeraChat Server is Running!");
 });
 
 // Standard route
