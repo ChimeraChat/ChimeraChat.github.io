@@ -14,6 +14,13 @@ import { dbConfig } from './config/db.js';
 import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
+import http from "http"; // Required for WebSockets
+import { initializeChat } from "./chatBackend.js"; // Import the chat system
+
+const server = http.createServer(app); // Wrap Express with HTTP server
+
+// Initialize Chat WebSockets
+initializeChat(server);
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
@@ -223,7 +230,17 @@ app.get('/api/download/:fileId', async (req, res) => {
   }
 });
 
-
+app.get("/api/chat/history", async (req, res) => {
+  try {
+    const result = await pool.query(
+        "SELECT sender_username, message, timestamp FROM chimerachat_messages ORDER BY timestamp ASC"
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching chat history:", error);
+    res.status(500).json({ message: "Failed to fetch chat history." });
+  }
+});
 
 // Standard route
 app.get('/', (req, res) => {
@@ -231,7 +248,9 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servern körs på port ${port}`);
+  console.log(`appservern körs på port ${port}`);
 });
 
-
+server.listen(port, () => {
+  console.log(`chatserver running on port ${port}`);
+});
