@@ -84,7 +84,27 @@ function renderFiles(files) {
 
     files.forEach(file => {
         const listItem = document.createElement('li');
-        listItem.textContent = file.name;  // Assuming 'name' is a property of the file objects
+        listItem.textContent = file.name;
+
+        // Create Download button
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = "Download";
+        downloadBtn.onclick = async () => {
+            try {
+                const response = await fetch(`/api/download/${file.id}`);
+                const data = await response.json();
+                if (response.ok) {
+                    window.location.href = data.url; // Redirect to download link
+                } else {
+                    alert("Error: " + data.message);
+                }
+            } catch (error) {
+                console.error("Download error:", error);
+                alert("Failed to download file.");
+            }
+        };
+
+        listItem.appendChild(downloadBtn);
         fileList.appendChild(listItem);
     });
 }

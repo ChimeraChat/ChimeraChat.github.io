@@ -312,6 +312,20 @@ app.get('/api/files', async (req, res) => {
   }
 });
 
+app.get('/api/download/:fileId', async (req, res) => {
+  try {
+    const fileId = req.params.fileId;
+    if (!fileId) {
+      return res.status(400).json({ message: "File ID is required" });
+    }
+
+    const fileUrl = `https://drive.google.com/uc?id=${fileId}&export=download`;
+    res.json({ url: fileUrl });
+  } catch (error) {
+    console.error("Error generating download link:", error);
+    res.status(500).json({ message: "Failed to generate download link." });
+  }
+});
 
 
 app.get('/api/user/id', async (req, res) => {

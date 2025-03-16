@@ -90,7 +90,7 @@ async function handleLogin(event) {
                 message.remove();
                 window.location.href = "home.html";
             }, 3000);
-            
+
 
         } else {
             console.error("Login failed:", data.message);
@@ -102,57 +102,6 @@ async function handleLogin(event) {
     }
 }
 
-/*
-
-async function getUserFiles() {
-    try {
-        const response = await fetch('/api/user/id');
-        if (!response.ok) {
-            throw new Error(`Failed to get user folder ID: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        if (!data.id) {
-            throw new Error("User folder ID not found.");
-        }
-
-        const folderId = data.id;
-
-        // Get Files from User's Folder
-        const filesResponse = await fetch(`/api/files?folderId=${folderId}`);
-
-        const text = await filesResponse.text();
-        console.log("🔍 Raw API Response:", text);
-
-        if (!filesResponse.ok) {
-            throw new Error(`Failed to get files: ${filesResponse.statusText}`);
-        }
-
-        const files = JSON.parse(text); // Convert text to JSON
-        return files;
-    } catch (error) {
-        console.error("Error in getUserFiles:", error);
-        throw error; // Re-throw to let the caller handle it
-    }
-}
-
-/*
-async function loadFilesPage() {
-    try {
-        const files = await getUserFiles();
-        // ... display the files on the page ...
-        console.log("Files:", files);
-    } catch (error) {
-        // ... handle the error (e.g., show an error message) ...
-        console.error("Error getting files:", error)
-    }
-}
-
-// Call loadFilesPage() when the user navigates to the files page
-if (window.location.pathname === '/files.html') {
-    loadFilesPage();
-}
-*/
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
