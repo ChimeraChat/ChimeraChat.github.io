@@ -8,8 +8,13 @@ const pool = new Pool(dbConfig);
 let io;
 let onlineUsers = {}; // Store online users
 
-export function initializeChat(server) {
-    io = new Server(server);
+export function startChat(server) {
+    io = new Server(server, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    });
 
     io.on("connection", (socket) => {
         console.log("A user connected:", socket.id);
@@ -43,4 +48,5 @@ export function initializeChat(server) {
             io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Update user list
         });
     });
+    return io;
 }

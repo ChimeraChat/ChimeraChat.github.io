@@ -13,13 +13,12 @@ import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
+import { createServer } from "http";
+import { startChat } from "./config/chatBackend.js"; // Import the chat system
 
-import http from "http"; // Required for WebSockets
-import { initializeChat } from "./config/chatBackend.js"; // Import the chat system
-
-const server = http.createServer(); // Wrap Express with HTTP server
+const server = createServer(app); // Wrap Express with HTTP server
 // Initialize Chat WebSockets
-initializeChat(server);
+startChat(server);
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
