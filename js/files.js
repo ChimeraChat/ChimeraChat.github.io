@@ -161,14 +161,13 @@ async function displayUserFiles() {
     }
 }
 
-function renderFiles(files, elementId) {
+function renderFiles(files) {
     const fileList = document.getElementById('sharedList');
 
     if (!fileList) {
         console.error("Error: 'fileList' element not found in the DOM.");
         return; // Exit function if fileList is null
     }
-    fileList.innerHTML = '';  // Clear previous list
 
     if (!files || files.length === 0) {
         fileList.innerHTML = "<p>No files found.</p>";
