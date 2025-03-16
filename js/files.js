@@ -74,12 +74,12 @@ async function displayUserFiles() {
 }
 
 function renderFiles(files) {
+    const fileList = document.getElementById('fileList');
     if (!files || files.length === 0) {
         console.log("No files found.");
         return;
     }
 
-    const fileList = document.getElementById('fileList');
     fileList.innerHTML = '';  // Clear the list before updating
 
     files.forEach(file => {
