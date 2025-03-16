@@ -216,47 +216,35 @@ app.post('/api/create-folder', async (req, res) => {
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
-    const { filename, mimetype } = req.file;
-    const { fileType } = req.body; // "private" or "shared"
-    const user = req.session.user;
-
-    if (!user) {
-      return res.status(401).json({ message: "User not authenticated" });
+    if (!req.session.user || !req.session.user.id) {
+      return res.status(401).json({ message: "You are not logged in" });
     }
 
-    let parentFolderId;
-    if (fileType === "shared") {
-      parentFolderId = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID; // Shared folder ID
-    } else {
-      // Get user-specific folder ID from the database
-      const result = await pool.query(
-          'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
-          [user.id]
-      );
+    const userId = req.session.user.id;
+    const file = req.file;
+    const parentFolderId = req.body.parentFolderId; // Folder ID from the request body
 
-      if (result.rows.length === 0 || !result.rows[0].userfolderid) {
-        return res.status(400).json({ message: "User folder not found" });
-      }
-
-      parentFolderId = result.rows[0].userfolderid; // User's private folder ID
+    if (!file || !parentFolderId) {
+      return res.status(400).json({ message: "Missing file or parent folder ID" });
     }
 
-    console.log(`Uploading file: ${filename} to folder: ${parentFolderId}`);
+    console.log("Uploading file:", file.originalname, "to folder:", parentFolderId);
 
-    const fileBuffer = req.file.buffer;
-    const fileId = await uploadFileToDrive(fileBuffer, filename, mimetype, parentFolderId);
+    // Upload file to Google Drive
+    const uploadResult = await uploadFileToDrive(file.buffer, file.originalname, file.mimetype, parentFolderId);
 
-    if (!fileId) {
-      throw new Error("File upload failed");
+    if (!uploadResult) {
+      return res.status(500).json({ message: "File upload failed" });
     }
 
-    res.json({ message: "File uploaded successfully!", fileId });
+    res.status(200).json({ message: "File uploaded successfully", fileId: uploadResult.fileId, downloadLink: uploadResult.fileLink });
 
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ message: "Failed to upload file", error: error.message });
+    res.status(500).json({ message: "Upload failed", error: error.message });
   }
 });
+
 
 
 /*
