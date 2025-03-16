@@ -91,6 +91,8 @@ function renderFiles(files) {
 
 document.addEventListener("DOMContentLoaded", function () {
     const uploadForm = document.getElementById("uploadForm");
+    displayUserFiles();
+    renderFiles();
     if (uploadForm) {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
