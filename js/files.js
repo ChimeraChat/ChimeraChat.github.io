@@ -2,6 +2,43 @@
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];
+    const fileType = document.getElementById("fileType").value;
+
+    if (!file) {
+        alert("Please select a file to upload.");
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append("fileupload", file);
+        formData.append("fileType", fileType);
+
+        const uploadResponse = await fetch('/api/upload', {
+            method: "POST",
+            body: formData
+        });
+
+        const uploadData = await uploadResponse.json();
+        if (uploadResponse.ok) {
+            alert("File uploaded successfully!");
+            fileInput.value = ""; // Reset input
+            displayUserFiles();
+            displaySharedFiles();
+        } else {
+            throw new Error(uploadData.message || "Error uploading file.");
+        }
+    } catch (error) {
+        console.error("Upload error:", error);
+        alert("An error occurred while uploading the file.");
+    }
+}
+
+
+/*
+async function handleFileUpload() {
+    const fileInput = document.getElementById("fileupload");
+    const file = fileInput.files[0];
 
     if (!file) {
         alert("Please select a file to upload.");
@@ -40,6 +77,7 @@ async function handleFileUpload() {
         alert("An error occurred while uploading the file.");
     }
 }
+
 
 async function displayUserFiles() {
     try {
@@ -94,7 +132,7 @@ function renderFiles(files) {
                 const response = await fetch(`/api/download/${file.id}`);
                 const data = await response.json();
                 if (response.ok) {
-                    window.location.href = data.url; // Redirect to download link
+                    window.open(data.url, '_blank'); // Open in new tab
                 } else {
                     alert("Error: " + data.message);
                 }
@@ -108,6 +146,49 @@ function renderFiles(files) {
         fileList.appendChild(listItem);
     });
 }
+*/
+
+async function displayUserFiles() {
+    try {
+        const response = await fetch('/api/user/files');
+        const files = await response.json();
+
+        if (!response.ok) {
+            throw new Error(files.message || "Failed to load files.");
+        }
+
+        renderFiles(files, 'fileList');
+    } catch (error) {
+        console.error("Error handling user files:", error);
+    }
+}
+
+async function displaySharedFiles() {
+    try {
+        const response = await fetch('/api/shared/files');
+        const files = await response.json();
+
+        if (!response.ok) {
+            throw new Error(files.message || "Failed to load shared files.");
+        }
+
+        renderFiles(files, 'sharedList');
+    } catch (error) {
+        console.error("Error handling shared files:", error);
+    }
+}
+
+function renderFiles(files, elementId) {
+    const fileList = document.getElementById(elementId);
+    fileList.innerHTML = '';  // Clear previous list
+
+    files.forEach(file => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `<a href="${file.webViewLink}" target="_blank">${file.name}</a>`;
+        fileList.appendChild(listItem);
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", async function () {
     const uploadForm = document.getElementById("uploadForm");

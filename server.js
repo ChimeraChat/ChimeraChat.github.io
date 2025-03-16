@@ -12,7 +12,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
-import { drive, uploadMiddleware, uploadFileToDrive, createUserFolder } from "./config/googleDrive.js";
+import { drive, uploadMiddleware, uploadFileToDrive, createUserFolder, createSharedFolder } from "./config/googleDrive.js";
 
 
 const { Pool } = pkg;
@@ -49,6 +49,14 @@ app.use(session({
 
 console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 app.set('trust proxy', 1); // Trust first proxy
+
+(async () => {
+  try {
+    global.sharedFolderId = await createSharedFolder();
+  } catch (error) {
+    console.error("Error initializing shared folder:", error.message);
+  }
+})();
 
 // Signup route
 app.post('/signup', async (req, res) => {
@@ -207,6 +215,52 @@ app.post('/api/create-folder', async (req, res) => {
 });
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
+  try {
+    const { filename, mimetype } = req.file;
+    const { fileType } = req.body; // "private" or "shared"
+    const user = req.session.user;
+
+    if (!user) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    let parentFolderId;
+    if (fileType === "shared") {
+      parentFolderId = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID; // Shared folder ID
+    } else {
+      // Get user-specific folder ID from the database
+      const result = await pool.query(
+          'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
+          [user.id]
+      );
+
+      if (result.rows.length === 0 || !result.rows[0].userfolderid) {
+        return res.status(400).json({ message: "User folder not found" });
+      }
+
+      parentFolderId = result.rows[0].userfolderid; // User's private folder ID
+    }
+
+    console.log(`Uploading file: ${filename} to folder: ${parentFolderId}`);
+
+    const fileBuffer = req.file.buffer;
+    const fileId = await uploadFileToDrive(fileBuffer, filename, mimetype, parentFolderId);
+
+    if (!fileId) {
+      throw new Error("File upload failed");
+    }
+
+    res.json({ message: "File uploaded successfully!", fileId });
+
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Failed to upload file", error: error.message });
+  }
+});
+
+
+/*
+app.post('/api/upload', uploadMiddleware, async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
     return res.status(401).json({ message: "You are not logged in" });
   }
@@ -242,6 +296,7 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
 });
 
 
+
 //Get user folder ID from database
 app.get('/api/user/files', async (req, res) => {
   if (!req.session.user || !req.session.user.id) {
@@ -263,6 +318,52 @@ app.get('/api/user/files', async (req, res) => {
       res.status(500).json({ message: "Failed to fetch files." });
     }
 });
+*/
+app.get('/api/user/files', async (req, res) => {
+  if (!req.session.user || !req.session.user.id) {
+    return res.status(401).json({ message: "You are not logged in" });
+  }
+
+  const userId = req.session.user.id;
+
+  try {
+    const result = await pool.query(
+        'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1',
+        [userId]
+    );
+
+    if (result.rows.length === 0 || !result.rows[0].userfolderid) {
+      return res.status(404).json({ message: "User folder ID not found" });
+    }
+
+    const userFolderId = result.rows[0].userfolderid;
+
+    const driveResponse = await drive.files.list({
+      q: `'${userFolderId}' in parents`,
+      fields: 'files(id, name, webViewLink, webContentLink)'
+    });
+
+    res.status(200).json(driveResponse.data.files);
+  } catch (error) {
+    console.error("Error fetching user files:", error);
+    res.status(500).json({ message: "Failed to fetch user files." });
+  }
+});
+
+app.get('/api/shared/files', async (req, res) => {
+  try {
+    const driveResponse = await drive.files.list({
+      q: `'${process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID}' in parents`,
+      fields: 'files(id, name, webViewLink, webContentLink)'
+    });
+
+    res.status(200).json(driveResponse.data.files);
+  } catch (error) {
+    console.error("Error fetching shared files:", error);
+    res.status(500).json({ message: "Failed to fetch shared files." });
+  }
+});
+
 
 app.get('/api/files/:folderId', async (req, res) => {
   const { folderId } = req.params;

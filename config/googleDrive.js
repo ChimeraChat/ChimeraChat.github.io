@@ -18,8 +18,47 @@ const auth = new google.auth.GoogleAuth({
 // Skapa Drive-klienten
 const drive = google.drive({ version: "v3", auth });
 
+let sharedFolderId = process.env.SHARED_FOLDER_ID || null; // Store shared folder ID
+
 console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 
+async function createSharedFolder() {
+    if (sharedFolderId) {
+        console.log("✅ Shared folder already exists:", sharedFolderId);
+        return sharedFolderId;
+    }
+
+    console.log("🔄 Creating a shared folder...");
+
+    const folderMetadata = {
+        name: "ChimeraChat Shared Files",
+        mimeType: "application/vnd.google-apps.folder",
+    };
+
+    try {
+        const response = await drive.files.create({
+            resource: folderMetadata,
+            fields: "id",
+        });
+
+        sharedFolderId = response.data.id;
+
+        // Make the folder public
+        await drive.permissions.create({
+            fileId: sharedFolderId,
+            requestBody: {
+                role: "reader",
+                type: "anyone",
+            },
+        });
+
+        console.log("✅ Shared folder created:", sharedFolderId);
+        return sharedFolderId;
+    } catch (error) {
+        console.error("❌ Failed to create shared folder:", error.message);
+        throw new Error("Shared folder creation failed.");
+    }
+}
 
 async function createUserFolder(username, pool) {
     if (!username) {
@@ -75,21 +114,25 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
             requestBody: {
                 name: filename,
                 parents: [parentFolderId], // ID för mappen i Google Drive
+                mimeType: mimetype,
             },
             media: {
                 mimeType: mimetype, // Använd den faktiska MIME-typen från filen
                 body: bufferStream, // Använd stream
             },
+            fields: 'id',
         });
         console.log("Fil uppladdad:", response.data);
         return response.data.id;
+
+
     } catch (error) {
         console.error("Fel vid uppladdning drive.js:", error);
         return null;
     }
 };
 
-export { createUserFolder, drive };
+export { createUserFolder, createSharedFolder, drive };
 
 
 // Express route för att hantera uppladdning från klienten
