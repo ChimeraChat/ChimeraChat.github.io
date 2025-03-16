@@ -50,8 +50,7 @@ async function displayUserFiles() {
             throw new Error(folderData.message || "Failed to get folder ID.");
         }
 
-        const userFolderId = folderData.id;  // ✅ Ensure the variable is properly set
-        console.log("User Folder ID:", userFolderId); // Debugging
+        const userFolderId = folderData.id;  //  Ensure the variable is properly set
 
         // Fetch the files list from Google Drive
         const filesResponse = await fetch(`/api/files?folderId=${userFolderId}`);
@@ -67,7 +66,7 @@ async function displayUserFiles() {
             return;
         }
 
-        renderFiles(files);  // ✅ Call function to render files
+        renderFiles(files);  // Call function to render files
     } catch (error) {
         console.error("Error handling files:", error);
         alert("Error loading files: " + error.message);

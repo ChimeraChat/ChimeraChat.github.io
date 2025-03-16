@@ -103,34 +103,31 @@ async function handleLogin(event) {
 
 async function getUserFiles() {
     try {
-        // 1. Get User's Folder ID
-        const userFolderResponse = await fetch(`/api/user/id`, { // Changed the request
-            method: "GET",
-        });
-
-        if (!userFolderResponse.ok) {
-            const errorData = await userFolderResponse.json();
-            throw new Error(
-                errorData.message || `Server error: ${userFolderResponse.status}`
-            );
+        const response = await fetch('/api/user/id');
+        if (!response.ok) {
+            throw new Error(`Failed to get user folder ID: ${response.statusText}`);
         }
 
-        const userFolderData = await userFolderResponse.json();
-        const userFolderId = userFolderData.id; // Assuming the server returns { id: "..." }
+        const data = await response.json();
+        if (!data.id) {
+            throw new Error("User folder ID not found.");
+        }
 
-        // 2. Get Files from User's Folder
-        const filesResponse = await fetch(`/files`, { // Changed the request
-            method: "GET",
-        });
+        const folderId = data.id;
+        console.log("✅ User Folder ID:", folderId);
+
+        // Get Files from User's Folder
+        const filesResponse = await fetch(`/api/files?folderId=${folderId}`);
+
+        const text = await filesResponse.text();
+        console.log("🔍 Raw API Response:", text);
 
         if (!filesResponse.ok) {
-            const errorData = await filesResponse.json();
-            throw new Error(
-                errorData.message || `Server error: ${filesResponse.status}`
-            );
+            throw new Error(`Failed to get files: ${filesResponse.statusText}`);
         }
 
-        return await filesResponse.json(); // Returns the list of files
+        const files = JSON.parse(text); // Convert text to JSON
+        return files;
     } catch (error) {
         console.error("Error in getUserFiles:", error);
         throw error; // Re-throw to let the caller handle it
