@@ -89,10 +89,10 @@ function renderFiles(files) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const uploadForm = document.getElementById("uploadForm");
-    displayUserFiles();
-    renderFiles();
+    await displayUserFiles();
+    await renderFiles();
     if (uploadForm) {
         uploadForm.addEventListener("submit", async function (event) {
             event.preventDefault();
