@@ -60,14 +60,17 @@
       <p>chat with Nova</p>
       <p>chat with Luna</p>
       <p>chat with Bean</p>
-      <ul id="chatId"></ul>
+      <ul id="onlineUsers"></ul>
     </div>
 
     <div class="grid-item wide chat-container">
-      <h3>Chat</h3>
-      <p>Your messages will appear here...</p>
-      <div id="chatBox"></div>
-      <form id="chatForm">
+      <div class="chat-header">
+      <h3 id="chatWith">Chat</h3>
+      </div>
+      <div id="chatBox" class="chat-box">
+        <!-- Messages will be displayed here -->
+      </div>
+      <form id="chatForm" class="chat-form">
         <input type="text" id="messageInput" placeholder="Type a message..." required>
         <button type="submit">Send</button>
       </form>
