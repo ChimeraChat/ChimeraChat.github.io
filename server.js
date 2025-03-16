@@ -13,18 +13,12 @@ import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
-import { createServer } from "http";
-import { startChat } from "./config/chatBackend.js"; // Import the chat system
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 const PgSession = pgSession(session);
 const app = express();
 const port = process.env.PORT || 3000;
-const server = createServer(app); // Wrap Express with HTTP server
-
-// Initialize Chat WebSockets
-startChat(server);
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -165,9 +159,7 @@ app.post('/logout', (req, res) => {
       redirect: "index.html"
     });
   }
-
 });
-
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
@@ -193,7 +185,6 @@ app.post('/api/upload', uploadMiddleware, async (req, res) => {
   }
 });
 
-
 // Get files from a user's Google Drive folder
 app.get('/api/files', async (req, res) => {
   try {
@@ -213,7 +204,6 @@ app.get('/api/files', async (req, res) => {
   }
 });
 
-
 app.get('/api/download/:fileId', async (req, res) => {
   try {
     const fileId = req.params.fileId;
@@ -229,30 +219,13 @@ app.get('/api/download/:fileId', async (req, res) => {
   }
 });
 
-app.get("/api/chat/history", async (req, res) => {
-  try {
-    const result = await pool.query(
-        "SELECT sender_username, message, timestamp FROM chimerachat_messages ORDER BY timestamp ASC"
-    );
-    res.json(result.rows);
-  } catch (error) {
-    console.error("Error fetching chat history:", error);
-    res.status(500).json({ message: "Failed to fetch chat history." });
-  }
-});
-
-// Sample route
-app.get("/", (req, res) => {
-  res.send("ChimeraChat Server is Running!");
-});
-
 // Standard route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(port, () => {
-  console.log(`appservern körs på port ${port}`);
+  console.log(`servern körs på port ${port}`);
 });
 
 
