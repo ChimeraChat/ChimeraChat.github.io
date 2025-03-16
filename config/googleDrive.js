@@ -18,9 +18,9 @@ const auth = new google.auth.GoogleAuth({
 // Skapa Drive-klienten
 const drive = google.drive({ version: "v3", auth });
 
-export const SHARED_FOLDER_ID = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID; // Store shared folder ID
+const SHARED_FOLDER_ID = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID; // Store shared folder ID
 
-console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
+console.log("GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS, SHARED_FOLDER_ID);
 
 async function listAllFiles() {
     try {

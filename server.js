@@ -12,7 +12,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { dbConfig } from './config/db.js';
 import session from 'express-session';
-import {drive, uploadMiddleware, uploadFileToDrive, SHARED_FOLDER_ID} from "./config/googleDrive.js";
+import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
 
 const { Pool } = pkg;
@@ -50,7 +50,7 @@ app.use(session({
 console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
 app.set('trust proxy', 1); // Trust first proxy
 
-
+const SHARED_FOLDER_ID = process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID;
 
 // Signup route
 app.post('/signup', async (req, res) => {
