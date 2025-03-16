@@ -1,4 +1,6 @@
 //server.js
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
@@ -14,14 +16,11 @@ import { dbConfig } from './config/db.js';
 import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 const server = createServer(app); // Wrap Express with HTTP
 const io = new Server(server, {
@@ -238,10 +237,8 @@ io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
   // When a user logs in, store their username
-  socket.on("userLoggedIn", (userData) => {
-    const { userId, username } = userData;
-    onlineUsers[socket.id] = { userId, username };
-
+  socket.on("userLoggedIn", (username) => {
+    onlineUsers[socket.id] = username;
     console.log(` ${username} is now online`);
     io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Broadcast updated list
   });
@@ -287,7 +284,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`servern körs på port ${port}`);
 });
 

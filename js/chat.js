@@ -18,33 +18,26 @@ function displayMessage(message) {
     chatBox.appendChild(msgElement);
 }
 
-socket.on("receiveMessage", displayMessage);
-
 // Send message on form submit
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const messageInput = document.getElementById("messageInput");
     const message = messageInput.value.trim();
 
-    if (!message) return;
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        const messageData = {
+            senderId: user.id,
+            senderUsername: user.username,
+            message,
+        };
 
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
-    if (!user || !user.username) {
-        console.error("User not found in session storage.");
-        alert("You must be logged in to send messages.");
-        return;
+        socket.emit("sendMessage", messageData);
+        messageInput.value = ""; // Clear input
     }
-
-    const messageData = {
-        senderId: user.id,
-        senderUsername: user.username,
-        message,
-    };
-
-    socket.emit("sendMessage", messageData);
-    messageInput.value = ""; // Clear input
 });
+
+socket.on("receiveMessage", displayMessage);
 
 // Update online users list
 socket.on("updateOnlineUsers", (userList) => {
@@ -66,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     loadChatHistory();
 });
+
 
 
 
