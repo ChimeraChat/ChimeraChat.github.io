@@ -114,7 +114,6 @@ async function getUserFiles() {
         }
 
         const folderId = data.id;
-        console.log("✅ User Folder ID:", folderId);
 
         // Get Files from User's Folder
         const filesResponse = await fetch(`/api/files?folderId=${folderId}`);
