@@ -67,7 +67,9 @@ async function deleteAllFiles() {
     }
 }
 
-deleteAllFiles();
+//Function for deleting all files from Google Drive
+// deleteAllFiles();
+
 
 async function createSharedFolder() {
     if (sharedFolderId) {
@@ -157,6 +159,8 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
         bufferStream.push(null); // Slutsignal för streamen
         console.log("BufferStream:", bufferStream);
 
+        console.log("Uploading file:", filename, "to folder:", parentFolderId);
+
         const response = await drive.files.create({
             requestBody: {
                 name: filename,
@@ -169,9 +173,17 @@ export const uploadFileToDrive = async (filebuffer, filename, mimetype, parentFo
             },
             fields: 'id',
         });
-        console.log("Fil uppladdad:", response.data);
-        return response.data.id;
+        const fileId = response.data.id;
+        console.log("File uploaded:", fileId);
 
+        // **Make the file publicly accessible**
+        await drive.permissions.create({
+            fileId: fileId,
+            requestBody: {
+                role: 'reader',
+                type: 'anyone'
+            }
+        });
 
     } catch (error) {
         console.error("Fel vid uppladdning drive.js:", error);
