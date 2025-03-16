@@ -84,13 +84,13 @@ async function handleLogin(event) {
             message.textContent = "Login success!";
             document.body.prepend(message);
 
+            updateLoginButton();
+
             setTimeout(()=>{
                 message.remove();
                 window.location.href = "home.html";
-            }, 3000);
-
-            updateLoginButton();
-
+            }, 1000);
+            
         } else {
             console.error("Login failed:", data.message);
             alert(data.message || "Login failed.");
