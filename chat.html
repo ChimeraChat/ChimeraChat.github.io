@@ -45,54 +45,68 @@
 <body>
 <main>
   <div class="grid-container">
-    <div class="grid-item wide">
-      <label for="searchUser">Search for online users</label>
-      <input type="text" id="searchUser" placeholder="Search online users..." />
-      <button id="searchButton">Search</button>
-      <p id="errorMessage" style="color: red;"></p>
-      <ul id="userList"></ul>
-    </div>
-
-    <div class="grid-item tall">
-      <h3>Online users</h3>
-      <p>chat with Misse</p>
-      <p>chat with Molly</p>
-      <p>chat with Nova</p>
-      <p>chat with Luna</p>
-      <p>chat with Bean</p>
-      <ul id="onlineUsers"></ul>
-    </div>
-
-    <div class="grid-item wide chat-container">
-      <div class="chat-header">
-      <h3 id="chatWith">Chat</h3>
+<!--    <div class="grid-item chat-search">-->
+<!--      <label for="searchUser">Search for online users</label>-->
+<!--      <input type="text" id="searchUser" placeholder="Search online users..." />-->
+<!--      <button id="searchButton">Search</button>-->
+<!--      <p id="errorMessage" style="color: red;"></p>-->
+<!--      <ul id="userList"></ul>-->
+<!--    </div>-->
+    <div class="grid-item chat-container">
+      <h5 id="chatWith">Chat</h5>
+      <div id="chatListCon" class="chatListcontainer">
+        <div id="chatBox" class="chat-box">
+          <!-- Messages will be displayed here -->
+        </div>
       </div>
-      <div id="chatBox" class="chat-box">
-        <!-- Messages will be displayed here -->
-      </div>
+
       <form id="chatForm" class="chat-form">
+        <label for="messageInput"></label>
         <input type="text" id="messageInput" placeholder="Type a message..." required>
         <button type="submit">Send</button>
       </form>
     </div>
 
+
+    <div class="grid-item tall">
+      <h5>Online users</h5>
+      <ul id="onlineUsers"></ul>
+    </div>
+
+    <div class="grid-item wide">
+      <h5>Chat Guidelines</h5>
+      <p>Please be respectful towards each-other. </p>
+      <p>Don't give out personal information.</p>
+      <p>If you are under the age of 18 you should get a parents permission before chatting.</p>
+      <p>Be careful with revealing your real age.</p>
+      <p>Lastly, treat other as you want to be treated</p>
+      <p>Users who violate these values will be banned</p>
+      <h6>If you need to report inappropriate behavior you can contact us <a href="contact_us.html">here</a></h6>
+    </div>
+
     <div class="grid-item small">
-      <h3>Upload files</h3>
+      <h5>Upload files</h5>
       <a href="files.html">
         <img src="img/share_pic_group.png" alt="Image 1">
       </a>
     </div>
 
-    <div class="grid-item wide">
-      <a href="chat.html">
-        <img src="img/communicating.png" alt="Our Vision">
+    <div class="grid-item cat" >
+      <video id="animatedVideo3" src="img/animated_walk.mp4" autoplay loop muted class="animated-video" style="pointer-events: none;"></video>
+      <div id="videoButton" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;"></div>
+    </div>
+
+    <div class="grid-item medium">
+      <h5>Our DEV team</h5>
+      <a href="about_us.html">
+        <img src="img/temp_logo.png" alt="Meet our DEV team">
       </a>
     </div>
 
   </div>
 </main>
-<footer>
-  <p>&copy; 2025 ChimeraChat. Alla rättigheter förbehållna.</p>
-</footer>
+
+  <script src="js/footer.js"></script>
+
 </body>
 </html>

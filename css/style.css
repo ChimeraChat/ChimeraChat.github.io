@@ -62,13 +62,20 @@ nav a:hover {
     background-color: rgba(235, 198, 243, 0.52);
     color: #2b069e;
 }
-#loginForm,#signupForm,#contactForm {
+#loginForm,#signupForm,#contactForm{
     width: 100%;
     padding: 20px;
     background: #f3fffe;
     border: 1px solid #ffffff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.chatListcontainer{
+    padding: 20px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
 
 .wrap{
@@ -87,6 +94,15 @@ input[type="email"]{
     border: 1px solid #c8e7ed;
     border-radius: 3px;
     font-size: 16px;
+}
+.chat-box {
+    width: 60%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #c8e7ed;
+    border-radius: 3px;
+    font-size: 16px;
+    background-color: white;
 }
 
 /* Center the submit button */
@@ -115,6 +131,12 @@ label{
     color: #1d7774;
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
+}
+h5{
+    color: #134e4c;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
 }
 main {
     width: 100%;
@@ -178,6 +200,10 @@ footer {
     font-size: 16px;
     cursor: pointer;
 }
+button:hover{
+    background-color: rgba(149, 71, 237, 0.52);
+    color: white;
+}
 /* General Grid Item Styling */
 .grid-item {
     background-color: rgb(255, 255, 255);
@@ -216,8 +242,8 @@ footer {
     grid-row: span 2; /* Spans two rows */
     background: #f4f8e1; /* Light pink */
     font-weight: bold;
+    justify-content: flex-start;
 }
-
 .wide-tall{
     grid-column: span 2;
     grid-row: span 2;
@@ -244,6 +270,10 @@ footer {
 .small img{
     height: 100%;
     width: 100%;
+}
+.chat-container, .chat-search{
+    grid-column: span 2; /* Spans two columns */
+    background: #f3fffe;
 }
 .profile{
     background-color: rgb(253, 241, 255);
@@ -332,10 +362,17 @@ a{
         color: rgba(255, 255, 255, 0.97);
         border: 2px solid rgba(192, 185, 255, 0.97);
     }
+    button:hover {
+        background-color: rgba(44, 12, 85, 0.52);
+        color: #e8dbff;
+    }
     a {
         color: #8ab4f8; /* Light blue for links */
     }
     p{
+        color: #f7ebff;
+    }
+    h5{
         color: #f7ebff;
     }
     li{
