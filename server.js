@@ -32,6 +32,7 @@ const io = new Server(server, {
 
 // Store online users
 let onlineUsers = {};
+let offlineUsers = {};
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
