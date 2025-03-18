@@ -1,6 +1,15 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
+// Notify server when user logs in
+document.addEventListener("DOMContentLoaded", () => {
+    loadChatHistory();
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user) {
+        socket.emit("userLoggedIn", user);
+    }
+});
+
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
@@ -60,7 +69,6 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         socket.emit("sendMessage", messageData);
         displayMessage(messageData); // Immediately display the message
         messageInput.value = ""; // Clear input
-        loadChatHistory();
     }
 });
 
@@ -81,13 +89,6 @@ function updateUserList(users) {
 }
 
 
-// Notify server when user logs in
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user) {
-        socket.emit("userLoggedIn", user);
-    }
-    updateUserList();
-});
+
 
 
