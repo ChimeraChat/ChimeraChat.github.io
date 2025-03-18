@@ -19,20 +19,19 @@ function displayMessage(message) {
     // Check if the message is from the user
     const user = JSON.parse(sessionStorage.getItem("user"));
 
-        if (user.username === message.sender_username) {
-            msgElement.innerHTML = `<strong>Me:</strong> ${message.message}`;
-        } else {
-            msgElement.classList.add("other-message"); // Style for received messages
-        }
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message"); // Style for user messages
+    } else {
+        msgElement.classList.add("other-message"); // Style for received messages
+    }
 
     msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-
     setTimeout(() => {
         chatBox.appendChild(msgElement);
     }, 1000); // Delay to ensure the message is displayed before scrolling
 
     // Auto-scroll to the bottom
-    chatBox.scrollBottom = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Send a new message
@@ -49,7 +48,6 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
             alert("Error: User not recognized. Please re-login.");
             return;
         }
-
         const messageData = {
             senderId: user.id,
             senderUsername: user.username,
@@ -57,13 +55,21 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         };
 
         socket.emit("sendMessage", messageData);
-        displayMessage(messageData); // Immediately display the message
+
+        // Wait for server confirmation before displaying message
+        socket.once("messageConfirmed", () => {
+            displayMessage(messageData);
+        });
         messageInput.value = ""; // Clear input
     }
 });
 
 // Receive messages
-socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
+socket.on("receiveMessage", (message) => {
+    displayMessage(message);
+});
+// Receive messages
+//socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
 
 
 // Update online users list
@@ -82,11 +88,13 @@ function updateUserList(users) {
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
-        socket.emit("userLoggedIn", user);
+        socket.emit("userLoggedIn", user.username);
     }
+    loadChatHistory();
 });
 
-loadChatHistory();
-updateUserList();
+// Listen for online users update
+socket.on("updateOnlineUsers", updateUserList);
+
 
 
