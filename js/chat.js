@@ -3,7 +3,6 @@ const socket = io();
 
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
-    loadChatHistory();
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
         socket.emit("userLoggedIn", user);
@@ -40,7 +39,6 @@ function displayMessage(message) {
         chatBox.appendChild(msgElement);
     }, 1000); // Delay to ensure the message is displayed before scrolling
 
-
     // Auto-scroll to the bottom
     chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -73,7 +71,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 });
 
 // Receive messages
-socket.on("receiveMessage", displayMessage, updateUserList);
+socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
 
 
 // Update online users list
@@ -88,7 +86,7 @@ function updateUserList(users) {
     });
 }
 
-
+loadChatHistory();
 
 
 
