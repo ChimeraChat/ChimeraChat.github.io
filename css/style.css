@@ -91,7 +91,7 @@ input[type="email"]{
 
 #chatBoxPrivate, #chatBoxPublic {
     display: flex;
-    background-color: white;
+    background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
     overflow-y: auto; /* Scroll to see older messages */
