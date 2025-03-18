@@ -121,19 +121,12 @@ input[type="email"]{
     justify-content: center;
     align-items: center;
     display: flex;
+    background-color: rgba(255, 255, 255, 0.94);
+    border: dot-dash #97ede6;
 }
-
-.chat-container {
-    width: 100%;
-    padding: 15px;
-    background: #f3fffe;
-    border-radius: 8px;
-    text-align: center;
-}
-
 .user-message {
-    background-color: #d1e7ff; /* Light blue for user's messages */
-    color: #8db7ec;            /* Darker text for contrast */
+    background-color: #d7ebff; /* Light blue for user's messages */
+    color: #1b3459;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
@@ -144,8 +137,8 @@ input[type="email"]{
 
 /* Style for other users' messages */
 .other-message {
-    background-color: #e6f7e6; /* Light green for other users */
-    color: #90e890;            /* Darker text for contrast */
+    background-color: #c5ffc5; /* Light green for other users */
+    color: #135513;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
@@ -355,6 +348,7 @@ button:hover{
 .chat-container, .chat-search{
     grid-column: span 2; /* Spans two columns */
     background: #f3fffe;
+    text-align: center;
 }
 .profile{
     background-color: rgb(253, 241, 255);
