@@ -24,12 +24,12 @@ function displayMessage(message) {
         } else {
             msgElement.classList.add("other-message"); // Style for received messages
         }
+        
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
 
-        msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-        chatBox.appendChild(msgElement);
-
-        // Auto-scroll to the bottom
-        chatBox.scrollTop = chatBox.scrollHeight;
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Send a new message
@@ -61,10 +61,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 });
 
 // Receive messages
-socket.on("receiveMessage", displayMessage, loadChatHistory, updateUserList);
-
-// Load chat history when page loads
-document.addEventListener("DOMContentLoaded", updateUserList);
+socket.on("receiveMessage", displayMessage, updateUserList);
 
 
 // Update online users list
@@ -86,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (user) {
         socket.emit("userLoggedIn", user);
     }
+    updateUserList();
 });
 
 
