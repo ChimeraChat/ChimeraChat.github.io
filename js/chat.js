@@ -72,15 +72,23 @@ socket.on("receiveMessage", (message) => {
 //socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
 
 
-// Update online users list
-function updateUserList(users) {
+// Update online & offline users list
+function updateUserLists(users) {
     const onlineUsersList = document.getElementById("onlineUsers");
-    onlineUsersList.innerHTML = ""; // Rensa listan
+    const offlineUsersList = document.getElementById("offlineUsers");
 
-    users.forEach(username => {
+    onlineUsersList.innerHTML = ""; // Clear list
+    offlineUsersList.innerHTML = ""; // Clear list
+
+    users.forEach(user => {
         const listItem = document.createElement("li");
-        listItem.textContent = username;
-        onlineUsersList.appendChild(listItem);
+        listItem.textContent = user.username;
+
+        if (user.isOnline) {
+            onlineUsersList.appendChild(listItem);
+        } else {
+            offlineUsersList.appendChild(listItem);
+        }
     });
 }
 

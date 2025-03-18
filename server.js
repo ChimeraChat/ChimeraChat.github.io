@@ -236,11 +236,49 @@ app.get('/api/download/:fileId', async (req, res) => {
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // When a user logs in, store their username
-  socket.on("userLoggedIn", (username) => {
-    onlineUsers[username.username] = socket.id;
-    console.log(` ${username.username} is now online`);
-    io.emit("updateOnlineUsers", Object.keys(onlineUsers)); // Broadcast updated list
+  // Fetch all users from the database when a new user connects
+  async function fetchAllUsers() {
+    try {
+      const result = await pool.query("SELECT username, is_online FROM chimerachat_accounts");
+      return result.rows.map(user => ({ username: user.username, isOnline: user.is_online }));
+    } catch (error) {
+      console.error("Error fetching user list:", error);
+      return [];
+    }
+  }
+
+  // When a user logs in, move them to online users list
+  socket.on("userLoggedIn", async (username) => {
+    try {
+      // Update database to mark user as online
+      await pool.query("UPDATE chimerachat_accounts SET is_online = TRUE WHERE username = $1", [username]);
+
+      // Fetch updated user lists
+      const users = await fetchAllUsers();
+      io.emit("updateUserLists", users);
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  });
+
+  // When a user disconnects, move them to offline users list
+  socket.on("disconnect", async () => {
+    console.log("A user disconnected:", socket.id);
+    const username = onlineUsers[socket.id];
+
+    if (username) {
+      try {
+        await pool.query("UPDATE chimerachat_accounts SET is_online = FALSE WHERE username = $1", [username]);
+
+        // Fetch updated user lists
+        const users = await fetchAllUsers();
+        io.emit("updateUserLists", users);
+      } catch (error) {
+        console.error("Error updating user status:", error);
+      }
+    }
+
+    delete onlineUsers[socket.id];
   });
 
   // When a user sends a message
@@ -258,13 +296,6 @@ io.on("connection", (socket) => {
     {
       console.error("Error saving message to database:", error);
     }
-  });
-  // When a user disconnects
-  socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
-    delete onlineUsers[socket.id];
-    io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Update user list
-  });
 });
 
 app.get("/api/chat/history", async (req, res) => {
@@ -288,4 +319,4 @@ server.listen(port, () => {
   console.log(`servern körs på port ${port}`);
 });
 
-
+});
