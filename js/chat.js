@@ -56,6 +56,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         socket.emit("sendMessage", messageData);
         displayMessage(messageData); // Immediately display the message
         messageInput.value = ""; // Clear input
+        loadChatHistory();
     }
 });
 
