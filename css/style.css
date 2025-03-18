@@ -91,9 +91,9 @@ input[type="email"]{
 
 #chatBox {
     display: flex;
-    flex-direction: column-reverse; /* NEW: Stack messages from the bottom */
+    flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
-    overflow-y: auto;
+    overflow-y: auto; /* Scroll to see older messages */
     border: 1px solid #ddd;
     border-radius: 8px;
 }
@@ -103,16 +103,20 @@ input[type="email"]{
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
-    width: fit-content; /* Prevents full-width stretching */
-    max-width: 70%; /* Limits message width for a cleaner look */
+    width: fit-content;
+    max-width: 70%;
 }
 
 #chatBox p:last-child {
-    margin-bottom: auto; /* Ensures messages hug the bottom */
+    scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
 #chatBox p strong {
     color: #4CAF50;
+}
+#chatForm {
+    display: flex;
+    margin-top: 10px;
 }
 .chat-container {
     border-radius: 12px;
