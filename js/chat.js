@@ -51,7 +51,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 });
 
 // Receive messages
-socket.on("receiveMessage", displayMessage, loadChatHistory);
+socket.on("receiveMessage", displayMessage, loadChatHistory, updateUserList);
 
 // Load chat history when page loads
 document.addEventListener("DOMContentLoaded", updateUserList);
@@ -73,8 +73,8 @@ function updateUserList(users) {
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user && user.username) {
-        socket.emit("userLoggedIn", user.username);
+    if (user) {
+        socket.emit("userLoggedIn", user);
     }
     loadChatHistory();
 });
