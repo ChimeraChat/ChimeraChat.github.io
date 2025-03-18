@@ -71,20 +71,27 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
     const recipientUsername = document.getElementById("privateRecipient").value;
     const message = messageInput.value.trim();
 
-    if (message && recipientUsername) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        socket.emit("sendPrivateMessage", {
-            senderUsername: user.username,
-            recipientUsername,
-            message
-        });
-
-        // Show message instantly
-        displayPrivateMessage({ senderUsername: "Me", message });
-
-        messageInput.value = "";
+    if (!recipientUsername || !message) {
+        alert("Recipient and message are required.");
+        return;
     }
+
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    socket.emit("sendPrivateMessage", {
+        senderUsername: user.username,
+        recipientUsername,
+        message
+    });
+
+    // Show message instantly
+    displayPrivateMessage({ senderUsername: "Me", message });
+
+    messageInput.value = "";
+
 });
+
+// Listen for private messages
+socket.on("receivePrivateMessage", displayPrivateMessage);
 
 // Display private messages
 function displayPrivateMessage(message) {
@@ -93,11 +100,9 @@ function displayPrivateMessage(message) {
 
     const msgElement = document.createElement("p");
 
-    if (message.senderUsername === "Me") {
-        msgElement.classList.add("user-message");
-    } else {
-        msgElement.classList.add("other-message");
-    }
+    msgElement.classList.add(
+        message.senderUsername === "Me" ? "user-message" : "other-message"
+    );
 
     msgElement.innerHTML = `<strong>${message.senderUsername}:</strong> ${message.message}`;
     chatBox.appendChild(msgElement);
@@ -116,17 +121,12 @@ socket.on("receiveMessage", displayMessage);
 
 
 // Update online & offline users list
-function updateUserLists(users) {
+socket.on("updateUserLists", (users) => {
     const onlineUsersList = document.getElementById("onlineUsers");
     const offlineUsersList = document.getElementById("offlineUsers");
 
-    if (!onlineUsersList || !offlineUsersList) {
-        console.error("Error: User lists not found.");
-        return;
-    }
-
-    onlineUsersList.innerHTML = ""; // Clear list
-    offlineUsersList.innerHTML = ""; // Clear list
+    onlineUsersList.innerHTML = "";
+    offlineUsersList.innerHTML = "";
 
     users.forEach(user => {
         const listItem = document.createElement("li");
@@ -140,7 +140,7 @@ function updateUserLists(users) {
             offlineUsersList.appendChild(listItem);
         }
     });
-}
+});
 
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
