@@ -11,6 +11,66 @@ async function loadChatHistory() {
     }
 }
 
+
+// Function to display messages
+function displayMessage(message) {
+    const chatBox = document.getElementById("chatBox");
+    const msgElement = document.createElement("p");
+
+    // Check if the message is from the user
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message"); // Style for user messages
+    } else {
+        msgElement.classList.add("other-message"); // Style for received messages
+    }
+
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Send a new message
+document.getElementById("chatForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        const messageData = {
+            senderId: user.id,
+            senderUsername: user.username,
+            message,
+        };
+
+        socket.emit("sendMessage", messageData);
+        messageInput.value = ""; // Clear input
+    }
+});
+
+// Receive messages
+socket.on("receiveMessage", displayMessage);
+
+// Load chat history when page loads
+document.addEventListener("DOMContentLoaded", loadChatHistory);
+
+// Update online users
+socket.on("updateOnlineUsers", (users) => {
+    const onlineUsersList = document.getElementById("onlineUsers");
+    onlineUsersList.innerHTML = ""; // Clear previous list
+
+    users.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = user;
+        onlineUsersList.appendChild(li);
+    });
+});
+
+/*
+
 function displayMessage(message) {
     const chatBox = document.getElementById("chatBox");
     const msgElement = document.createElement("p");
@@ -50,6 +110,8 @@ socket.on("updateOnlineUsers", (userList) => {
         userListContainer.appendChild(listItem);
     });
 });
+
+*/
 
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
