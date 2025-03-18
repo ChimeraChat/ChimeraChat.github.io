@@ -103,13 +103,6 @@ input[type="email"]{
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
-#chatForm {
-    display: flex;
-    margin-top: 10px;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
 .chat-container {
     border-radius: 12px;
     padding: 15px;
@@ -124,8 +117,8 @@ input[type="email"]{
     display: flex;
 }
 .user-message {
-    background-color: #b4c5dd; /* Light blue for user's messages */
-    color: #345081;            /* Darker text for contrast */
+    background-color: #d7e7fd; /* Light blue for user's messages */
+    color: #688bd1;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
@@ -136,8 +129,8 @@ input[type="email"]{
 
 /* Style for other users' messages */
 .other-message {
-    background-color: #b2dfb2; /* Light green for other users */
-    color: #3a883a;            /* Darker text for contrast */
+    background-color: #d9f8d9; /* Light green for other users */
+    color: #56b356;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
@@ -148,12 +141,15 @@ input[type="email"]{
 
 #chatForm {
     display: flex;
-    justify-content: space-between;
     padding: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
-
-#messageInput {
-    flex: 1;
+.messageInput {
+    display: flex;
+    flex-direction: column;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
