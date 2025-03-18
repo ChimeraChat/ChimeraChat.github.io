@@ -139,7 +139,7 @@ input[type="email"]{
     max-width: 70%;
 }
 
-#chatForm {
+#chatForm .public, #chatForm .private{
     display: flex;
     padding: 10px;
     margin-top: 10px;
@@ -147,12 +147,16 @@ input[type="email"]{
     flex-direction: column;
     align-items: center;
 }
-.messageInput {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+#messageInputPrivate, #messageInputPublic {
+    width: 80%;              /* Make the width 80% */
+    padding: 10px;           /* Padding for inner space */
+    margin: 8px 0;           /* Space around the textarea */
+    border: 1px solid #c8e7ed;
+    border-radius: 3px;
+    font-size: 16px;
+    min-height: 50px;        /* Ensure a minimum height */
+    resize: none;            /* Disable manual resizing */
+    overflow-y: hidden;      /* Hide vertical scrollbar initially */
 }
 
 #chatForm button {
