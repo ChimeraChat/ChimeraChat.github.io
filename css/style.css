@@ -95,6 +95,7 @@ input[type="email"]{
     border-radius: 3px;
     font-size: 16px;
 }
+/*
 .chat-box {
     width: 60%;
     padding: 10px;
@@ -104,6 +105,71 @@ input[type="email"]{
     font-size: 16px;
     background-color: white;
 }
+*/
+
+.chat-container {
+    width: 100%;
+    padding: 15px;
+    background: #f3fffe;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.chat-box {
+    height: 300px; /* Fixed height */
+    overflow-y: auto; /* Enable scrolling */
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.chat-box p {
+    margin: 5px;
+    padding: 8px;
+    border-radius: 10px;
+    max-width: 80%;
+    display: inline-block;
+}
+
+.chat-box .user-message {
+    background: #e9f5fb;
+    color: #000;
+    align-self: flex-end;
+}
+
+.chat-box .other-message {
+    background: #f4f8e1;
+    color: #000;
+    align-self: flex-start;
+}
+
+#chatForm {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#messageInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#chatForm button {
+    padding: 8px 15px;
+    background-color: #5a5ac9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#chatForm button:hover {
+    background-color: #4444a0;
+}
+
 
 /* Center the submit button */
 input[type="submit"],input[type="reset"] {
