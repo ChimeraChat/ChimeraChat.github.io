@@ -21,12 +21,16 @@ function displayMessage(message) {
 
         if (user.username === message.sender_username) {
             msgElement.classList.add("user-message"); // Style for user messages
+            msgElement.innerHTML = `<strong>Me:</strong> ${message.message}`;
+
         } else {
             msgElement.classList.add("other-message"); // Style for received messages
+            msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
         }
-        
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
+    setTimeout(() => {
+        chatBox.appendChild(msgElement);
+    }, 1000); // Delay to ensure the message is displayed before scrolling
+
 
     // Auto-scroll to the bottom
     chatBox.scrollTop = chatBox.scrollHeight;

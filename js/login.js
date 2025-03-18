@@ -89,7 +89,7 @@ async function handleLogin(event) {
             setTimeout(()=>{
                 message.remove();
                 window.location.href = "home.html";
-            }, 3000);
+            }, 1000);
 
 
         } else {
