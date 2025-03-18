@@ -89,7 +89,7 @@ input[type="email"]{
     font-size: 16px;
 }
 
-#chatBox {
+#chatBoxPrivate, #chatBoxPublic {
     display: flex;
     background-color: white;
     flex-direction: column; /* Normal top-to-bottom stacking */
@@ -99,7 +99,7 @@ input[type="email"]{
     border-radius: 8px;
 }
 
-#chatBox p:last-child {
+#chatBoxPrivate p:last-child , #chatBoxPublic p:last-child{
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
@@ -139,7 +139,7 @@ input[type="email"]{
     max-width: 70%;
 }
 
-#chatForm .public, #chatForm .private{
+#chatFormPublic, #chatFormPrivate{
     display: flex;
     padding: 10px;
     margin-top: 10px;
