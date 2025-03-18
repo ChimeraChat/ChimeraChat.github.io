@@ -64,11 +64,54 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
     }
 });
 
-// Receive messages
-socket.on("receiveMessage", (message) => {
-    displayMessage(message);
+// Send a private message
+document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const messageInput = document.getElementById("messageInputPrivate");
+    const recipientUsername = document.getElementById("privateRecipient").value;
+    const message = messageInput.value.trim();
+
+    if (message && recipientUsername) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        socket.emit("sendPrivateMessage", {
+            senderUsername: user.username,
+            recipientUsername,
+            message
+        });
+
+        // Show message instantly
+        displayPrivateMessage({ senderUsername: "Me", message });
+
+        messageInput.value = "";
+    }
 });
+
+// Display private messages
+function displayPrivateMessage(message) {
+    const chatBox = document.getElementById("chatBoxPrivate");
+    if (!chatBox) return;
+
+    const msgElement = document.createElement("p");
+
+    if (message.senderUsername === "Me") {
+        msgElement.classList.add("user-message");
+    } else {
+        msgElement.classList.add("other-message");
+    }
+
+    msgElement.innerHTML = `<strong>${message.senderUsername}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Listen for private messages
+socket.on("receivePrivateMessage", displayPrivateMessage);
+
+
 // Receive messages
+socket.on("receiveMessage", displayMessage);
+
+
 //socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
 
 
@@ -76,6 +119,11 @@ socket.on("receiveMessage", (message) => {
 function updateUserLists(users) {
     const onlineUsersList = document.getElementById("onlineUsers");
     const offlineUsersList = document.getElementById("offlineUsers");
+
+    if (!onlineUsersList || !offlineUsersList) {
+        console.error("Error: User lists not found.");
+        return;
+    }
 
     onlineUsersList.innerHTML = ""; // Clear list
     offlineUsersList.innerHTML = ""; // Clear list
@@ -85,8 +133,10 @@ function updateUserLists(users) {
         listItem.textContent = user.username;
 
         if (user.isOnline) {
+            listItem.classList.add("online-user");
             onlineUsersList.appendChild(listItem);
         } else {
+            listItem.classList.add("offline-user");
             offlineUsersList.appendChild(listItem);
         }
     });
@@ -96,7 +146,7 @@ function updateUserLists(users) {
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
-        socket.emit("userLoggedIn", user.username);
+        socket.emit("userLoggedIn", { id: user.id, username: user.username });
     }
     loadChatHistory();
 });

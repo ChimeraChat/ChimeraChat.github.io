@@ -55,11 +55,8 @@
     <div class="grid-item chat-container">
       <h5 id="chatWithPublic">Public Chat</h5>
       <div id="chatListConPublic" class="chatListcontainer">
-          <div id="chatBoxPublic" class="chat-box">
-              <!-- Messages will be displayed here -->
-          </div>
-      </div>
-
+          <div id="chatBoxPublic" class="chat-box"></div>
+      </div>  <!-- Messages will be displayed here -->
       <form id="chatFormPublic" class="chat-form">
         <label for="messageInputPublic"></label>
         <textarea type="text" id="messageInputPublic" placeholder="Type a message..." required></textarea>
@@ -79,12 +76,9 @@
 
     <div class="grid-item chat-container">
       <h5 id="chatWith">Private messages</h5>
-      <div id="chatListCon" class="chatListcontainer">
-        <div id="chatBoxPrivate" class="chat-box">
-          <!-- Messages will be displayed here -->
-        </div>
-      </div>
-
+      <input type="text" id="privateRecipient" placeholder="Enter recipient username">
+      <div id="chatBoxPrivate" class="chat-box"></div>
+      <!-- Messages will be displayed here -->
       <form id="chatFormPrivate" class="chat-form">
         <label for="messageInputPrivate"></label>
         <textarea type="text" id="messageInputPrivate" placeholder="Type a message..." required></textarea>

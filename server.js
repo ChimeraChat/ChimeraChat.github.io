@@ -20,7 +20,7 @@ const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 10000;
+const port = process.env.PORT;
 
 const server = createServer(app); // Wrap Express with HTTP
 const io = new Server(server, {
@@ -253,6 +253,9 @@ io.on("connection", (socket) => {
       // Update database to mark user as online
       await pool.query("UPDATE chimerachat_accounts SET is_online = TRUE WHERE username = $1", [username]);
 
+      // Store user session
+      onlineUsers[socket.id] = username.username;
+
       // Fetch updated user lists
       const users = await fetchAllUsers();
       io.emit("updateUserLists", users);
@@ -296,6 +299,27 @@ io.on("connection", (socket) => {
     {
       console.error("Error saving message to database:", error);
     }
+});
+
+// Private messages between users
+socket.on("sendPrivateMessage", async (data) => {
+  const { senderUsername, recipientUsername, message } = data;
+
+  try {
+    // Save private message to DB
+    await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
+        [senderUsername, recipientUsername, message]);
+
+    console.log(`Private message from ${senderUsername} to ${recipientUsername}: ${message}`);
+
+    // Emit only to the recipient
+    const recipientSocket = Object.keys(onlineUsers).find(socketId => onlineUsers[socketId] === recipientUsername);
+    if (recipientSocket) {
+      io.to(recipientSocket).emit("receivePrivateMessage", { senderUsername, message });
+    }
+  } catch (error) {
+    console.error("Error saving private message:", error);
+  }
 });
 
 app.get("/api/chat/history", async (req, res) => {
