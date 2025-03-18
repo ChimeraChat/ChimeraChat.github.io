@@ -140,33 +140,27 @@ input[type="email"]{
     text-align: center;
 }
 
-.chat-box {
-    height: 300px; /* Fixed height */
-    overflow-y: auto; /* Enable scrolling */
-    background: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-.chat-box p {
-    margin: 5px;
-    padding: 8px;
+.user-message {
+    background-color: #d1e7ff; /* Light blue for user's messages */
+    color: #8db7ec;            /* Darker text for contrast */
+    padding: 8px 12px;
     border-radius: 10px;
-    max-width: 80%;
-    display: inline-block;
+    margin: 5px 0;
+    align-self: flex-end;      /* Align user's messages to the right */
+    text-align: right;
+    max-width: 70%;
 }
 
-.chat-box .user-message {
-    background: #e9f5fb;
-    color: #000;
-    align-self: flex-end;
-}
-
-.chat-box .other-message {
-    background: #f4f8e1;
-    color: #000;
-    align-self: flex-start;
+/* Style for other users' messages */
+.other-message {
+    background-color: #e6f7e6; /* Light green for other users */
+    color: #90e890;            /* Darker text for contrast */
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    align-self: flex-start;    /* Align received messages to the left */
+    text-align: left;
+    max-width: 70%;
 }
 
 #chatForm {
