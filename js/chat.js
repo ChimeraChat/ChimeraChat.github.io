@@ -1,10 +1,18 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
+// Load previous chat history
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
         const messages = await response.json();
+
+        const chatBox = document.getElementById("chatBoxPublic");
+        if (!chatBox) {
+            console.error("Error: chatBoxPublic not found in the DOM.");
+            return;
+        }
+
         messages.forEach(displayMessage);
     } catch (error) {
         console.error("Error loading chat history:", error);
@@ -14,6 +22,10 @@ async function loadChatHistory() {
 // Function to display messages
 function displayMessage(message) {
     const chatBox = document.getElementById("chatBoxPublic");
+    if (!chatBox) {
+        console.error("Error: chatBoxPublic not found.");
+        return;
+    }
     const msgElement = document.createElement("p");
 
     // Check if the message is from the user
@@ -35,33 +47,35 @@ function displayMessage(message) {
 }
 
 // Send a new message
-document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const messageInput = document.getElementById("messageInputPublic");
-    const message = messageInput.value.trim();
+// Ensure chat box exists before adding event listener
+document.addEventListener("DOMContentLoaded", () => {
+    const chatForm = document.getElementById("chatFormPublic");
+    if (chatForm) {
+        chatForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const messageInput = document.getElementById("messageInputPublic");
+            const message = messageInput.value.trim();
 
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
+            if (message) {
+                const user = JSON.parse(sessionStorage.getItem("user"));
+                if (!user || !user.username) {
+                    alert("Error: Please re-login.");
+                    return;
+                }
 
-        if (!user || !user.username) {
-            console.error("Error: User is not defined in sessionStorage.");
-            alert("Error: User not recognized. Please re-login.");
-            return;
-        }
-        const messageData = {
-            senderId: user.id,
-            senderUsername: user.username,
-            message,
-        };
+                const messageData = {
+                    senderId: user.id,
+                    senderUsername: user.username,
+                    message,
+                };
 
-        socket.emit("sendMessage", messageData);
-
-        // Wait for server confirmation before displaying message
-        socket.once("messageConfirmed", () => {
-            displayMessage(messageData);
+                socket.emit("sendMessage", messageData);
+                displayMessage(messageData); // Show instantly
+                messageInput.value = "";
+            }
         });
-        messageInput.value = ""; // Clear input
     }
+    loadChatHistory();
 });
 
 // Send a private message
