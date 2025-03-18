@@ -1,6 +1,26 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
+// Function to display messages
+function displayMessage(message, type = "public") {
+    const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") : document.getElementById("chatBoxPublic");
+    const msgElement = document.createElement("p");
+
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message");
+    } else {
+        msgElement.classList.add("other-message");
+    }
+
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Load chat history
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
@@ -11,73 +31,45 @@ async function loadChatHistory() {
     }
 }
 
-// Function to display messages
-function displayMessage(message) {
-    const chatBox = document.getElementById("chatBox");
-    const msgElement = document.createElement("p");
-
-    // Check if the message is from the user
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message"); // Style for user messages
-    } else {
-        msgElement.classList.add("other-message"); // Style for received messages
-    }
-
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-
-    // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// Send a new message
-document.getElementById("chatForm").addEventListener("submit", (event) => {
+// Event listener for public chat
+document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
     event.preventDefault();
-    const messageInput = document.getElementById("messageInput");
+    const messageInput = document.getElementById("messageInputPublic");
     const message = messageInput.value.trim();
 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
-        const messageData = {
-            senderId: user.id,
-            senderUsername: user.username,
-            message,
-        };
-
-        socket.emit("sendMessage", messageData);
-        messageInput.value = ""; // Clear input
+        socket.emit("sendMessage", { message, username: user.username, type: "public" });
+        messageInput.value = "";
     }
 });
 
-// Receive messages
-socket.on("receiveMessage", displayMessage, loadChatHistory);
+// Event listener for private chat
+document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const messageInput = document.getElementById("messageInputPrivate");
+    const message = messageInput.value.trim();
 
-// Load chat history when page loads
-document.addEventListener("DOMContentLoaded", loadChatHistory);
-
-
-// Update online users list
-socket.on("updateOnlineUsers", (userList) => {
-    const userListContainer = document.getElementById("onlineUsers");
-    userListContainer.innerHTML = "";
-
-    userList.forEach(user => {
-        const listItem = document.createElement("li");
-        listItem.textContent = user.username;
-        userListContainer.appendChild(listItem);
-    });
-});
-
-
-// Notify server when user logs in
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user) {
-        socket.emit("userLoggedIn", user);
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        // Assuming you want to send to a specific user, you'll need the recipient's username
+        const recipient = "someOtherUser"; // This can be dynamic based on the selected private chat
+        socket.emit("sendPrivateMessage", { message, sender: user.username, recipient });
+        messageInput.value = "";
     }
-    loadChatHistory();
 });
+
+// Listen for incoming messages
+socket.on("receiveMessage", (data) => {
+    displayMessage(data, "public");
+});
+
+socket.on("receivePrivateMessage", (data) => {
+    displayMessage(data, "private");
+});
+
+// Load history when the page loads
+loadChatHistory();
 
 
 
