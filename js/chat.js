@@ -57,6 +57,7 @@ socket.on("receiveMessage", displayMessage);
 // Load chat history when page loads
 document.addEventListener("DOMContentLoaded", loadChatHistory);
 
+/*
 // Update online users
 socket.on("updateOnlineUsers", (users) => {
     const onlineUsersList = document.getElementById("onlineUsers");
@@ -69,7 +70,6 @@ socket.on("updateOnlineUsers", (users) => {
     });
 });
 
-/*
 
 function displayMessage(message) {
     const chatBox = document.getElementById("chatBox");
@@ -99,6 +99,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 
 socket.on("receiveMessage", displayMessage);
 
+*/
 // Update online users list
 socket.on("updateOnlineUsers", (userList) => {
     const userListContainer = document.getElementById("onlineUsers");
@@ -111,7 +112,7 @@ socket.on("updateOnlineUsers", (userList) => {
     });
 });
 
-*/
+
 
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
