@@ -11,7 +11,6 @@ async function loadChatHistory() {
     }
 }
 
-
 // Function to display messages
 function displayMessage(message) {
     const chatBox = document.getElementById("chatBox");
@@ -52,54 +51,12 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 });
 
 // Receive messages
-socket.on("receiveMessage", displayMessage);
+socket.on("receiveMessage", displayMessage, loadChatHistory);
 
 // Load chat history when page loads
 document.addEventListener("DOMContentLoaded", loadChatHistory);
 
-/*
-// Update online users
-socket.on("updateOnlineUsers", (users) => {
-    const onlineUsersList = document.getElementById("onlineUsers");
-    onlineUsersList.innerHTML = ""; // Clear previous list
 
-    users.forEach(user => {
-        const li = document.createElement("li");
-        li.textContent = user;
-        onlineUsersList.appendChild(li);
-    });
-});
-
-
-function displayMessage(message) {
-    const chatBox = document.getElementById("chatBox");
-    const msgElement = document.createElement("p");
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-}
-
-// Send message on form submit
-document.getElementById("chatForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const messageInput = document.getElementById("messageInput");
-    const message = messageInput.value.trim();
-
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        const messageData = {
-            senderId: user.id,
-            senderUsername: user.username,
-            message,
-        };
-
-        socket.emit("sendMessage", messageData);
-        messageInput.value = ""; // Clear input
-    }
-});
-
-socket.on("receiveMessage", displayMessage);
-
-*/
 // Update online users list
 socket.on("updateOnlineUsers", (userList) => {
     const userListContainer = document.getElementById("onlineUsers");
@@ -113,7 +70,6 @@ socket.on("updateOnlineUsers", (userList) => {
 });
 
 
-
 // Notify server when user logs in
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
@@ -122,8 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     loadChatHistory();
 });
-
-
 
 
 
