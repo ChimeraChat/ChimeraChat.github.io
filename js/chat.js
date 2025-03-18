@@ -35,9 +35,9 @@ function displayMessage(message) {
 }
 
 // Send a new message
-document.getElementById("chatForm").addEventListener("submit", (event) => {
+document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
     event.preventDefault();
-    const messageInput = document.getElementById("messageInput");
+    const messageInput = document.getElementById("messageInputPublic");
     const message = messageInput.value.trim();
 
     if (message) {
