@@ -1,14 +1,6 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
-// Notify server when user logs in
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user) {
-        socket.emit("userLoggedIn", user);
-    }
-});
-
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
@@ -28,19 +20,19 @@ function displayMessage(message) {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
         if (user.username === message.sender_username) {
-            msgElement.classList.add("user-message"); // Style for user messages
             msgElement.innerHTML = `<strong>Me:</strong> ${message.message}`;
-
         } else {
             msgElement.classList.add("other-message"); // Style for received messages
-            msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
         }
+
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+
     setTimeout(() => {
         chatBox.appendChild(msgElement);
     }, 1000); // Delay to ensure the message is displayed before scrolling
 
     // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollBottom = chatBox.scrollHeight;
 }
 
 // Send a new message
@@ -86,7 +78,15 @@ function updateUserList(users) {
     });
 }
 
-loadChatHistory();
+// Notify server when user logs in
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user) {
+        socket.emit("userLoggedIn", user);
+    }
+});
 
+loadChatHistory();
+updateUserList();
 
 
