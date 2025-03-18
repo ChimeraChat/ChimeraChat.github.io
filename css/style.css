@@ -91,10 +91,11 @@ input[type="email"]{
 
 #chatBox {
     display: flex;
+    background-color: white;
     flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
     overflow-y: auto; /* Scroll to see older messages */
-    border: 1px solid #ddd;
+    border: 1px solid #c2f1ee;
     border-radius: 8px;
 }
 
@@ -121,12 +122,10 @@ input[type="email"]{
     justify-content: center;
     align-items: center;
     display: flex;
-    background-color: rgba(255, 255, 255, 0.94);
-    border: dot-dash #97ede6;
 }
 .user-message {
-    background-color: #d7ebff; /* Light blue for user's messages */
-    color: #1b3459;            /* Darker text for contrast */
+    background-color: #b4c5dd; /* Light blue for user's messages */
+    color: #345081;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
@@ -137,8 +136,8 @@ input[type="email"]{
 
 /* Style for other users' messages */
 .other-message {
-    background-color: #c5ffc5; /* Light green for other users */
-    color: #135513;            /* Darker text for contrast */
+    background-color: #b2dfb2; /* Light green for other users */
+    color: #3a883a;            /* Darker text for contrast */
     padding: 8px 12px;
     border-radius: 10px;
     margin: 5px 0;
