@@ -159,7 +159,7 @@ input[type="email"]{
     overflow-y: hidden;      /* Hide vertical scrollbar initially */
 }
 
-#chatForm button {
+#chat-form button {
     padding: 8px 15px;
     background-color: #5a5ac9;
     color: white;
@@ -168,7 +168,7 @@ input[type="email"]{
     cursor: pointer;
 }
 
-#chatForm button:hover {
+#chat-form button:hover {
     background-color: #4444a0;
 }
 
@@ -433,11 +433,11 @@ a{
         background-color: rgba(44, 12, 85, 0.52);
         color: #e8dbff;
     }
-    #chatForm button:hover {
+    #chat-form button:hover {
         background-color: rgba(44, 12, 85, 0.52);
         color: #e8dbff;
     }
-    #chatForm button,[type="submit"],input[type="reset"] {
+    #chat-form button,[type="submit"],input[type="reset"] {
         background-color: rgb(78, 75, 177);
         color: rgba(255, 255, 255, 0.97);
         border: 2px solid rgba(192, 185, 255, 0.97);
