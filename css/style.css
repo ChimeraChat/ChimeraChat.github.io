@@ -97,26 +97,17 @@ input[type="email"]{
     border: 1px solid #ddd;
     border-radius: 8px;
 }
-/* Chat Messages */
-#chatBox p {
-    background-color: #e6f7e6;
-    padding: 8px 12px;
-    border-radius: 10px;
-    margin: 5px 0;
-    width: fit-content;
-    max-width: 70%;
-}
 
 #chatBox p:last-child {
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
-#chatBox p strong {
-    color: #4CAF50;
-}
 #chatForm {
     display: flex;
     margin-top: 10px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .chat-container {
     border-radius: 12px;
