@@ -13,7 +13,7 @@ async function loadChatHistory() {
 
 // Function to display messages
 function displayMessage(message) {
-    const chatBox = document.getElementById("chatBox");
+    const chatBox = document.getElementById("chatBoxPublic");
     const msgElement = document.createElement("p");
 
     // Check if the message is from the user

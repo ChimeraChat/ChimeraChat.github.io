@@ -146,6 +146,7 @@ input[type="email"]{
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    float: right;
 }
 #messageInputPrivate, #messageInputPublic {
     width: 80%;              /* Make the width 80% */
@@ -157,6 +158,7 @@ input[type="email"]{
     min-height: 50px;        /* Ensure a minimum height */
     resize: none;            /* Disable manual resizing */
     overflow-y: hidden;      /* Hide vertical scrollbar initially */
+    float: left;
 }
 
 #chat-form button {
