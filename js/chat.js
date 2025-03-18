@@ -18,17 +18,18 @@ function displayMessage(message) {
 
     // Check if the message is from the user
     const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message"); // Style for user messages
-    } else {
-        msgElement.classList.add("other-message"); // Style for received messages
-    }
 
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
+        if (user.username === message.sender_username) {
+            msgElement.classList.add("user-message"); // Style for user messages
+            msgElement.innerHTML = `<strong>Me:</strong> ${message.message}`;
+        } else {
+            msgElement.classList.add("other-message"); // Style for received messages
+            msgElement.innerHTML = `<strong>${message.senderUsername}:</strong> ${message.message}`;
+        }
 
-    // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.appendChild(msgElement);
+        // Auto-scroll to the bottom
+        chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Send a new message
@@ -39,6 +40,13 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
+
+        if (!user || !user.username) {
+            console.error("Error: User is not defined in sessionStorage.");
+            alert("Error: User not recognized. Please re-login.");
+            return;
+        }
+
         const messageData = {
             senderId: user.id,
             senderUsername: user.username,
@@ -46,6 +54,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         };
 
         socket.emit("sendMessage", messageData);
+        displayMessage(messageData); // Immediately display the message
         messageInput.value = ""; // Clear input
     }
 });
@@ -76,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (user) {
         socket.emit("userLoggedIn", user);
     }
-    loadChatHistory();
 });
 
 

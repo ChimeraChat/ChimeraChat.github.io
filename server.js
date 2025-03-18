@@ -238,9 +238,9 @@ io.on("connection", (socket) => {
 
   // When a user logs in, store their username
   socket.on("userLoggedIn", (username) => {
-    onlineUsers[socket.id] = username;
-    console.log(` ${username} is now online`);
-    io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Broadcast updated list
+    onlineUsers[username.username] = socket.id;
+    console.log(` ${username.username} is now online`);
+    io.emit("updateOnlineUsers", Object.keys(onlineUsers)); // Broadcast updated list
   });
 
   // When a user sends a message
