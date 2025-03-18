@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Listen for online users update
-socket.on("updateOnlineUsers", updateUserList);
+socket.on("updateOnlineUsers", updateUserLists);
 
 
 
