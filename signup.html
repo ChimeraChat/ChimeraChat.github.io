@@ -10,68 +10,67 @@
     <link rel="stylesheet" href="/css/animate.css">
     <script type="module" src="/js/signup.js" defer></script>
     <script type="module" src="/js/main.js" defer></script>
-    <script type="module" src="/js/footer.js" defer></script>
     <script type="module" src="/js/login.js"></script>
     <script src="/js/darkMode.js"></script>
 
 </head>
 <body>
-    <header>
-        <div class="grid-container">
-            <a href="index.html">
-                <img src="img/logo.png" alt="Logo Image" id="headerImage">
-            </a>
-            <h1>Chimera Chat</h1>
-            <a href="index.html">
-                <img src="img/logo.png" alt="Logo Image" id="headerImage2">
-            </a>
+<header>
+    <div class="grid-container">
+        <a href="index.html">
+            <img src="img/logo.png" alt="Logo Image" id="headerImage">
+        </a>
+        <h1>Chimera Chat</h1>
+        <a href="index.html">
+            <img src="img/logo.png" alt="Logo Image" id="headerImage2">
+        </a>
+    </div>
+    <button id="darkModeToggle">🌙</button>
+    <nav>
+        <div class="container">
+            <a href="index.html" >Home</a>
+            <a href="chat.html" >Chat</a>
+            <a href="files.html" >Files</a>
+            <a href="faq.html" >Faq</a>
+            <a href="contact_us.html" >Contact</a>
+            <a href="about_us.html" >About us</a>
+            <a href="" >Sign up</a>
+            <a href="login.html" >Log in</a>
         </div>
-        <button id="darkModeToggle">🌙</button>
-        <nav>
-            <div class="container">
-                <a href="index.html" >Home</a>
-                <a href="chat.html" >Chat</a>
-                <a href="files.html" >Files</a>
-                <a href="faq.html" >Faq</a>
-                <a href="contact_us.html" >Contact</a>
-                <a href="about_us.html" >About us</a>
-                <a href="" >Sign up</a>
-                <a href="login.html" >Log in</a>
-            </div>
-        </nav>
-    </header>
-    <main>
-        <div class="wrap">
-            <section id="messageContainer">
-                <h2 id="Välkommen"></h2><br>
-                <p id="message"></p>
-            </section>
-                <form action="/signup" id="signupForm" method="POST">
-                    <h2>Sign up</h2>
+    </nav>
+</header>
+<main>
+    <div class="wrap">
+        <section id="messageContainer">
+            <h2 id="Välkommen"></h2><br>
+            <p id="message"></p>
+        </section>
+            <form action="/signup" id="signupForm" method="POST">
+                <h2>Sign up</h2>
 
-                    <div>
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    <div>
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    <div>
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div>
-                        <p>
-                            Already a user?<a href="login.html" > Log in </a>
-                        </p>
-                    </div>
-                    <div>
-                        <input type="submit" name="send" value="Sign up">
-                    </div>
-                </form>
-            </div>
-    </main>
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div>
+                    <p>
+                        Already a user?<a href="login.html" > Log in </a>
+                    </p>
+                </div>
+                <div>
+                    <input type="submit" name="send" value="Sign up">
+                </div>
+            </form>
+        </div>
+</main>
     <script src="/js/footer.js"></script>
 </body>
 </html>
