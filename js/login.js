@@ -73,6 +73,10 @@ async function handleLogin(event) {
             body: JSON.stringify({ username, password })
         });
 
+        // **DEBUGGING: Log full response**
+        const textResponse = await response.text();
+        console.log("Full server response:", textResponse);
+
         const data = await response.json();
         console.log("Login Response:", data); // Debugging
 
