@@ -3,8 +3,32 @@ function createFooter() {
     const paragraph = document.createElement("p");
     paragraph.innerHTML = "&copy; 2025 ChimeraChat. Some rights reserved.";
 
+    const socialContainer = document.createElement("div");
+    socialContainer.classList.add("social-links");
+
+    const socialLinks = [
+        { href: "https://www.instagram.com", imgSrc: "img/instagram.png", alt: "Instagram" },
+        { href: "https://www.youtube.com", imgSrc: "img/youtube.png", alt: "YouTube" }
+    ];
+
+    socialLinks.forEach(link => {
+        const a = document.createElement("a");
+        a.href = link.href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+
+        const img = document.createElement("img");
+        img.src = link.imgSrc;
+        img.alt = link.alt;
+        img.classList.add("social-icon");
+
+        a.appendChild(img);
+        socialContainer.appendChild(a);
+    });
+
     footer.appendChild(paragraph);
-    document.body.appendChild(footer); // Add the footer to the end of the body
+    footer.appendChild(socialContainer);
+    document.body.appendChild(footer);
 }
 
 // Run the function when the page loads
@@ -32,3 +56,5 @@ document.getElementById("videoButton").addEventListener("click", function(event)
     const audio = new Audio(soundPool[randomIndex]);
     audio.play().catch(err => console.error("Audio playback failed:", err));
 });
+
+createFooter();

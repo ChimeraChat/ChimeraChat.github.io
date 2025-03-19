@@ -13,7 +13,6 @@
   <script type="module" src="./js/login.js" defer></script>
   <script type="module" src="./js/chat.js" defer></script>
   <script type="module" src="./js/darkMode.js" defer></script>
-  <script type="module" src="./js/footer.js" defer></script>
 
 </head>
 <header>
@@ -63,26 +62,31 @@
         </form>
       </div>
     </div>
-    <div class="grid-item tall">
+    <div class="grid-item medium">
       <h5>Online users</h5>
       <ul id="onlineUsers"></ul>
     </div>
 
-    <div class="grid-item tall">
-      <h5>Offline users</h5>
-      <ul id="offlineUsers"></ul>
-    </div>
+
 
     <div class="grid-item chat-container">
       <h5 id="chatWith">Private messages</h5>
-      <input type="text" id="privateRecipient" placeholder="Enter recipient username">
-      <div id="chatBoxPrivate" class="chat-box"></div>
-      <!-- Messages will be displayed here -->
-      <form id="chatFormPrivate" class="chat-form">
-        <label for="messageInputPrivate"></label>
-        <textarea type="text" id="messageInputPrivate" placeholder="Type a message..." required></textarea>
-        <button type="submit">Send</button>
-      </form>
+      <div id="chatListConPrivate" class="chatListcontainer">
+        <label for="privateRecipient"></label>
+        <input type="text" id="privateRecipient" placeholder="Enter recipient username">
+        <div id="chatBoxPrivate" class="chat-box"></div>
+        <!-- Messages will be displayed here -->
+        <form id="chatFormPrivate" class="chat-form">
+          <label for="messageInputPrivate"></label>
+          <textarea type="text" id="messageInputPrivate" placeholder="Type a message..." required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="online" class="grid-item small">
+      <h5>Offline users</h5>
+      <ul id="offlineUsers"></ul>
     </div>
 
     <div class="grid-item wide">
@@ -96,15 +100,7 @@
       <h6>If you need to report inappropriate behavior you can contact us <a href="contact_us.html">here</a></h6>
     </div>
 
-    <div class="grid-item small">
-      <h5>Upload files</h5>
-      <a href="files.html">
-        <img src="img/share_pic_group.png" alt="Image 1">
-      </a>
-    </div>
-
-
-    <div class="grid-item medium">
+    <div id="offline" class="grid-item medium">
       <h5>Our DEV team</h5>
       <a href="about_us.html">
         <img src="img/temp_logo.png" alt="Meet our DEV team">
@@ -113,6 +109,7 @@
 
   </div>
 </main>
+  <script src="js/footer.js"></script>
 </body>
 </html>
 
@@ -167,15 +164,15 @@
 <body>
 <main>
   <div class="grid-container">
-<!--    <div class="grid-item chat-search">-->
-<!--      <label for="searchUser">Search for online users</label>-->
-<!--      <input type="text" id="searchUser" placeholder="Search online users..." />-->
-<!--      <button id="searchButton">Search</button>-->
-<!--      <p id="errorMessage" style="color: red;"></p>-->
-<!--      <ul id="userList"></ul>-->
-<!--    </div>-->
+    <div class="grid-item chat-search">
+      <label for="searchUser">Search for online users</label>
+      <input type="text" id="searchUser" placeholder="Search online users..." />
+      <button id="searchButton">Search</button>
+      <p id="errorMessage" style="color: red;"></p>
+      <ul id="userList"></ul>
+    </div>
 
-<!--
+
     <div class="grid-item chat-container">
       <h5 id="chatWithPublic">Public Chat</h5>
       <div id="chatListConPublic" class="chatListcontainer">
