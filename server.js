@@ -26,7 +26,7 @@ const pool = new Pool({
 
 const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3006;
 
 const server = createServer(app); // Wrap Express with HTTP
 const io = new Server(server, {
