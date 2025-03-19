@@ -1,5 +1,6 @@
 //main.js
-//import { displayUserFiles, renderFiles  } from './files.js';
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io();
 
 function setupRestrictedLinks() {
     setTimeout(() => {  // Delay to ensure sessionStorage is updated
@@ -34,3 +35,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 export { setupRestrictedLinks };
 
+// Update only online users list
+function updateUserList(users) {
+    const onlineUsersList = document.getElementById("onlineUsers");
+    if (!onlineUsersList) {
+        console.error(" Error: Online users list not found.");
+        return;
+    }
+
+    onlineUsersList.innerHTML = ""; // Clear list
+
+    users.forEach(username => {
+        const listItem = document.createElement("li");
+        listItem.textContent = username;
+        listItem.classList.add("online-user");
+        onlineUsersList.appendChild(listItem);
+    });
+}
+
+// Listen for online user updates
+socket.on("updateOnlineUsers", updateUserList);
