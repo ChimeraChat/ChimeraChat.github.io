@@ -26,7 +26,7 @@ async function listAllFiles() {
     try {
         const res = await drive.files.list({
             fields: "files(id, name)",
-            pageSize: 1000, // Adjust if needed
+            pageSize: 25, // Adjust if needed
         });
 
         if (!res.data.files.length) {

@@ -254,7 +254,7 @@ io.on("connection", (socket) => {
     onlineUsers.delete(socket.id);
 
     // Emit updated list of online users
-    io.emit("updateOnlineUsers", Array.from(onlineUsers));
+    io.emit("updateOnlineUsers", Array.from(onlineUsers.values()));
 });
 
   // When a user sends a message
