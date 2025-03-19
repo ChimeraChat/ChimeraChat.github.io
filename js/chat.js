@@ -1,333 +1,108 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
-async function loadChatHistory() {
-    try {
-        const response = await fetch('/api/chat/history');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const messages = await response.json();
-        messages.forEach(message => displayMessage(message, "chatBoxPublic"));
-    } catch (error) {
-        console.error("Error loading chat history:", error);
-    }
-}
-
-// Function to display messages (now with target chat box)
-function displayMessage(message, targetChatBoxId) {
-    const chatBox = document.getElementById(targetChatBoxId);
-    if (!chatBox) {
-        console.error(`Error: ${targetChatBoxId} element not found.`);
-        return;
-    }
-
+// Function to display messages
+function displayMessage(message, type = "public") {
+    const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") : document.getElementById("chatBoxPublic");
     const msgElement = document.createElement("p");
 
-    // Check if the message is from the user
     const user = JSON.parse(sessionStorage.getItem("user"));
-
     if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message"); // Style for user messages
+        msgElement.classList.add("user-message");
     } else {
-        msgElement.classList.add("other-message"); // Style for received messages
+        msgElement.classList.add("other-message");
     }
 
     msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    setTimeout(() => {
-        chatBox.appendChild(msgElement);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }, 1000); // Delay to ensure the message is displayed before scrolling
+    chatBox.appendChild(msgElement);
+
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to display private messages
-function displayPrivateMessage(message) {
-    displayMessage(message, "chatBoxPrivate");
-}
-
-// Send a new message (public)
-document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const messageInput = document.getElementById("messageInputPublic");
-    if (!messageInput) {
-        console.error("Error: messageInputPublic element not found.");
-        return;
-    }
-    const message = messageInput.value.trim();
-
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-
-        if (!user || !user.username) {
-            console.error("Error: User is not defined in sessionStorage.");
-            alert("Error: User not recognized. Please re-login.");
-            return;
-        }
-        const messageData = {
-            senderId: user.id,
-            senderUsername: user.username,
-            message,
-        };
-
-        socket.emit("sendMessage", messageData);
-
-        socket.once("messageConfirmed", () => {
-            displayMessage(messageData, "chatBoxPublic");
-        });
-        messageInput.value = ""; // Clear input
-    }
-});
-
-//Send private message
-document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const recipientInput = document.getElementById("privateRecipient");
-    const messageInput = document.getElementById("messageInputPrivate");
-    if (!messageInput) {
-        console.error("Error: messageInputPrivate element not found.");
-        return;
-    }
-    if (!recipientInput) {
-        console.error("Error: recipientInput element not found.");
-        return;
-    }
-
-    const recipientUsername = recipientInput.value.trim();
-    const message = messageInput.value.trim();
-
-    if (message && recipientUsername) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-
-        if (!user || !user.username) {
-            console.error("Error: User is not defined in sessionStorage.");
-            alert("Error: User not recognized. Please re-login.");
-            return;
-        }
-        const messageData = {
-            senderUsername: user.username,
-            recipientUsername: recipientUsername,
-            message,
-        };
-
-        socket.emit("sendPrivateMessage", messageData);
-        displayPrivateMessage(messageData);
-        messageInput.value = "";
-    } else {
-        console.error("Error: empty message or recipientUsername");
-    }
-});
-
-// Receive messages (public)
-socket.on("receiveMessage", (message) => {
-    displayMessage(message, "chatBoxPublic");
-});
-
-// Receive messages (private)
-socket.on("receivePrivateMessage", (message) => {
-    displayPrivateMessage(message);
-});
-
-// Update online/offline users list
-function updateUserList(users) {
-    const onlineUsersList = document.getElementById("onlineUsers");
-    const offlineUsersList = document.getElementById("offlineUsers");
-    if (!onlineUsersList || !offlineUsersList) {
-        console.error(`Error: onlineUsers or offlineUsers element not found.`);
-        return;
-    }
-    onlineUsersList.innerHTML = "";
-    offlineUsersList.innerHTML = "";
-
-    users.forEach(user => {
-        const listItem = document.createElement("li");
-        listItem.textContent = user.username;
-        if (user.isOnline) {
-            onlineUsersList.appendChild(listItem);
-        } else {
-            offlineUsersList.appendChild(listItem);
-        }
-    });
-}
-
-// Notify server when user logs in
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user) {
-        socket.emit("userLoggedIn", user.username);
-    }
-    loadChatHistory();
-});
-
-// Listen for online users update
-socket.on("updateOnlineUsers", updateUserList);
-
-/*
-// Load previous chat history
+// Load chat history
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
         const messages = await response.json();
-
-        const chatBox = document.getElementById("chatBoxPublic");
-        if (!chatBox) {
-            console.error("Error: chatBoxPublic not found in the DOM.");
-            return;
-        }
-
         messages.forEach(displayMessage);
     } catch (error) {
         console.error("Error loading chat history:", error);
     }
 }
 
-// Function to display messages
-function displayMessage(message) {
-    const chatBox = document.getElementById("chatBoxPublic");
-    if (!chatBox) {
-        console.error("Error: chatBoxPublic not found.");
-        return;
+// Event listener for public chat
+document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const messageInput = document.getElementById("messageInputPublic");
+    const message = messageInput.value.trim();
+
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        socket.emit("sendMessage", { message, username: user.username, type: "public" });
+        messageInput.value = "";
     }
-    const msgElement = document.createElement("p");
-
-    // Check if the message is from the user
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
-    if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message"); // Style for user messages
-    } else {
-        msgElement.classList.add("other-message"); // Style for received messages
-    }
-
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    setTimeout(() => {
-        chatBox.appendChild(msgElement);
-    }, 1000); // Delay to ensure the message is displayed before scrolling
-
-    // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// Send a new message
-// Ensure chat box exists before adding event listener
-document.addEventListener("DOMContentLoaded", () => {
-    const chatForm = document.getElementById("chatFormPublic");
-    if (chatForm) {
-        chatForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const messageInput = document.getElementById("messageInputPublic");
-            const message = messageInput.value.trim();
-
-            if (message) {
-                const user = JSON.parse(sessionStorage.getItem("user"));
-                if (!user || !user.username) {
-                    alert("Error: Please re-login.");
-                    return;
-                }
-
-                const messageData = {
-                    senderId: user.id,
-                    senderUsername: user.username,
-                    message,
-                };
-
-                socket.emit("sendMessage", messageData);
-                displayMessage(messageData); // Show instantly
-                messageInput.value = "";
-            }
-        });
-    }
-    loadChatHistory();
 });
 
-// Send a private message
+// Event listener for private chat
 document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
     const messageInput = document.getElementById("messageInputPrivate");
-    const recipientUsername = document.getElementById("privateRecipient").value;
     const message = messageInput.value.trim();
 
-    if (!recipientUsername || !message) {
-        alert("Recipient and message are required.");
-        return;
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        // Assuming you want to send to a specific user, you'll need the recipient's username
+        const recipient = "someOtherUser"; // This can be dynamic based on the selected private chat
+        socket.emit("sendPrivateMessage", { message, sender: user.username, recipient });
+        messageInput.value = "";
     }
-
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    socket.emit("sendPrivateMessage", {
-        senderUsername: user.username,
-        recipientUsername,
-        message
-    });
-
-    // Show message instantly
-    displayPrivateMessage({ senderUsername: "Me", message });
-
-    messageInput.value = "";
-
 });
 
-// Listen for private messages
-socket.on("receivePrivateMessage", displayPrivateMessage);
+// Listen for incoming messages
+socket.on("receiveMessage", (data) => {
+    displayMessage(data, "public");
+});
 
-// Display private messages
-function displayPrivateMessage(message) {
-    const chatBox = document.getElementById("chatBoxPrivate");
-    if (!chatBox) return;
+socket.on("receivePrivateMessage", (data) => {
+    displayMessage(data, "private");
+});
 
-    const msgElement = document.createElement("p");
+// Load history when the page loads
+loadChatHistory();
 
-    msgElement.classList.add(
-        message.senderUsername === "Me" ? "user-message" : "other-message"
-    );
 
-    msgElement.innerHTML = `<strong>${message.senderUsername}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-    chatBox.scrollTop = chatBox.scrollHeight;
+
+
+/*async function sendMessage() {
+    const chatUser = sessionStorage.getItem("chatWith") ? JSON.parse(sessionStorage.getItem("chatWith")) : null;
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+
+    if (!chatUser || !message) return;
+
+    try {
+        const response = await fetch("/send-message", );
+        if (!response.ok) throw new Error("Failed to send message");
+    } catch (error) {
+        console.error("Message send error:", error);
+        alert("Could not send message. Please try again.");
+    }
+
+    if (response.ok) {
+        displayMessage("You", message); // Show message in chat
+        messageInput.value = ""; // Clear input
+    } else {
+        alert("Failed to send message.");
+    }
 }
 
-// Listen for private messages
-socket.on("receivePrivateMessage", displayPrivateMessage);
+function displayMessage(sender, message) {
+    const chatBox = document.getElementById("chatBox");
+    const msgElement = document.createElement("div");
+    msgElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    chatBox.appendChild(msgElement);
+}
 
-
-// Receive messages
-socket.on("receiveMessage", displayMessage);
-
-
-//socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
-
-
-// Update online & offline users list
-socket.on("updateUserLists", (users) => {
-    const onlineUsersList = document.getElementById("onlineUsers");
-    const offlineUsersList = document.getElementById("offlineUsers");
-
-    onlineUsersList.innerHTML = "";
-    offlineUsersList.innerHTML = "";
-
-    users.forEach(user => {
-        const listItem = document.createElement("li");
-        listItem.textContent = user.username;
-
-        if (user.isOnline) {
-            listItem.classList.add("online-user");
-            onlineUsersList.appendChild(listItem);
-        } else {
-            listItem.classList.add("offline-user");
-            offlineUsersList.appendChild(listItem);
-        }
-    });
-});
-
-// Notify server when user logs in
-document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user) {
-        socket.emit("userLoggedIn", { id: user.id, username: user.username });
-    }
-    loadChatHistory();
-});
-
-// Listen for online users update
-socket.on("updateOnlineUsers", updateUserLists);
-*/
-
-
+// Send message when button is clicked
+document.getElementById("sendButton").addEventListener("click", sendMessage);*/
