@@ -17,7 +17,13 @@ import session from 'express-session';
 import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
 const { Pool } = pkg;
-const pool = new Pool(dbConfig);
+//const pool = new Pool(dbConfig);
+const pool = new Pool({
+  connectionString: dbConfig,
+  max: 5, // Reduce connection pool size
+  idleTimeoutMillis: 30000, // Close idle connections faster
+});
+
 const PgSession = pgSession(session);
 const app = express();
 const port = process.env.PORT || 3000;
