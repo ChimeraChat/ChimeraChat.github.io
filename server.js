@@ -36,7 +36,7 @@ const io = new Server(server, {
   }
 });
 
-// Socket.IO connection
+/*** Socket.IO connection
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -44,7 +44,7 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
-
+***/
 // Store online users
 const onlineUsers = new Map();  // Use a Map to store only usernames
 
