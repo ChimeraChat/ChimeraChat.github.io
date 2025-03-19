@@ -95,17 +95,24 @@ input[type="email"]{
 }
 
 .offline-user {
-    color: grey;
+    color: #5e5b5b;
     font-style: italic;
 }
-
+#offline{
+    align-items: flex-start;
+    text-align: center;
+}
+#online{
+    align-items: flex-start;
+    text-align: center;
+}
 #chatBoxPrivate, #chatBoxPublic {
     display: flex;
-    background-color: white;
+    background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
     overflow-y: auto; /* Scroll to see older messages */
-    border: 1px solid #c2f1ee;
+    border: 3px solid #f60000; /*for testing only will not be red when bug free*/
     border-radius: 8px;
 }
 
@@ -242,6 +249,15 @@ footer {
     color: #453e59;
 }
 
+.social-links a {
+    margin: 0 10px;
+    text-decoration: none;
+}
+.social-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain; /* Ensures uniform scaling */
+}
 /* Input Section Styling */
 .input {
     text-align: center;
