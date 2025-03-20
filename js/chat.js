@@ -39,7 +39,26 @@ function displayMessage(message, type = "public") {
 }
 
 
-*/
+function displayMessage(message, type = "public") {
+    const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") :
+document.getElementById("chatBoxPublic");
+    const msgElement = document.createElement("p");
+
+
+    // Check if the message is from the user
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message"); // Style for user messages
+    } else {
+        msgElement.classList.add("other-message"); // Style for received messages
+    }
+
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+}*/
 
 // Load chat history
 async function loadChatHistory() {
@@ -87,11 +106,6 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
         if (!user || !user.id || !user.username) {
             console.error("Error: User data is missing from sessionStorage.");
             alert("Error: Please log in again.");
-            return;
-        }
-
-        if (!recipient) {
-            alert("Please enter a recipient.");
             return;
         }
 
@@ -145,7 +159,6 @@ try {
 } catch (error) {
     console.error("Error loading user data", error)
 }
-
 
 
 // Get UI elements
