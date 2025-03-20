@@ -79,7 +79,7 @@ async function handleLogin(event) {
         if (response.ok && data.user) {
             console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify({
-                id: data.id, // Ensure this is returned by the backend!
+                id: data.userid, // Ensure this is returned by the backend!
                 username: data.username
             }));
 
