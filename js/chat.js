@@ -34,6 +34,11 @@ async function loadChatHistory() {
     }
 }
 
+// Function to display messages
+function displayMessage(message) {
+    const chatBox = document.getElementById("chatBox");
+    const msgElement = document.createElement("p");
+>>>>>>> parent of 0dbb233 (chat)
 
 
 // Send a new message
@@ -104,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Listen for online users update
-socket.on("updateOnlineUsers", updateUserLists);
+socket.on("updateOnlineUsers", updateUserList);
 
 
 
