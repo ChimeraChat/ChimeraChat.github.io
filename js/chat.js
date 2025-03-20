@@ -74,7 +74,7 @@ async function loadChatHistory() {
 // Send a new message
 document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
     event.preventDefault();
-    const message = messageInput.value.trim();
+    const message = messageInputPublic.value.trim();
 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
