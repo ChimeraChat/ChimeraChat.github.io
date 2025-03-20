@@ -162,7 +162,7 @@ try {
 
 
 // Get UI elements
-const chatBox = document.getElementById("chatBox");
+//const chatBox = document.getElementById("chatBox");
 const chatRecipient = document.getElementById("chatRecipient"); // Dropdown for recipient
 const chatWithTitle = document.getElementById("chatWithTitle");
 
@@ -194,8 +194,8 @@ function displayMessage(message, type = "public") {
     const msgElement = document.createElement("p");
     msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    chatBoxPrivate.appendChild(msgElement);
+    chatBoxPrivate.scrollTop = chatBoxPrivate.scrollHeight; // Auto-scroll
 }
 
 // Listen for messages
@@ -205,8 +205,8 @@ socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
 // Send message
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    const messageInput = document.getElementById("messageInput");
-    const message = messageInput.value.trim();
+    const messageInputPrivate = document.getElementById("messageInputPrivate");
+    const message = messageInputPrivate.value.trim();
     const selectedUser = chatRecipient.value;
     const user = JSON.parse(sessionStorage.getItem("user"));
 
@@ -222,6 +222,6 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         } else {
             socket.emit("sendPrivateMessage", { sender: user.username, recipient: selectedUser, message });
         }
-        messageInput.value = ""; // Clear input
+        messageInputPrivate.value = ""; // Clear input
     }
 });
