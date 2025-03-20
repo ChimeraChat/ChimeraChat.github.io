@@ -52,7 +52,19 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
 
-        socket.emit("sendMessage", { message, username: user.username, type: "public" });
+        if (!user || !user.id) {
+            console.error("Error: User or user ID is missing from sessionStorage.");
+            alert("Error: User not recognized. Please re-login.");
+            return;
+        }
+
+        // Ensure the object includes `senderId`
+        socket.emit("sendMessage", {
+            senderId: user.id,
+            senderUsername: user.username,
+            message
+        });
+
         messageInput.value = ""; // Clear input
     }
 });

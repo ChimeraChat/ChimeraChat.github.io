@@ -78,7 +78,10 @@ async function handleLogin(event) {
 
         if (response.ok && data.user) {
             console.log("Login Response:", data);
-            sessionStorage.setItem("user", JSON.stringify(data.user));
+            sessionStorage.setItem("user", JSON.stringify({
+                id: data.id, // Ensure this is returned by the backend!
+                username: data.username
+            }));
 
             const message = document.createElement("div");
             message.textContent = "Login success!";

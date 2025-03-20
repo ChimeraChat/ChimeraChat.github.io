@@ -249,6 +249,12 @@ io.on("connection", (socket) => {
     try {
       const {senderId, senderUsername, message} = messageData;
 
+      if (!senderId || isNaN(senderId)) {
+        console.error("Invalid senderId received:", senderId);
+        socket.emit("errorMessage", { error: "Invalid senderId. Please re-login." });
+        return;
+      }
+
       //Save to database
       await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
           [senderId, senderUsername, message]);
