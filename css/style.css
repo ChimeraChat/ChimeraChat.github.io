@@ -95,7 +95,7 @@ input[type="email"]{
 }
 
 #online{
-    align-items: center;
+    align-items: flex-start;
     text-align: center;
 }
 #chatBoxPrivate, #chatBoxPublic {
