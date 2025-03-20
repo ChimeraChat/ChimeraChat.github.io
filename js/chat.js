@@ -129,33 +129,6 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
     }
 });
 
-/*
-document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const messageInput = document.getElementById("messageInputPrivate");
-    const recipientInput = document.getElementById("privateRecipient");
-    const recipient = recipientInput.value.trim();
-    const message = messageInput.value.trim();
-    const user = JSON.parse(sessionStorage.getItem("user"));
-
-    if (!user || !user.userid || !user.username) {
-        console.error("Error: User data is missing from sessionStorage.");
-        alert("Error: Please log in again.");
-        return;
-    }
-
-    if (!recipient) {
-        alert("Please enter a recipient.");
-        return;
-    }
-
-    console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
-
-    socket.emit("sendPrivateMessage", { recipient, message: message, senderId: user.userid, senderUsername: user.username  });
-    messageInput.value = "" // Clear input field
-});*/
-
-
 socket.on("updateOnlineUsers", (users) => {
     if (!onlineUsersList) {
         console.error("onlineUsers element not found.");
