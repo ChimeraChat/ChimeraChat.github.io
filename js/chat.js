@@ -95,9 +95,9 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
         messageInputPublic.value = ""; // Clear input
     }
 });
-
+/*
 // Event listener for private chat
-document.getElementById("chatForm").addEventListener("submit", (event) => {
+document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = privateRecipient.value.trim();
     const message = messageInputPrivate.value.trim();
@@ -125,7 +125,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         alert("Failed to send private message.");
     }
 });
-/*
+
 socket.on("updateOnlineUsers", (users) => {
     if (!onlineUsersList) {
         console.error("onlineUsers element not found.");
@@ -215,7 +215,7 @@ socket.on("receiveMessage", (data) => displayMessage(data, "public"));
 socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
 
 // Send message
-document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
+document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = document.getElementById("privateRecipient").value.trim();
     const message = document.getElementById("messageInputPrivate").value.trim();
