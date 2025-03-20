@@ -1,6 +1,4 @@
 function createFooter() {
-    console.log("Footer is being created...");
-
     const footer = document.createElement("footer");
     const paragraph = document.createElement("p");
     paragraph.innerHTML = "&copy; 2025 ChimeraChat. Some rights reserved.";
@@ -9,8 +7,8 @@ function createFooter() {
     socialContainer.classList.add("social-links");
 
     const socialLinks = [
-        { href: "https://www.instagram.com/hellokitty/", imgSrc: "img/instagram.png", alt: "Instagram" },
-        { href: "https://www.youtube.com/watch?v=xvFZjo5PgG0", imgSrc: "img/youtube.png", alt: "YouTube" }
+        { href: "https://www.instagram.com", imgSrc: "img/instagram.png", alt: "Instagram" },
+        { href: "https://www.youtube.com", imgSrc: "img/youtube.png", alt: "YouTube" }
     ];
 
     socialLinks.forEach(link => {
@@ -32,7 +30,6 @@ function createFooter() {
     footer.appendChild(socialContainer);
     document.body.appendChild(footer);
 }
-createFooter();
 
 // Run the function when the page loads
 let lastSoundIndex = -1;
@@ -60,3 +57,4 @@ document.getElementById("videoButton").addEventListener("click", function(event)
     audio.play().catch(err => console.error("Audio playback failed:", err));
 });
 
+createFooter();
