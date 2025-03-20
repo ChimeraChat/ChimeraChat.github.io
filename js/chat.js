@@ -103,7 +103,7 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
     try {
         const user = JSON.parse(sessionStorage.getItem("user"));
 
-        if (!user || !user.id || !user.username) {
+        if (!user || !user.userid || !user.username) {
             console.error("Error: User data is missing from sessionStorage.");
             alert("Error: Please log in again.");
             return;
@@ -114,7 +114,7 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
         socket.emit("sendPrivateMessage", {
             recipient,
             message,
-            senderId: user.id,
+            senderId: user.userid,
             senderUsername: user.username
         });
         messageInputPrivate.value = ""; // Clear input field
@@ -123,7 +123,7 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
         alert("Failed to send private message.");
     }
 });
-
+/*
 socket.on("updateOnlineUsers", (users) => {
     if (!onlineUsersList) {
         console.error("onlineUsers element not found.");
@@ -138,7 +138,7 @@ socket.on("updateOnlineUsers", (users) => {
         onlineUsersList.appendChild(listItem);
     });
 });
-
+*/
 
 // Listen for incoming messages
 socket.on("receiveMessage", (data) => {
@@ -174,6 +174,8 @@ chatRecipient.addEventListener("change", () => {
 
 // Load available users dynamically
 socket.on("updateOnlineUsers", (users) => {
+    console.log("Updated Online Users:", users);
+
     chatRecipient.innerHTML = `<option value="public">Everyone (Public Chat)</option>`; // Reset with default
     users.forEach((username) => {
         if (username !== sessionStorage.getItem("user").username) { // Don't add yourself
