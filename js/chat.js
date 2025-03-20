@@ -1,6 +1,15 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
+const chatBoxPublic = document.getElementById("chatBoxPublic");
+const chatBoxPrivate = document.getElementById("chatBoxPrivate");
+const privateRecipient = document.getElementById("privateRecipient");
+
+// Check if the elements exist before using them
+if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient) {
+    console.error("Some chat elements are missing in the HTML.");
+}
+
 // Function to display messages
 function displayMessage(message, type = "public") {
     const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") : document.getElementById("chatBoxPublic");
@@ -52,16 +61,36 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
 document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
     const messageInput = document.getElementById("messageInputPrivate");
+    const recipientInput = document.getElementById("privateRecipient"); // Get recipient
+    const recipient = recipientInput.value.trim();
     const message = messageInput.value.trim();
+
+    if (!recipient) {
+        alert("Please enter a recipient for the private message.");
+        return;
+    }
 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
-        // Assuming you want to send to a specific user, you'll need the recipient's username
-        const recipient = "someOtherUser"; // This can be dynamic based on the selected private chat
         socket.emit("sendPrivateMessage", { message, sender: user.username, recipient });
         messageInput.value = "";
     }
 });
+
+
+socket.on("updateOnlineUsers", (users) => {
+    const onlineUsersList = document.getElementById("onlineUsers");
+    if (!onlineUsersList) return;
+
+    onlineUsersList.innerHTML = ""; // Clear existing list
+
+    users.forEach((username) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = username;
+        onlineUsersList.appendChild(listItem);
+    });
+});
+
 
 // Listen for incoming messages
 socket.on("receiveMessage", (data) => {
