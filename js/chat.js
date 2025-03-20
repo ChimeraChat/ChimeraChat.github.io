@@ -13,7 +13,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPublic || !messageInputPrivate || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
-
+/*
 // Function to display messages
 function displayMessage(message, type = "public") {
     try {
@@ -38,27 +38,8 @@ function displayMessage(message, type = "public") {
     }
 }
 
-/*
-function displayMessage(message, type = "public") {
-    const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") :
-document.getElementById("chatBoxPublic");
-    const msgElement = document.createElement("p");
 
-
-    // Check if the message is from the user
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message"); // Style for user messages
-    } else {
-        msgElement.classList.add("other-message"); // Style for received messages
-    }
-
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-
-    // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
-}*/
+*/
 
 // Load chat history
 async function loadChatHistory() {
@@ -164,3 +145,68 @@ try {
 } catch (error) {
     console.error("Error loading user data", error)
 }
+
+
+
+// Get UI elements
+const chatBox = document.getElementById("chatBox");
+const chatRecipient = document.getElementById("chatRecipient"); // Dropdown for recipient
+const chatWithTitle = document.getElementById("chatWithTitle");
+
+// Update title based on recipient
+chatRecipient.addEventListener("change", () => {
+    const selectedUser = chatRecipient.value;
+    chatWithTitle.textContent = selectedUser === "public" ? "Public Chat" : `Chat with ${selectedUser}`;
+});
+
+// Load available users dynamically
+socket.on("updateOnlineUsers", (users) => {
+    chatRecipient.innerHTML = `<option value="public">Everyone (Public Chat)</option>`; // Reset with default
+    users.forEach((username) => {
+        if (username !== sessionStorage.getItem("user").username) { // Don't add yourself
+            const option = document.createElement("option");
+            option.value = username;
+            option.textContent = username;
+            chatRecipient.appendChild(option);
+        }
+    });
+});
+
+// Function to display messages
+function displayMessage(message, type = "public") {
+    if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
+
+    const msgElement = document.createElement("p");
+    msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
+    msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+}
+
+// Listen for messages
+socket.on("receiveMessage", (data) => displayMessage(data, "public"));
+socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
+
+// Send message
+document.getElementById("chatForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+    const selectedUser = chatRecipient.value;
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    if (!user || !user.username) {
+        console.error("User not found in sessionStorage");
+        alert("Please log in again.");
+        return;
+    }
+
+    if (message) {
+        if (selectedUser === "public") {
+            socket.emit("sendMessage", { sender: user.username, message });
+        } else {
+            socket.emit("sendPrivateMessage", { sender: user.username, recipient: selectedUser, message });
+        }
+        messageInput.value = ""; // Clear input
+    }
+});

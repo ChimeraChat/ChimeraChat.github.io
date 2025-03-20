@@ -244,7 +244,7 @@ io.on("connection", (socket) => {
     io.emit("updateOnlineUsers", Object.keys(onlineUsers)); // Broadcast updated list
   });
 
-  // When a user sends a message
+/*  // When a user sends a message
   socket.on("sendMessage", async (messageData) => {
     try {
       const {senderId, senderUsername, message} = messageData;
@@ -266,7 +266,7 @@ io.on("connection", (socket) => {
       console.error("Error saving message to database:", error);
     }
   });
-
+/*
   // When a user sends a private message
   socket.on("sendPrivateMessage", async (messageData) => {
     try {
@@ -286,7 +286,7 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.error("Error saving private message to database:", error);
     }
-  });
+  });*/
 
   // When a user disconnects
   socket.on("disconnect", () => {
@@ -294,6 +294,50 @@ io.on("connection", (socket) => {
     delete onlineUsers[socket.id];
     io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Update user list
   });
+
+
+
+
+  console.log("User connected:", socket.id);
+
+  socket.on("sendMessage", async (messageData) => {
+    try {
+      const { sender, message } = messageData;
+      console.log("Public Message from:", sender, message);
+
+      // Save to database
+      await pool.query("INSERT INTO chimerachat_messages (sender_username, message) VALUES ($1, $2)", [sender, message]);
+
+      // Broadcast to everyone
+      io.emit("receiveMessage", messageData);
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  });
+
+  socket.on("sendPrivateMessage", async (data) => {
+    const { sender, recipient, message } = data;
+    console.log(`Private message from ${sender} to ${recipient}: ${message}`);
+
+    try {
+      // Save private message to database
+      await pool.query("INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)", [sender, recipient, message]);
+
+      // Find recipient socket ID
+      const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipient)?.[0];
+
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("receivePrivateMessage", { sender, message, recipient });
+      } else {
+        console.log(`Recipient ${recipient} is offline.`);
+      }
+    } catch (error) {
+      console.error("Error saving private message:", error);
+    }
+  });
+
+
+
 });
 
 app.get("/api/chat/history", async (req, res) => {
@@ -306,6 +350,7 @@ app.get("/api/chat/history", async (req, res) => {
     console.error("Error fetching chat history:", error);
     res.status(500).json({ message: "Failed to fetch chat history." });
   }
+
 });
 
 // Standard route

@@ -69,19 +69,37 @@
     </div>
 
     <div class="grid-item chat-container">
+      <h5 id="chatWithTitle">Public Chat</h5>
+      <label for="chatRecipient">Send to:</label>
+      <select id="chatRecipient">
+        <option value="public">Everyone (Public Chat)</option>
+      </select>
+
+      <div id="chatListCon" class="chatListcontainer">
+        <div id="chatBox" class="chat-box"></div> <!-- Messages will be displayed here -->
+      </div>
+      <form id="chatForm" class="chat-form">
+        <label for="messageInput"></label>
+        <textarea id="messageInput" placeholder="Type a message..." required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+<!---
+    <div class="grid-item chat-container">
       <h5 id="chatWith">Private messages</h5>
       <div id="chatListConPrivate" class="chatListcontainer">
         <label for="privateRecipient">Recipient Username:</label>
         <input type="text" id="privateRecipient" placeholder="Enter recipient username">
         <div id="chatBoxPrivate" class="chat-box"></div>
-        <!-- Messages will be displayed here -->
+         Messages will be displayed here
         <form id="chatFormPrivate" class="chat-form">
           <label for="messageInputPrivate"></label>
           <textarea type="text" id="messageInputPrivate" placeholder="Type a message..." required></textarea>
           <button type="submit">Send</button>
         </form>
       </div>
-    </div>
+    </div> -->
 
     <div class="grid-item wide">
       <h5>Chat Guidelines</h5>
