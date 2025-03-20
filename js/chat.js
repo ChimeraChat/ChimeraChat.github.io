@@ -2,28 +2,7 @@ import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
 
-// Function to display messages
-function displayMessage(message, type = "public") {
-    const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") : document.getElementById("chatBoxPublic");
-    const msgElement = document.createElement("p");
-
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user.username === message.sender_username) {
-        msgElement.classList.add("user-message");
-    } else {
-        msgElement.classList.add("other-message");
-    }
-
-    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-
-    // Auto-scroll to the bottom
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-
 // Load previous chat history
-
 async function loadChatHistory() {
     try {
         const response = await fetch('/api/chat/history');
@@ -38,13 +17,67 @@ async function loadChatHistory() {
 function displayMessage(message) {
     const chatBox = document.getElementById("chatBox");
     const msgElement = document.createElement("p");
->>>>>>> parent of 0dbb233 (chat)
+
+
+    // Check if the message is from the user
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message"); // Style for user messages
+    } else {
+        msgElement.classList.add("other-message"); // Style for received messages
+    }
+
+    msgElement.innerHTML = `<strong>${message.sender_username}:</strong> ${message.message}`;
+    chatBox.appendChild(msgElement);
+
+    // Auto-scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 
 // Send a new message
-document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
+document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    const messageInput = document.getElementById("messageInputPublic");
+    const messageInput = document.getElementById("messageInput");
+    const message = messageInput.value.trim();
+
+    if (message) {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        const messageData = {
+            senderId: user.id,
+            senderUsername: user.username,
+            message,
+        };
+
+        socket.emit("sendMessage", messageData);
+        messageInput.value = ""; // Clear input
+    }
+});
+
+// Receive messages
+socket.on("receiveMessage", displayMessage, loadChatHistory);
+
+// Load chat history when page loads
+document.addEventListener("DOMContentLoaded", loadChatHistory);
+
+
+// Update online users list
+socket.on("updateOnlineUsers", (userList) => {
+    const userListContainer = document.getElementById("onlineUsers");
+    userListContainer.innerHTML = "";
+
+    userList.forEach(user => {
+        const listItem = document.createElement("li");
+        listItem.textContent = user.username;
+        userListContainer.appendChild(listItem);
+    });
+});
+
+
+
+/*async function sendMessage() {
+    const chatUser = sessionStorage.getItem("chatWith") ? JSON.parse(sessionStorage.getItem("chatWith")) : null;
+    const messageInput = document.getElementById("messageInput");
     const message = messageInput.value.trim();
 
     if (message) {
@@ -79,23 +112,15 @@ socket.on("receiveMessage", (message) => {
 //socket.on("receiveMessage", displayMessage, updateUserList, loadChatHistory);
 
 
-// Update online & offline users list
-function updateUserLists(users) {
+// Update online users list
+function updateUserList(users) {
     const onlineUsersList = document.getElementById("onlineUsers");
-    const offlineUsersList = document.getElementById("offlineUsers");
+    onlineUsersList.innerHTML = ""; // Rensa listan
 
-    onlineUsersList.innerHTML = ""; // Clear list
-    offlineUsersList.innerHTML = ""; // Clear list
-
-    users.forEach(user => {
+    users.forEach(username => {
         const listItem = document.createElement("li");
-        listItem.textContent = user.username;
-
-        if (user.isOnline) {
-            onlineUsersList.appendChild(listItem);
-        } else {
-            offlineUsersList.appendChild(listItem);
-        }
+        listItem.textContent = username;
+        onlineUsersList.appendChild(listItem);
     });
 }
 
