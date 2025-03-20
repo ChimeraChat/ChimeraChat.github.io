@@ -149,7 +149,7 @@ input[type="email"]{
     max-width: 70%;
 }
 
-#chatFormPublic, #chatFormPrivate{
+.chatFormPublic, .chatFormPrivate{
     display: flex;
     padding: 10px;
     margin-top: 10px;
@@ -181,6 +181,7 @@ input[type="email"]{
 #chatForm button:hover {
     background-color: #4444a0;
 }
+
 
 
 /* Center the submit button */
