@@ -302,11 +302,12 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", async (messageData) => {
     try {
-      const { sender, message } = messageData;
-      console.log("Public Message from:", sender, message);
+      const {senderId, senderUsername, message} = messageData;
+      console.log("Public Message from:", senderUsername, message);
 
       // Save to database
-      await pool.query("INSERT INTO chimerachat_messages (sender_username, message) VALUES ($1, $2)", [sender, message]);
+      await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
+          [senderId, senderUsername, message]);
 
       // Broadcast to everyone
       io.emit("receiveMessage", messageData);
@@ -316,18 +317,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendPrivateMessage", async (data) => {
-    const { sender, recipient, message } = data;
-    console.log(`Private message from ${sender} to ${recipient}: ${message}`);
+    const { recipient, message, senderId, senderUsername } = data;
+    console.log(`Private message from ${senderUsername} to ${recipient}: ${message}`);
 
     try {
       // Save private message to database
-      await pool.query("INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)", [sender, recipient, message]);
+      await pool.query('INSERT INTO chimerachat_private_messages(sender_id, sender_username, recipient_username, message) VALUES ($1, $2, $3, $4)',
+          [senderId, senderUsername, recipient, message]);
 
       // Find recipient socket ID
       const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipient)?.[0];
 
       if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receivePrivateMessage", { sender, message, recipient });
+        io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message, recipient });
       } else {
         console.log(`Recipient ${recipient} is offline.`);
       }
