@@ -21,7 +21,7 @@ const pool = new Pool(dbConfig);
 
 const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const server = createServer(app); // Wrap Express with HTTP
 const io = new Server(server, {
@@ -33,6 +33,7 @@ const io = new Server(server, {
 
 // Store online users
 let onlineUsers = {};
+let offlineUsers = {};
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -294,10 +295,6 @@ io.on("connection", (socket) => {
     try {
       const {senderId, senderUsername, message} = messageData;
 
-      if (!senderId || isNaN(senderId)) {
-        console.error("Invalid senderId:", senderId);
-        return;
-      }
       //Save to database
       await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
           [senderId, senderUsername, message]);
@@ -315,16 +312,6 @@ socket.on("sendPrivateMessage", async (data) => {
   const { senderUsername, recipientUsername, message } = data;
 
   try {
-    const recipientResult = await pool.query(
-        'SELECT username FROM chimerachat_accounts WHERE username = $1',
-        [recipientUsername]
-    );
-
-    if (recipientResult.rows.length === 0) {
-      socket.emit("privateMessageError", { message: "Recipient not found!" });
-      console.error(`Recipient ${recipientUsername} does not exist.`);
-      return;
-    }
     // Save private message to DB
     await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
         [senderUsername, recipientUsername, message]);
@@ -339,7 +326,6 @@ socket.on("sendPrivateMessage", async (data) => {
     } else {
       console.log(`Recipient ${recipientUsername} is offline.`);
     }
-    socket.emit("privateMessageConfirmed");
   } catch (error) {
     console.error("Error saving private message:", error);
   }
