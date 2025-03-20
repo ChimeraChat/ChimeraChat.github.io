@@ -4,7 +4,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node --max-old-space-size=256 server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

@@ -19,7 +19,6 @@ import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.j
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
 
-
 const PgSession = pgSession(session);
 const app = express();
 const port = process.env.PORT || 3000;
