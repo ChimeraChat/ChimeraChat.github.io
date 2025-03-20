@@ -21,7 +21,7 @@ const pool = new Pool(dbConfig);
 
 const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 const server = createServer(app); // Wrap Express with HTTP
 const io = new Server(server, {
@@ -33,7 +33,6 @@ const io = new Server(server, {
 
 // Store online users
 let onlineUsers = {};
-let offlineUsers = {};
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -250,13 +249,10 @@ io.on("connection", (socket) => {
   }
 
   // When a user logs in, move them to online users list
-  socket.on("userLoggedIn", async (user) => {
+  socket.on("userLoggedIn", async (username) => {
     try {
       // Update database to mark user as online
-      await pool.query("UPDATE chimerachat_accounts SET is_online = TRUE WHERE username = $1", [user.username]);
-
-      // Store user session
-      onlineUsers[socket.id] = user.username;
+      await pool.query("UPDATE chimerachat_accounts SET is_online = TRUE WHERE username = $1", [username]);
 
       // Fetch updated user lists
       const users = await fetchAllUsers();
@@ -266,12 +262,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  // When a user logs in, broadcast updated user lists
-  async function broadcastUserLists() {
-    const users = await fetchAllUsers();
-    io.emit("updateUserLists", users);
-  }
-
   // When a user disconnects, move them to offline users list
   socket.on("disconnect", async () => {
     console.log("A user disconnected:", socket.id);
@@ -280,8 +270,10 @@ io.on("connection", (socket) => {
     if (username) {
       try {
         await pool.query("UPDATE chimerachat_accounts SET is_online = FALSE WHERE username = $1", [username]);
-        delete onlineUsers[socket.id];
-        broadcastUserLists(); // Broadcast updated lists
+
+        // Fetch updated user lists
+        const users = await fetchAllUsers();
+        io.emit("updateUserLists", users);
       } catch (error) {
         console.error("Error updating user status:", error);
       }
@@ -305,30 +297,6 @@ io.on("connection", (socket) => {
     {
       console.error("Error saving message to database:", error);
     }
-});
-
-// Private messages between users
-socket.on("sendPrivateMessage", async (data) => {
-  const { senderUsername, recipientUsername, message } = data;
-
-  try {
-    // Save private message to DB
-    await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
-        [senderUsername, recipientUsername, message]);
-
-    console.log(`Private message from ${senderUsername} to ${recipientUsername}: ${message}`);
-
-    // Emit only to the recipient
-    const recipientSocket = Object.keys(onlineUsers).find(socketId => onlineUsers[socketId] === recipientUsername);
-
-    if (recipientSocket) {
-      io.to(recipientSocket).emit("receivePrivateMessage", { senderUsername, message });
-    } else {
-      console.log(`Recipient ${recipientUsername} is offline.`);
-    }
-  } catch (error) {
-    console.error("Error saving private message:", error);
-  }
 });
 
 app.get("/api/chat/history", async (req, res) => {

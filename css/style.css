@@ -89,16 +89,6 @@ input[type="email"]{
     font-size: 16px;
 }
 
-.online-user {
-    color: green;
-    font-weight: bold;
-}
-
-.offline-user {
-    color: grey;
-    font-style: italic;
-}
-
 #chatBoxPrivate, #chatBoxPublic {
     display: flex;
     background-color: white;
