@@ -94,6 +94,14 @@ input[type="email"]{
     font-weight: bold;
 }
 
+.offline-user {
+    color: #5e5b5b;
+    font-style: italic;
+}
+#offline{
+    align-items: flex-start;
+    text-align: center;
+}
 #online{
     align-items: flex-start;
     text-align: center;
@@ -264,7 +272,7 @@ footer {
     font-weight: bold;
 }
 
-/* Testing grid for index and files page */
+/* Testing grid for index and post page */
 
 .grid-container {
     display: grid;

@@ -32,7 +32,7 @@ const io = new Server(server, {
 });
 
 // Store online users
-const onlineUsers = new Map();  // Use a Map to store only usernames
+let onlineUsers = {};
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -130,7 +130,7 @@ app.post('/login', async (req, res) => {
         return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
       }
       // Ta bort lösenord innan vi skickar tillbaka data
-      delete user.hashpassword;
+      //delete user.hashpassword;
 
       // Store user in session
       req.session.user = {
@@ -235,36 +235,67 @@ app.get('/api/download/:fileId', async (req, res) => {
 
 // WebSocket Connection
 io.on("connection", (socket) => {
-  console.log(" User connected:", socket.id);
+  console.log("A user connected:", socket.id);
 
-  socket.on("userLoggedIn", (user) => {
-    if (!user || !user.username) return;  // Ensure valid user
-    socket.username = user.username;  // Store username in socket
+  // Fetch all users from the database when a new user connects
+  async function fetchAllUsers() {
+    try {
+      const result = await pool.query("SELECT username, is_online FROM chimerachat_accounts");
+      return result.rows.map(user => ({ username: user.username, isOnline: user.is_online }));
+    } catch (error) {
+      console.error("Error fetching user list:", error);
+      return [];
+    }
+  }
 
-    onlineUsers.set(socket.id, user.username); // Store socket ID → username
-    console.log(`🟢 ${user.username} is online`);
+  // When a user logs in, move them to online users list
+  socket.on("userLoggedIn", async (user) => {
+    try {
+      // Update database to mark user as online
+      await pool.query("UPDATE chimerachat_accounts SET is_online = TRUE WHERE username = $1", [user.username]);
 
-    // Send updated online users list
-    io.emit("updateOnlineUsers", Array.from(onlineUsers.values()));
-});
+      // Store user session
+      onlineUsers[socket.id] = user.username;
 
-  socket.on("disconnect", () => {
-    console.log(` User disconnected: ${socket.username}`);
+      // Fetch updated user lists
+      const users = await fetchAllUsers();
+      io.emit("updateUserLists", users);
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  });
 
-    // Remove user from the online users Set
-    onlineUsers.delete(socket.id);
+  // When a user logs in, broadcast updated user lists
+  async function broadcastUserLists() {
+    const users = await fetchAllUsers();
+    io.emit("updateUserLists", users);
+  }
 
-    // Emit updated list of online users
-    io.emit("updateOnlineUsers", Array.from(onlineUsers.values()));
-});
+  // When a user disconnects, move them to offline users list
+  socket.on("disconnect", async () => {
+    console.log("A user disconnected:", socket.id);
+    const username = onlineUsers[socket.id];
+
+    if (username) {
+      try {
+        await pool.query("UPDATE chimerachat_accounts SET is_online = FALSE WHERE username = $1", [username]);
+        delete onlineUsers[socket.id];
+        broadcastUserLists(); // Broadcast updated lists
+      } catch (error) {
+        console.error("Error updating user status:", error);
+      }
+    }
+
+    delete onlineUsers[socket.id];
+  });
 
   // When a user sends a message
   socket.on("sendMessage", async (messageData) => {
     try {
       const {senderId, senderUsername, message} = messageData;
 
-      if (!senderId || isNaN(senderId || !senderUsername || !message)) {
-        console.error("Invalid senderId:", messageData);
+      if (!senderId || isNaN(senderId)) {
+        console.error("Invalid senderId:", senderId);
         return;
       }
       //Save to database
@@ -279,40 +310,39 @@ io.on("connection", (socket) => {
     }
 });
 
-  // Private messages between users
-  socket.on("sendPrivateMessage", async (data) => {
-    const { senderUsername, recipientUsername, message } = data;
+// Private messages between users
+socket.on("sendPrivateMessage", async (data) => {
+  const { senderUsername, recipientUsername, message } = data;
 
-    if (!senderUsername || !recipientUsername || !message) {
-      console.error("Missing required fields for private message:", data);
+  try {
+    const recipientResult = await pool.query(
+        'SELECT username FROM chimerachat_accounts WHERE username = $1',
+        [recipientUsername]
+    );
+
+    if (recipientResult.rows.length === 0) {
+      socket.emit("privateMessageError", { message: "Recipient not found!" });
+      console.error(`Recipient ${recipientUsername} does not exist.`);
       return;
     }
+    // Save private message to DB
+    await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
+        [senderUsername, recipientUsername, message]);
 
-    const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipientUsername)?.[0];
+    console.log(`Private message from ${senderUsername} to ${recipientUsername}: ${message}`);
 
-    if (recipientSocketId) {
-      io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message });
+    // Emit only to the recipient
+    const recipientSocket = Object.keys(onlineUsers).find(socketId => onlineUsers[socketId] === recipientUsername);
+
+    if (recipientSocket) {
+      io.to(recipientSocket).emit("receivePrivateMessage", { senderUsername, message });
     } else {
       console.log(`Recipient ${recipientUsername} is offline.`);
     }
-
-    try {
-      // Save private message to DB
-      await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
-          [senderUsername, recipientUsername, message]);
-
-      console.log(`Private message from ${senderUsername} to ${recipientUsername}: ${message}`);
-
-      // Emit only to the recipient
-      if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message });
-        socket.emit("privateMessageConfirmed");
-      } else {
-      console.log(`Recipient ${recipientUsername} is offline.`);
-      }
-    } catch (error) {
-      console.error("Error saving private message:", error);
-    }
+    socket.emit("privateMessageConfirmed");
+  } catch (error) {
+    console.error("Error saving private message:", error);
+  }
 });
 
 app.get("/api/chat/history", async (req, res) => {
