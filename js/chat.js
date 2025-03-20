@@ -8,6 +8,8 @@ const messageInputPublic = document.getElementById("messageInputPublic");
 const messageInputPrivate = document.getElementById("messageInputPrivate");
 const onlineUsersList = document.getElementById("onlineUsers");
 
+
+
 // Check if the elements exist before using them
 // Check if the elements exist before using them
 if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPublic || !messageInputPrivate || !onlineUsersList) {
@@ -174,16 +176,26 @@ chatRecipient.addEventListener("change", () => {
 
 // Load available users dynamically
 socket.on("updateOnlineUsers", (users) => {
-    console.log("Updated Online Users:", users);
+    const onlineUsersList = document.getElementById("onlineUsers");
+    const privateRecipientDropdown = document.getElementById("privateRecipient");
 
-    chatRecipient.innerHTML = `<option value="public">Everyone (Public Chat)</option>`; // Reset with default
+    if (!onlineUsersList || !privateRecipientDropdown) return;
+
+    // Clear lists before updating
+    onlineUsersList.innerHTML = "";
+    privateRecipientDropdown.innerHTML = '<option value="">Select a user</option>';
+
     users.forEach((username) => {
-        if (username !== sessionStorage.getItem("user").username) { // Don't add yourself
-            const option = document.createElement("option");
-            option.value = username;
-            option.textContent = username;
-            chatRecipient.appendChild(option);
-        }
+        // Update sidebar list
+        const listItem = document.createElement("li");
+        listItem.textContent = username;
+        onlineUsersList.appendChild(listItem);
+
+        // Add to dropdown for private chat
+        const option = document.createElement("option");
+        option.value = username;
+        option.textContent = username;
+        privateRecipientDropdown.appendChild(option);
     });
 });
 
@@ -203,25 +215,34 @@ socket.on("receiveMessage", (data) => displayMessage(data, "public"));
 socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
 
 // Send message
-document.getElementById("chatForm").addEventListener("submit", (event) => {
+document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
-    const messageInputPrivate = document.getElementById("messageInputPrivate");
-    const message = messageInputPrivate.value.trim();
-    const selectedUser = chatRecipient.value;
-    const user = JSON.parse(sessionStorage.getItem("user"));
+    const recipient = document.getElementById("privateRecipient").value.trim();
+    const message = document.getElementById("messageInputPrivate").value.trim();
 
-    if (!user || !user.username) {
-        console.error("User not found in sessionStorage");
-        alert("Please log in again.");
+    if (!recipient) {
+        alert("Please select a user to send a private message.");
         return;
     }
 
     if (message) {
-        if (selectedUser === "public") {
-            socket.emit("sendMessage", { sender: user.username, message });
-        } else {
-            socket.emit("sendPrivateMessage", { sender: user.username, recipient: selectedUser, message });
+        const user = JSON.parse(sessionStorage.getItem("user"));
+
+        if (!user || !user.userid || !user.username) {
+            console.error("Error: User data is missing from sessionStorage.");
+            alert("Error: Please log in again.");
+            return;
         }
-        messageInputPrivate.value = ""; // Clear input
+
+        console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
+
+        socket.emit("sendPrivateMessage", {
+            recipient,
+            message,
+            senderId: user.userid,
+            senderUsername: user.username
+        });
+
+        document.getElementById("messageInputPrivate").value = ""; // Clear input field
     }
 });
