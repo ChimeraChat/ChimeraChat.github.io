@@ -246,3 +246,14 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
         document.getElementById("messageInputPrivate").value = ""; // Clear input field
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
+    if (!user || !user.id || !user.username) {
+        console.error("Error: User or user ID is missing from sessionStorage.");
+        alert("Please log in again.");
+        return;
+    }
+
+    console.log("User loaded from session:", user);
+});
