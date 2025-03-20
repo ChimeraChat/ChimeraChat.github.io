@@ -130,7 +130,7 @@ app.post('/login', async (req, res) => {
         return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
       }
       // Ta bort lösenord innan vi skickar tillbaka data
-      //delete user.hashpassword;
+      delete user.hashpassword;
 
       // Store user in session
       req.session.user = {
@@ -177,7 +177,7 @@ app.post('/logout', (req, res) => {
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
-    if (!req.session.user || !req.session.user.id) {
+    if (!req.session.user || !req.session.user.userid) {
       return res.status(401).json({ message: "You are not logged in" });
     }
 
@@ -266,6 +266,28 @@ io.on("connection", (socket) => {
       console.error("Error saving message to database:", error);
     }
   });
+
+  // When a user sends a private message
+  socket.on("sendPrivateMessage", async (messageData) => {
+    try {
+      const { recipient, message, senderId, senderUsername } = messageData;
+
+      if (!senderId || isNaN(senderId)) {
+        console.error("Invalid senderId received:", senderId);
+        socket.emit("errorMessage", { error: "Invalid senderId. Please re-login." });
+        return;
+      }
+      //Save to database
+      await pool.query('INSERT INTO chimerachat_private_messages(sender_id, sender_username, recipient_username, message) VALUES ($1, $2, $3, $4)',
+          [senderId, senderUsername, recipient, message]);
+
+      console.log(`Private message from ${senderUsername} to ${recipient}:`, message);
+      io.to(onlineUsers[recipient]).emit("receivePrivateMessage", { sender_username: senderUsername, message }); // Send message to recipient
+    } catch (error) {
+      console.error("Error saving private message to database:", error);
+    }
+  });
+
   // When a user disconnects
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);

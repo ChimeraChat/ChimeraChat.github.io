@@ -38,24 +38,25 @@ async function logout() {
             }
 
             sessionStorage.removeItem("user");
-            const message = document.createElement("div");
-            message.textContent = "You've been logged out!";
-            document.body.prepend(message);
-            setTimeout(()=>{
-            }, 3000);
-            message.remove();
+            displayMessage("You've been logged out!");
             window.location.href = "index.html";
-
+            updateLoginButton();
             updateLoginButton();
 
         } catch (error) {
             console.error("Logout error:", error);
-            const message = document.createElement("div");
-            message.textContent = error.message || "Logout failed: An unexpected error occured.";
-            document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000);
+            displayMessage(error.message || "Logout failed: An unexpected error occurred.");
         }
     }
+}
+
+function displayMessage(text) {
+    const message = document.createElement("div");
+    message.textContent = text;
+    document.body.prepend(message);
+    setTimeout(() => {
+        message.remove();
+    }, 3000);
 }
 
 async function handleLogin(event) {
@@ -80,26 +81,16 @@ async function handleLogin(event) {
             console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
 
-            sessionStorage.setItem("user", JSON.stringify({
-                id: data.user.id,
-                username: data.user.username
-            }));
-
-            const message = document.createElement("div");
-            message.textContent = "Login success!";
-            document.body.prepend(message);
-
+            displayMessage("Login success!");
             updateLoginButton();
 
-            setTimeout(()=>{
-                message.remove();
-                window.location.href = "home.html";
+            setTimeout(() => {
+                window.location.href = "chat.html";
             }, 1000);
-
 
         } else {
             console.error("Login failed:", data.message);
-            alert(data.message || "Login failed.");
+            displayMessage(data.message || "Login failed.");
         }
     } catch (error) {
         console.error("Error during login:", error);
