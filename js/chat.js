@@ -52,6 +52,8 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
     if (message) {
         const user = JSON.parse(sessionStorage.getItem("user"));
 
+        console.log(message, user)
+
         if (!user || !user.userid) {
             console.error("Error: User or user ID is missing from sessionStorage.");
             alert("Error: User not recognized. Please re-login.");
