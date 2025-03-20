@@ -59,11 +59,7 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
         }
 
         // Ensure the object includes `senderId`
-        socket.emit("sendMessage", {
-            senderId: user.id,
-            senderUsername: user.username,
-            message
-        });
+        socket.emit("sendMessage", { message });
 
         messageInput.value = ""; // Clear input
     }
