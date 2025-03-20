@@ -80,6 +80,11 @@ async function handleLogin(event) {
             console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
 
+            sessionStorage.setItem("user", JSON.stringify({
+                id: data.user.id,
+                username: data.user.username
+            }));
+
             const message = document.createElement("div");
             message.textContent = "Login success!";
             document.body.prepend(message);
