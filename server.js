@@ -280,7 +280,41 @@ io.on("connection", (socket) => {
     }
 });
 
+  // Private messages between users
+  socket.on("sendPrivateMessage", async (data) => {
+    const { senderUsername, recipientUsername, message } = data;
 
+    if (!senderUsername || !recipientUsername || !message) {
+      console.error("Missing required fields for private message:", data);
+      return;
+    }
+
+    const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipientUsername)?.[0];
+
+    if (recipientSocketId) {
+      io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message });
+    } else {
+      console.log(`Recipient ${recipientUsername} is offline.`);
+    }
+
+    try {
+      // Save private message to DB
+      await pool.query('INSERT INTO chimerachat_private_messages (sender_username, recipient_username, message) VALUES ($1, $2, $3)',
+          [senderUsername, recipientUsername, message]);
+
+      console.log(`Private message from ${senderUsername} to ${recipientUsername}: ${message}`);
+
+      // Emit only to the recipient
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message });
+        socket.emit("privateMessageConfirmed");
+      } else {
+      console.log(`Recipient ${recipientUsername} is offline.`);
+      }
+    } catch (error) {
+      console.error("Error saving private message:", error);
+    }
+});
 
 app.get("/api/chat/history", async (req, res) => {
   try {
