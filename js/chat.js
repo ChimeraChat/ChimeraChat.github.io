@@ -97,7 +97,7 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
 });
 
 // Event listener for private chat
-document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
+document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = privateRecipient.value.trim();
     const message = messageInputPrivate.value.trim();
