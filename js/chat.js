@@ -71,20 +71,26 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
 document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
     const messageInput = document.getElementById("messageInputPrivate");
-    const recipientInput = document.getElementById("privateRecipient"); // Get recipient
+    const recipientInput = document.getElementById("privateRecipient");
     const recipient = recipientInput.value.trim();
     const message = messageInput.value.trim();
+    const user = JSON.parse(sessionStorage.getItem("user"));
 
-    if (!recipient) {
-        alert("Please enter a recipient for the private message.");
+    if (!user || !user.id || !user.username) {
+        console.error("Error: User data is missing from sessionStorage.");
+        alert("Error: Please log in again.");
         return;
     }
 
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
-        socket.emit("sendPrivateMessage", { message, sender: user.username, recipient });
-        messageInput.value = "";
+    if (!recipient) {
+        alert("Please enter a recipient.");
+        return;
     }
+
+    console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
+
+    socket.emit("sendPrivateMessage", { recipient, message });
+    messageInput.value = ""; // Clear input field
 });
 
 
