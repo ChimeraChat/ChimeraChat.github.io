@@ -109,7 +109,7 @@ input[type="email"]{
     flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
     overflow-y: auto; /* Scroll to see older messages */
-    border: 3px solid #f60000; /*for testing only will not be red when bug free*/
+    border: 3px solid #1c9bb1; /*for testing only will not be red when bug free*/
     border-radius: 8px;
 }
 
@@ -123,7 +123,7 @@ input[type="email"]{
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-.chatListcontainer{
+.chatListCon{
     padding: 20px;
     width: 80%;
     justify-content: center;
@@ -185,7 +185,36 @@ input[type="email"]{
 #chatForm button:hover {
     background-color: #4444a0;
 }
+select {
+    width: 50%; /* Make it responsive to container width */
+    padding: 5px; /* Add some padding inside */
+    border: 2px solid #2ba7bd; /* Green border */
+    border-radius: 5px; /* Round the edges */
+    background-color: #f9f9f9; /* Light background color */
+    font-size: 16px; /* Font size */
+    color: #333; /* Text color */
+    cursor: pointer; /* Add pointer cursor on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
 
+/* Styling the options inside the dropdown */
+option {
+    background-color: #fff; /* White background for options */
+    color: #333; /* Text color for options */
+    padding: 5px; /* Padding for options */
+}
+
+/* Optional: Add hover effect for select */
+select:hover {
+    border-color: #45a049; /* Darker green border on hover */
+}
+
+/* Optional: Add focus effect for accessibility */
+select:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #45a049; /* Highlight border color on focus */
+    box-shadow: 0 0 5px rgba(69, 160, 73, 0.5); /* Greenish glow */
+}
 
 /* Center the submit button */
 input[type="submit"],input[type="reset"] {
