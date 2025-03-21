@@ -198,29 +198,7 @@ socket.on("updateOnlineUsers", (users) => {
         privateRecipientDropdown.appendChild(option);
     });
 });
-function displayMessage(message, type = "public") {
-    const chatBox = type === "private" ? chatBoxPrivate : chatBoxPublic; // Correct selection
-
-    if (!chatBox) {
-        console.error(`Error: ${type} chatBox is missing in the HTML.`);
-        return;
-    }
-
-    const msgElement = document.createElement("p");
-    msgElement.classList.add(
-        message.sender === JSON.parse(sessionStorage.getItem("user")).username
-            ? "user-message"
-            : "other-message"
-    );
-
-    msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
-    chatBox.appendChild(msgElement);
-
-    // Auto-scroll
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
 // Function to display messages
-/* DENNA KOMMENTERADE FLORA UT FOR TEST!!!
 function displayMessage(message, type = "public") {
     if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
 
@@ -230,7 +208,7 @@ function displayMessage(message, type = "public") {
     chatBoxPrivate.appendChild(msgElement);
     chatBoxPrivate.scrollTop = chatBoxPrivate.scrollHeight; // Auto-scroll
 }
-*/
+
 // Listen for messages
 socket.on("receiveMessage", (data) => displayMessage(data, "public"));
 socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
