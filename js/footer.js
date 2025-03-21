@@ -10,7 +10,7 @@ function createFooter() {
 
     const socialLinks = [
         { href: "https://www.instagram.com/hellokitty/", imgSrc: "img/instagram.png", alt: "Instagram" },
-        { href: "https://www.youtube.com/watch?v=xvFZjo5PgG0", imgSrc: "img/youtube.png", alt: "YouTube" }
+        { href: "https://customrickroll.github.io", imgSrc: "img/youtube.png", alt: "YouTube" }
     ];
 
     socialLinks.forEach(link => {
