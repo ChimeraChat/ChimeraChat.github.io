@@ -366,9 +366,7 @@ button:hover{
 
 .tall {
     grid-row: span 2; /* Spans two rows */
-    background: #f4f8e1; /* Light pink */
-    font-weight: bold;
-    justify-content: flex-start;
+    background: #e5f6d5;
 }
 .wide-tall{
     grid-column: span 2;
