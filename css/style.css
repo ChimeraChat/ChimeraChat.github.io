@@ -95,8 +95,12 @@ input[type="email"]{
 }
 
 #online{
-    align-items: flex-start;
-    text-align: center;
+    display: flex;
+    flex-direction: column; /* Ensures items stack vertically */
+    align-items: center;    /* Horizontally centers content */
+    justify-content: flex-start; /* Positions content at the top */
+    height: 100%;           /* Ensures the div has height for layout purposes */
+    text-align: center;     /* Centers text inside the div */
 }
 
 #chatBoxPrivate, #chatBoxPublic {
