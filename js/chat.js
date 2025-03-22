@@ -68,7 +68,7 @@ async function displayMessage(message, type = "public") {
     const isSender = user.username === message.sender;
     msgElement.classList.add(isSender ? "user-message" : "other-message");
 
-    if (user.username === message.sender_username) {
+    if (user.username === message.sender) {
         msgElement.classList.add("user-message");
     } else {
         msgElement.classList.add("other-message");
