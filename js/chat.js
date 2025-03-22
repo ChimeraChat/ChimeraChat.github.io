@@ -145,6 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("User loaded from session:", user);
 });
 
+const Userdata = {
+    sessionStorageKeys: Object.keys(sessionStorage),
+    sessionStorageUser: sessionStorage.getItem('user'),
+};
 
 //DEBUGG
 const data = {
