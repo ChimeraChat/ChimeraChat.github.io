@@ -144,7 +144,7 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-end;      /* Align user's messages to the right */
     text-align: right;
-    max-width: 70%;
+    /*max-width: 70%;*/
 }
 
 /* Style for other users' messages */
@@ -156,7 +156,7 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-start;    /* Align received messages to the left */
     text-align: left;
-    max-width: 70%;
+    /*max-width: 70%;*/
 }
 
 #chatForm{

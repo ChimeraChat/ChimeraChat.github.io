@@ -95,6 +95,13 @@ socket.on("user-message", (data) => {
     displayMessage(data, "private");
 });
 
+async function setStyles() {
+    await setElementStyles($0.querySelector('p.other-message'), { width: 'auto', 'word-wrap': 'break-word'});
+    await setElementStyles($0.querySelector('p.user-message'), { width: 'auto', 'word-wrap': 'break-word'});
+    await setElementStyles($0.querySelector('#chatBox'), { width: '100%'});
+}
+setStyles();
+
 // Send message
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
