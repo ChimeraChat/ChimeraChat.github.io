@@ -34,6 +34,7 @@ socket.on("updateOnlineUsers", (users) => {
     // Clear lists before updating
     onlineUsersList.innerHTML = "";
     privateRecipientDropdown.innerHTML = "";
+    privateRecipientDropdown.innerHTML = '<option value="public">Everyone (Public Chat)</option>';
 
 
     users.forEach((username) => {
@@ -47,6 +48,7 @@ socket.on("updateOnlineUsers", (users) => {
         option.value = username;
         option.textContent = username;
         privateRecipientDropdown.appendChild(option);
+
 
     });
 });
