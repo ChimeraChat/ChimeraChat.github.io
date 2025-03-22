@@ -100,12 +100,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
     const user = JSON.parse(sessionStorage.getItem("user"));
     console.log("User from sessionStorage: ", user); // ADDED LINE: Inspect retrieved data
 
-    if (!recipient) {
-        alert("Please select a user to send a private message.");
-        return;
-    }
-
-    if (!user || !user.userid || !user.username) {
+    if (!user || !user.id || !user.username) {
         console.error("Error: User data is missing from sessionStorage.");
         alert("Error: Please log in again.");
         return;
@@ -116,18 +111,18 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
 
         socket.emit("sendPublicMessage", {
             message,
-            senderId: user.userid,
+            senderId: user.id,
             senderUsername: user.username
         });
     } else {
         console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
 
-    socket.emit("sendPrivateMessage", {
-        recipient,
-        message,
-        senderId: user.userid,
-        senderUsername: user.username
-    });
+        socket.emit("sendPrivateMessage", {
+            recipient,
+            message,
+            senderId: user.id,
+            senderUsername: user.username
+        });
 
         document.getElementById("messageInput").value = ""; // Clear input field
     }

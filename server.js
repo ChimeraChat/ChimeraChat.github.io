@@ -256,7 +256,7 @@ io.on("connection", (socket) => {
 
   console.log("User connected:", socket.id);
 
-  socket.on("sendMessage", async (messageData) => {
+  socket.on("sendPublicMessage", async (messageData) => {
     try {
       const {senderId, senderUsername, message} = messageData;
       console.log("Public Message from:", senderUsername, message);
