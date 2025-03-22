@@ -345,7 +345,8 @@ app.get("/api/chat/history", async (req, res) => {
 
 
 app.get("/api/chat/history", async (req, res) => {
-    try {
+  console.log("Fetching chat history..."); //Check if code enters in this block
+  try {
       const result = await pool.query(`
     SELECT sender_username, message, recipient_username FROM chimerachat_messages
     UNION ALL
@@ -361,7 +362,7 @@ app.get("/api/chat/history", async (req, res) => {
       res.json(messages);
     } catch (error) {
       console.error("Error fetching chat history:", error);
-      res.status(500).json({ message: "Failed to fetch chat history." });
+      res.status(500).json({ message: "Failed to fetch chat history.", error: error.message });
     }
   });
 
