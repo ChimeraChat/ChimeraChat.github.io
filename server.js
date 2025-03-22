@@ -244,49 +244,7 @@ io.on("connection", (socket) => {
     io.emit("updateOnlineUsers", Object.keys(onlineUsers)); // Broadcast updated list
   });
 
-/*  // When a user sends a message
-  socket.on("sendMessage", async (messageData) => {
-    try {
-      const {senderId, senderUsername, message} = messageData;
 
-      if (!senderId || isNaN(senderId)) {
-        console.error("Invalid senderId received:", senderId);
-        socket.emit("errorMessage", { error: "Invalid senderId. Please re-login." });
-        return;
-      }
-
-      //Save to database
-      await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
-          [senderId, senderUsername, message]);
-
-      console.log("Message saved to database:", messageData);
-      io.emit("receiveMessage", messageData); // Send message to all users
-    } catch (error)
-    {
-      console.error("Error saving message to database:", error);
-    }
-  });
-/*
-  // When a user sends a private message
-  socket.on("sendPrivateMessage", async (messageData) => {
-    try {
-      const { recipient, message, senderId, senderUsername } = messageData;
-
-      if (!senderId || isNaN(senderId)) {
-        console.error("Invalid senderId received:", senderId);
-        socket.emit("errorMessage", { error: "Invalid senderId. Please re-login." });
-        return;
-      }
-      //Save to database
-      await pool.query('INSERT INTO chimerachat_private_messages(sender_id, sender_username, recipient_username, message) VALUES ($1, $2, $3, $4)',
-          [senderId, senderUsername, recipient, message]);
-
-      console.log(`Private message from ${senderUsername} to ${recipient}:`, message);
-      io.to(onlineUsers[recipient]).emit("receivePrivateMessage", { sender_username: senderUsername, message }); // Send message to recipient
-    } catch (error) {
-      console.error("Error saving private message to database:", error);
-    }
-  });*/
 
   // When a user disconnects
   socket.on("disconnect", () => {
@@ -294,8 +252,6 @@ io.on("connection", (socket) => {
     delete onlineUsers[socket.id];
     io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Update user list
   });
-
-
 
 
   console.log("User connected:", socket.id);
@@ -354,37 +310,6 @@ app.get("/api/chat/history", async (req, res) => {
   }
 
 });
-
-//DEBUGG
-const data = {
-  sessionStorageKeys: Object.keys(sessionStorage),
-  sessionStorageData: {},
-  errorContext: null,
-};
-
-Object.keys(sessionStorage).forEach(key => {
-  try {
-    data.sessionStorageData[key] = JSON.parse(sessionStorage.getItem(key));
-  } catch (e) {
-    data.sessionStorageData[key] = sessionStorage.getItem(key);
-  }
-});
-
-try {
-  const errorLine = document.querySelector('script[src*="chat.js"]');
-  if(errorLine) {
-    const chatJSContent = await fetch(errorLine.src).then(res => res.text());
-    const errorLineContent = chatJSContent.split('\n')[107];
-
-    data.errorContext = {
-      file: 'chat.js',
-      line: 108,
-      code: errorLineContent,
-    };
-  }
-} catch (e) {
-  console.error(e)
-}
 
 // Standard route
 app.get('/', (req, res) => {

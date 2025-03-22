@@ -144,3 +144,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("User loaded from session:", user);
 });
+
+
+//DEBUGG
+const data = {
+    sessionStorageKeys: Object.keys(sessionStorage),
+    sessionStorageData: {},
+    errorContext: null,
+};
+
+Object.keys(sessionStorage).forEach(key => {
+    try {
+        data.sessionStorageData[key] = JSON.parse(sessionStorage.getItem(key));
+    } catch (e) {
+        data.sessionStorageData[key] = sessionStorage.getItem(key);
+    }
+});
+
+try {
+    const errorLine = document.querySelector('script[src*="chat.js"]');
+    if(errorLine) {
+        const chatJSContent = await fetch(errorLine.src).then(res => res.text());
+        const errorLineContent = chatJSContent.split('\n')[107];
+
+        data.errorContext = {
+            file: 'chat.js',
+            line: 108,
+            code: errorLineContent,
+        };
+    }
+} catch (e) {
+    console.error(e)
+}
