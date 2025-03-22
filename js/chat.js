@@ -16,16 +16,13 @@ async function loadChatHistory() {
 // Load history when the page loads
 loadChatHistory();
 
-// Get UI elements
-//const chatBox = document.getElementById("chatBox");
-const chatRecipient = document.getElementById("chatRecipient"); // Dropdown for recipient
-const chatWithTitle = document.getElementById("chatWithTitle");
-
-// Update title based on recipient
-chatRecipient.addEventListener("change", () => {
-    const selectedUser = chatRecipient.value;
-    chatWithTitle.textContent = selectedUser === "public" ? "Public Chat" : `Chat with ${selectedUser}`;
-});
+//Emit a userLoggedIn event when a new connection is stablished.
+try {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    socket.emit("userLoggedIn", { username: user.username });
+} catch (error) {
+    console.error("Error loading user data", error)
+}
 
 // Load available users dynamically
 socket.on("updateOnlineUsers", (users) => {
