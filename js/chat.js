@@ -14,7 +14,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPrivate || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
-/*
+
 // Function to display messages
 function displayMessage(message, type = "public") {
     try {
@@ -39,7 +39,7 @@ function displayMessage(message, type = "public") {
     }
 }
 
-
+/*
 function displayMessage(message, type = "public") {
     const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") :
 document.getElementById("chatBoxPublic");
