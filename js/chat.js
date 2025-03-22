@@ -75,10 +75,25 @@ socket.on("updateOnlineUsers", (users) => {
 });
 // Function to display messages
 function displayMessage(message, type = "public") {
-    if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
-
+    // Check if message is valid
+    if (!message || !message.sender || !message.message) {
+        console.error('Error: message is not valid. Missing sender or message.');
+        return
+    }
+    const userString = sessionStorage.getItem("user");
+    if (!userString) {
+        console.error('Error: user not found in sessionStorage');
+        return
+    }
+    const user = JSON.parse(userString);
+    if (type === "private" && message.recipient !== user.username && message.sender !== user.username ) return; // Ignore if not meant for user or is not sent by user
+    const chatBox = document.getElementById('chatListCon');
+    if (!chatBox) {
+        console.error("Error: chatListCon not found. Cannot display message.")
+        return;
+    }
     const msgElement = document.createElement("p");
-    msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
+    msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
     chatBox.appendChild(msgElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
