@@ -147,7 +147,7 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-end;      /* Align user's messages to the right */
     text-align: right;
-    max-width: 50%;
+    width: 50%;
     flex-basis: auto;
     word-wrap: break-word;
 }
@@ -161,7 +161,7 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-start;    /* Align received messages to the left */
     text-align: left;
-    max-width: 50%;
+    width: 50%;
     flex-basis: auto;
     word-wrap: break-word;
 }
