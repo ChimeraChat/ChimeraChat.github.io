@@ -48,18 +48,16 @@ socket.on("updateOnlineUsers", (users) => {
 
     users.forEach((username) => {
         // Update sidebar list
-        if (!username) {
-            const listItem = document.createElement("li");
-            listItem.textContent = username;
-            onlineUsersList.appendChild(listItem);
-        }
+        const listItem = document.createElement("li");
+        listItem.textContent = username;
+        onlineUsersList.appendChild(listItem);
         // Add to dropdown for private chat
-        if (!username) {
-            const option = document.createElement("option");
-            option.value = username;
-            option.textContent = username;
-            privateRecipientDropdown.appendChild(option);
-        }
+
+        const option = document.createElement("option");
+        option.value = username;
+        option.textContent = username;
+        privateRecipientDropdown.appendChild(option);
+
     });
 });
 // Function to display messages
