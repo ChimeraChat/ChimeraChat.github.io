@@ -348,9 +348,9 @@ app.get("/api/chat/history", async (req, res) => {
   console.log("Fetching chat history..."); //Check if code enters in this block
   try {
       const result = await pool.query(`
-    SELECT sender_username, message, recipient_username FROM chimerachat_messages
+    SELECT sender_username, message, recipient_username, timestamp FROM chimerachat_messages
     UNION ALL
-    SELECT sender_username, message, recipient_username FROM chimerachat_private_messages
+    SELECT sender_username, message, recipient_username, timestamp FROM chimerachat_private_messages
     ORDER BY timestamp ASC
   `);
       const messages = result.rows.map((row) => ({
