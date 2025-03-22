@@ -57,7 +57,6 @@ socket.on("updateOnlineUsers", (users) => {
 
     // Clear lists before updating
     onlineUsersList.innerHTML = "";
-    //privateRecipientDropdown.innerHTML = '<option value="">Select a user</option>';
 
     users.forEach((username) => {
         // Update sidebar list
@@ -75,11 +74,6 @@ socket.on("updateOnlineUsers", (users) => {
 // Function to display messages
 
 function displayMessage(message, type = "public") {
-    // Check if message is valid
-    if (!message || !message.sender || !message.message) {
-        console.error('Error: message is not valid. Missing sender or message.');
-        return
-    }
     const userString = sessionStorage.getItem("user");
     if (!userString) {
         console.error('Error: user not found in sessionStorage');
@@ -100,8 +94,25 @@ function displayMessage(message, type = "public") {
 }
 
 // Listen for messages
-socket.on("sendPublicMessage", (data) => displayMessage(data, "public"));
-socket.on("sendPrivateMessage", (data) => displayMessage(data, "private"));
+socket.on("other-message", (data) => {
+    // Check that data has sender and message
+    if (!data || !data.sender || !data.message) {
+        console.error('Received other-message with invalid data:', data);
+        return;
+    }
+    console.log('other-message received', data);
+    displayMessage(data, "public");
+});
+
+socket.on("user-message", (data) => {
+    // Check that data has sender and message
+    if (!data || !data.sender || !data.message) {
+        console.error('Received user-message with invalid data:', data);
+        return;
+    }
+    console.log('user-message received', data);
+    displayMessage(data, "private");
+});
 
 // Send message
 document.getElementById("chatForm").addEventListener("submit", (event) => {
