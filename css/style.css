@@ -78,6 +78,9 @@ nav a:hover {
     align-items: center;
     max-width: 60%;
 }
+li{
+    text-align: left;
+}
 /* Main content styling */
 textarea,input[type="text"],
 input[type="password"],
