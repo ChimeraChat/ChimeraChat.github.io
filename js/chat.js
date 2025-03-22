@@ -75,10 +75,10 @@ async function displayMessage(message, type = "public") {
     }
     //msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
     if (message.recipient && message.recipient !== "public") {
-        msgElement.innerHTML = `<strong>${message.sender} ➤ ${message.recipient}:</strong> ${message.message}`;
+        msgElement.innerHTML = `<strong>${message.sender} --- ➤  ${message.recipient}:</strong> ${message.message}`;
         chatBox.appendChild(msgElement);
     } else {
-        msgElement.innerHTML = `<strong>${message.sender} ➤ 'Public Chat':</strong> ${message.message}`;
+        msgElement.innerHTML = `<strong>${message.sender} --- ➤  Public Chat:</strong> ${message.message}`;
         chatBox.appendChild(msgElement);
     }
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
