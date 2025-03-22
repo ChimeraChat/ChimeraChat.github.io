@@ -129,16 +129,16 @@ input[type="email"]{
     overflow-y: auto;
     border-radius: 12px;
     padding: 15px;
-    max-width: 100%;
+    max-width: 80%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 .chatListCon{
+    display: flex;
     padding: 20px;
     width: 80%;
     max-height: 400px;
     justify-content: center;
     align-items: center;
-    display: flex;
     flex-direction: column;
 }
 .user-message {
