@@ -104,7 +104,7 @@ input[type="email"]{
     text-align: center;     /* Centers text inside the div */
 }
 
-#chatBoxPrivate, #chatBoxPublic {
+#chatBox {
     display: flex;
     background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
@@ -114,7 +114,7 @@ input[type="email"]{
     border-radius: 8px;
 }
 
-#chatBoxPrivate p:last-child , #chatBoxPublic p:last-child{
+#chatBox p:last-child {
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
@@ -154,7 +154,7 @@ input[type="email"]{
     max-width: 70%;
 }
 
-#chatFormPublic, #chatFormPrivate{
+#chatForm{
     display: flex;
     padding: 10px;
     margin-top: 10px;
@@ -162,7 +162,7 @@ input[type="email"]{
     flex-direction: column;
     align-items: center;
 }
-#messageInputPrivate, #messageInputPublic {
+#messageInput {
     width: 80%;              /* Make the width 80% */
     padding: 10px;           /* Padding for inner space */
     margin: 8px 0;           /* Space around the textarea */

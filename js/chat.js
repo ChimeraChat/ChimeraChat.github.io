@@ -93,7 +93,7 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
         messageInputPublic.value = ""; // Clear input
     }
 });*/
-
+/*
 // Event listener for private chat
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -203,8 +203,8 @@ function displayMessage(message, type = "public") {
     const msgElement = document.createElement("p");
     msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
-    chatBoxPrivate.appendChild(msgElement);
-    chatBoxPrivate.scrollTop = chatBoxPrivate.scrollHeight; // Auto-scroll
+    chatBox.appendChild(msgElement);
+    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
 }
 
 // Listen for messages
