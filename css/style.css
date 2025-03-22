@@ -108,7 +108,7 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-#chatBox {
+.chat-box {
     display: flex;
     background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
@@ -119,7 +119,7 @@ input[type="email"]{
     width: 80%;
 }
 
-#chatBox p:last-child {
+.chat-box p:last-child {
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
