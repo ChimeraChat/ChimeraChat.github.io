@@ -1,8 +1,7 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io();
 
-const chatBoxPublic = document.getElementById("chatBoxPublic");
-const chatBoxPrivate = document.getElementById("chatBoxPrivate");
+const chatBox = document.getElementById("chatBox");
 const privateRecipient = document.getElementById("privateRecipient");
 const messageInput = document.getElementById("messageInput");
 const onlineUsersList = document.getElementById("onlineUsers");
@@ -11,7 +10,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 
 // Check if the elements exist before using them
 // Check if the elements exist before using them
-if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPrivate || !onlineUsersList) {
+if (!chatBox || !privateRecipient || !messageInput || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
 /*
@@ -96,7 +95,7 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
 });*/
 
 // Event listener for private chat
-document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
+document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = privateRecipient.value.trim();
     const message = messageInput.value.trim();
@@ -124,7 +123,7 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
         alert("Failed to send private message.");
     }
 });
-
+/*
 socket.on("updateOnlineUsers", (users) => {
     if (!onlineUsersList) {
         console.error("onlineUsers element not found.");
@@ -139,7 +138,7 @@ socket.on("updateOnlineUsers", (users) => {
         onlineUsersList.appendChild(listItem);
     });
 });
-
+*/
 
 // Listen for incoming messages
 socket.on("receiveMessage", (data) => {
