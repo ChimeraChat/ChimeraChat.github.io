@@ -100,8 +100,8 @@ function displayMessage(message, type = "public") {
 }
 
 // Listen for messages
-socket.on("receiveMessage", (data) => displayMessage(data, "public"));
-socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
+socket.on("sendPublicMessage", (data) => displayMessage(data, "public"));
+socket.on("sendPrivateMessage", (data) => displayMessage(data, "private"));
 
 // Send message
 document.getElementById("chatForm").addEventListener("submit", (event) => {
