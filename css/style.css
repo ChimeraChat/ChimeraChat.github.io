@@ -134,6 +134,7 @@ input[type="email"]{
     justify-content: center;
     align-items: center;
     display: flex;
+    overflow: auto;
 }
 .user-message {
     background-color: #d7e7fd; /* Light blue for user's messages */
@@ -309,7 +310,7 @@ footer {
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-    grid-template-rows: repeat(5, auto); /* 5 rows */
+    grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); /* rows */
     gap: 15px; /* Space between grid items */
     width: 90%;
     max-width: 1200px;

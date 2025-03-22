@@ -104,7 +104,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         alert("Please select a user to send a private message.");
         return;
     }
-    
+
     if (!user || !user.userid || !user.username) {
         console.error("Error: User data is missing from sessionStorage.");
         alert("Error: Please log in again.");
