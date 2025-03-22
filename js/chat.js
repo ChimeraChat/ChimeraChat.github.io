@@ -38,16 +38,16 @@ socket.on("updateOnlineUsers", (users) => {
     privateRecipientDropdown.innerHTML = "";
 
 
-    users.forEach((user) => {
+    users.forEach((username) => {
         // Update sidebar list
         const listItem = document.createElement("li");
-        listItem.textContent = user;
+        listItem.textContent = username;
         onlineUsersList.appendChild(listItem);
         // Add to dropdown for private chat
 
         const option = document.createElement("option");
-        option.value = user;
-        option.textContent = user;
+        option.value = username;
+        option.textContent = username;
         privateRecipientDropdown.appendChild(option);
 
     });
