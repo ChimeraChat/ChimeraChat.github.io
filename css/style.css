@@ -310,7 +310,7 @@ footer {
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-    grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); /* rows */
+    grid-template-rows: repeat(10, auto); /* 5 rows */
     gap: 15px; /* Space between grid items */
     width: 90%;
     max-width: 1200px;
