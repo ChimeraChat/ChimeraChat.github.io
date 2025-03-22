@@ -76,7 +76,7 @@ async function loadChatHistory() {
             const response = await fetch('/api/chat/history');
             const messages = await response.json();
             console.log("Chat history loaded:", messages); // Debugging
-            messages.forEach(message);
+            messages.forEach(displayMessage);
         }
     } catch (error) {
         console.error("Error loading chat history:", error);
