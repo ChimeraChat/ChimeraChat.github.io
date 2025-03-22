@@ -450,26 +450,26 @@ a{
     background-size: cover;
 
     main, footer, header{
-        background-color: rgba(35, 29, 74, 0.91);
+        background-color: rgba(33, 16, 147, 0.91);
     }
     .wide {
-        background: rgba(70, 47, 90, 0.94);
+        background: rgba(65, 7, 113, 0.94);
     }
 
     .tall {
-        background: rgba(80, 42, 78, 0.84);
+        background: rgba(115, 8, 111, 0.84);
     }
 
     .medium {
-        background: rgba(64, 38, 73, 0.89);
+        background: rgba(106, 23, 138, 0.89);
     }
 
     .large {
-        background: rgba(43, 43, 83, 0.86);
+        background: rgba(10, 10, 129, 0.86);
     }
 
     .small{
-        background: rgba(34, 49, 71, 0.89);
+        background: rgba(12, 59, 135, 0.89);
     }
     .chat-container{
         background: rgba(79, 50, 104, 0.94);
@@ -478,6 +478,9 @@ a{
         background-color: rgba(87, 63, 138, 0.91);
         border-color: rgba(125, 89, 191, 0.86);
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+    }
+    .profile{
+        background-color: rgba(93, 16, 99, 0.84);
     }
     label{
         color: white;
