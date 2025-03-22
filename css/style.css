@@ -112,10 +112,12 @@ input[type="email"]{
     display: flex;
     background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto; /* Scroll to see older messages */
     border: 3px solid #1c9bb1; /*for testing only will not be red when bug free*/
     border-radius: 8px;
+    align-items: flex-start;
+    width: 100%;
 }
 
 #chatBox p:last-child {
@@ -144,7 +146,9 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-end;      /* Align user's messages to the right */
     text-align: right;
-    /*max-width: 70%;*/
+    max-width: 50%;
+    flex-basis: auto;
+    word-wrap: break-word;
 }
 
 /* Style for other users' messages */
@@ -156,7 +160,9 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-start;    /* Align received messages to the left */
     text-align: left;
-    /*max-width: 70%;*/
+    max-width: 50%;
+    flex-basis: auto;
+    word-wrap: break-word;
 }
 
 #chatForm{
