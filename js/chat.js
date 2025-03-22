@@ -1,6 +1,5 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
-import sanitizeHtml from 'sanitize-html';
 
 const chatBox = document.getElementById("chatBox");
 const messageInput = document.getElementById("messageInput");
@@ -77,11 +76,7 @@ socket.on("updateOnlineUsers", (users) => {
 // Function to display messages
 function displayMessage(message, type = "public") {
     if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
-
-    // Sanitize the message and sender before displaying
-    const sanitizedMessage = sanitizeHtml(message.message);
-    const sanitizedSender = sanitizeHtml(message.sender);
-
+    
     const msgElement = document.createElement("p");
     msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
