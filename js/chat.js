@@ -150,7 +150,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
             senderUsername: user.username
         });
 
-        document.getElementById("messageInput").value = ""; // Clear input field
+    document.getElementById("messageInput").value = ""; // Clear input field
     }
 
 });
