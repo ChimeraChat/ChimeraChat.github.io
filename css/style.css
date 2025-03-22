@@ -119,11 +119,13 @@ input[type="email"]{
     width: 100%;
 }
 
-#chatBox p:last-child {
+.chatBox p:last-child {
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
 
 .chat-container {
+    max-height: 400px;
+    overflow-y: auto; /* Scroll to see older messages */
     border-radius: 12px;
     padding: 15px;
     max-width: 100%;
