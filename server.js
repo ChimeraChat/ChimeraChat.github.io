@@ -331,38 +331,39 @@ app.get("/api/chat/history", async (req, res) => {
       sender: row.sender_username, // Rename sender_username to sender
       message: row.message,
       recipient: row.recipient_username // Add the recipient
-    }));*/
 
-    app.get("/api/chat/history", async (req, res) => {
-      try {
-        const result = await pool.query(`
-      SELECT sender_username, message, recipient_username FROM chimerachat_messages
-      UNION ALL
-      SELECT sender_username, message, recipient_username FROM chimerachat_private_messages
-      ORDER BY timestamp ASC
-    `);
-        const messages = result.rows.map((row) => ({
-          sender: row.sender_username,
-          message: row.message,
-          recipient: row.recipient_username,
-        }));
-
-        res.json(messages);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-        res.status(500).json({ message: "Failed to fetch chat history." });
-      }
-    });
-
-    // Merge public and private messages
+      // Merge public and private messages
     const messages = [...publicMessages, ...privateMessages];
 
-    res.json(messages);
-  } catch (error) {
-    console.error("Error fetching chat history:", error);
-    res.status(500).json({ message: "Failed to fetch chat history." });
-  }
-});
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      res.status(500).json({ message: "Failed to fetch chat history." });
+    }
+  });
+ */
+
+
+app.get("/api/chat/history", async (req, res) => {
+    try {
+      const result = await pool.query(`
+    SELECT sender_username, message, recipient_username FROM chimerachat_messages
+    UNION ALL
+    SELECT sender_username, message, recipient_username FROM chimerachat_private_messages
+    ORDER BY timestamp ASC
+  `);
+      const messages = result.rows.map((row) => ({
+        sender: row.sender_username,
+        message: row.message,
+        recipient: row.recipient_username,
+      }));
+
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      res.status(500).json({ message: "Failed to fetch chat history." });
+    }
+  });
 
 
 // Standard route
