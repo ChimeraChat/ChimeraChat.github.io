@@ -4,7 +4,7 @@ const socket = io();
 const chatBoxPublic = document.getElementById("chatBoxPublic");
 const chatBoxPrivate = document.getElementById("chatBoxPrivate");
 const privateRecipient = document.getElementById("privateRecipient");
-const messageInputPrivate = document.getElementById("messageInput");
+const messageInput = document.getElementById("messageInput");
 const onlineUsersList = document.getElementById("onlineUsers");
 
 
@@ -14,7 +14,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPrivate || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
-
+/*
 // Function to display messages
 function displayMessage(message, type = "public") {
     try {
@@ -39,7 +39,7 @@ function displayMessage(message, type = "public") {
     }
 }
 
-/*
+
 function displayMessage(message, type = "public") {
     const chatBox = type === "private" ? document.getElementById("chatBoxPrivate") :
 document.getElementById("chatBoxPublic");
@@ -118,7 +118,7 @@ document.getElementById("chatFormPrivate").addEventListener("submit", (event) =>
             senderId: user.userid,
             senderUsername: user.username
         });
-        messageInputPrivate.value = ""; // Clear input field
+        messageInput.value = ""; // Clear input field
     } catch (error) {
         console.error("Error sending private message:", error);
         alert("Failed to send private message.");
@@ -139,7 +139,7 @@ socket.on("updateOnlineUsers", (users) => {
         onlineUsersList.appendChild(listItem);
     });
 });
-*/
+
 
 // Listen for incoming messages
 socket.on("receiveMessage", (data) => {
