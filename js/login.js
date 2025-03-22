@@ -1,4 +1,6 @@
 //login.js
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io("https://chimerachat.onrender.com/");
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
@@ -80,6 +82,8 @@ async function handleLogin(event) {
         if (response.ok && data.user) {
             console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
+            // Emit userLoggedIn event with username after successful login
+            socket.emit("userLoggedIn", { username: data.user.username });
 
             displayMessage("Login success!");
             updateLoginButton();

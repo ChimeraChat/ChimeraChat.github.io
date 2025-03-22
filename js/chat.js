@@ -12,18 +12,8 @@ async function loadChatHistory() {
     }
 }
 
-
 // Load history when the page loads
 loadChatHistory();
-
-//Emit a userLoggedIn event when a new connection is stablished.
-try {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    socket.emit("userLoggedIn", { username: user.username });
-} catch (error) {
-    console.error("Error loading user data", error)
-}
-
 
 // Get UI elements
 //const chatBox = document.getElementById("chatBox");
@@ -45,17 +35,19 @@ socket.on("updateOnlineUsers", (users) => {
 
     // Clear lists before updating
     onlineUsersList.innerHTML = "";
+    privateRecipientDropdown.innerHTML = "";
 
-    users.forEach((username) => {
+
+    users.forEach((user) => {
         // Update sidebar list
         const listItem = document.createElement("li");
-        listItem.textContent = username;
+        listItem.textContent = user;
         onlineUsersList.appendChild(listItem);
         // Add to dropdown for private chat
 
         const option = document.createElement("option");
-        option.value = username;
-        option.textContent = username;
+        option.value = user;
+        option.textContent = user;
         privateRecipientDropdown.appendChild(option);
 
     });

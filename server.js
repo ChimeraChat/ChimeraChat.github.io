@@ -252,7 +252,7 @@ io.on("connection", (socket) => {
     console.log(` ${name} is now online`);
     io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Broadcast updated list
   });
-  
+
   // When a user disconnects
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
