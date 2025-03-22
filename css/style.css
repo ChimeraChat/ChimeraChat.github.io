@@ -476,6 +476,7 @@ button:hover{
     background-color: #ab79ad; /* Darker pink on hover */
 }
 
+
 /* Dark mode hover for Contact Us button */
 .dark-mode .contact-button:hover {
     background-color: #3e2b61; /* Darker purple on hover */
