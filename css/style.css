@@ -100,6 +100,7 @@ input[type="email"]{
     align-items: center;    /* Horizontally centers content */
     justify-content: flex-start; /* Positions content at the top */
     text-align: center;     /* Centers text inside the div */
+    background-color: #e6ffd4;
 }
 
 #chatBox {
