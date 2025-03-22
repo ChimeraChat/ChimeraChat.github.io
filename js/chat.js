@@ -76,7 +76,7 @@ socket.on("updateOnlineUsers", (users) => {
 // Function to display messages
 function displayMessage(message, type = "public") {
     if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
-    
+
     const msgElement = document.createElement("p");
     msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
@@ -98,12 +98,13 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
         return;
     }
     const user = JSON.parse(sessionStorage.getItem("user"));
+    console.log("User from sessionStorage: ", user); // ADDED LINE: Inspect retrieved data
 
     if (!recipient) {
         alert("Please select a user to send a private message.");
         return;
     }
-
+    
     if (!user || !user.userid || !user.username) {
         console.error("Error: User data is missing from sessionStorage.");
         alert("Error: Please log in again.");
