@@ -1,7 +1,6 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
 
-const chatBox = document.getElementById("chatBox");
 const messageInput = document.getElementById("messageInput");
 const onlineUsersList = document.getElementById("onlineUsers");
 
@@ -9,7 +8,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 
 // Check if the elements exist before using them
 // Check if the elements exist before using them
-if (!chatBox || !messageInput || !onlineUsersList) {
+if ( !messageInput || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
 
@@ -74,6 +73,7 @@ socket.on("updateOnlineUsers", (users) => {
     });
 });
 // Function to display messages
+
 function displayMessage(message, type = "public") {
     // Check if message is valid
     if (!message || !message.sender || !message.message) {
@@ -87,7 +87,7 @@ function displayMessage(message, type = "public") {
     }
     const user = JSON.parse(userString);
     if (type === "private" && message.recipient !== user.username && message.sender !== user.username ) return; // Ignore if not meant for user or is not sent by user
-    const chatBox = document.getElementById('chatListCon');
+    const chatBox = document.getElementById('chatBox');
     if (!chatBox) {
         console.error("Error: chatListCon not found. Cannot display message.")
         return;

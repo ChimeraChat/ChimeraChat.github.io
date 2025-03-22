@@ -265,27 +265,27 @@ io.on("connection", (socket) => {
       await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
           [senderId, senderUsername, message]);
 
-      // Broadcast to everyone
-      io.emit("other-message", messageData);
+        // Broadcast to everyone
+        io.emit("other-message", { sender: senderUsername, message: message });
     } catch (error) {
       console.error("Error saving message:", error);
     }
   });
 
   socket.on("sendPrivateMessage", async (data) => {
-    const { recipient, message, senderId, senderUsername } = data;
-    console.log(`Private message from ${senderUsername} to ${recipient}: ${message}`);
-
     try {
+      const { recipient, message, senderId, senderUsername } = data;
+      console.log(`Private message from ${senderUsername} to ${recipient}: ${message}`);
       // Save private message to database
       await pool.query('INSERT INTO chimerachat_private_messages(sender_id, sender_username, recipient_username, message) VALUES ($1, $2, $3, $4)',
           [senderId, senderUsername, recipient, message]);
+      io.emit("user-message", { sender: senderUsername, message: message, recipient: recipient });
 
       // Find recipient socket ID
       const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipient)?.[0];
 
       if (recipientSocketId) {
-        io.to(recipientSocketId).emit("user-message", { senderUsername, message, recipient });
+        io.to(recipientSocketId).emit("user-message", { sender: senderUsername, message: message, recipient: recipient });
       } else {
         console.log(`Recipient ${recipient} is offline.`);
       }
