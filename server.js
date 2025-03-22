@@ -309,8 +309,6 @@ io.on("connection", (socket) => {
     }
   });
 
-
-
 });
 
 app.get("/api/chat/history", async (req, res) => {
