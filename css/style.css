@@ -110,7 +110,6 @@ input[type="email"]{
 }
 .chat-box {
     display: flex;
-    flex-grow: 1;
     background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column; /* Normal top-to-bottom stacking */
     max-height: 400px;
@@ -129,11 +128,8 @@ input[type="email"]{
     padding: 15px;
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    height: 700px;
-    display: flex;
-    justify-content: space-between;
-    overflow-y: auto; /* Scroll to see older messages */
-    flex-direction: column; /* Normal top-to-bottom stacking */
+    height: 1000px;
+    /*overflow-y: auto; /* Scroll to see older messages */
 }
 .chatListCon{
     padding: 20px;
