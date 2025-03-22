@@ -135,7 +135,8 @@ input[type="email"]{
     justify-content: center;
     align-items: center;
     display: flex;
-    overflow: auto;
+    overflow-y: auto;
+    flex-direction: column;
 }
 .user-message {
     background-color: #d7e7fd; /* Light blue for user's messages */
