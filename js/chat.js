@@ -61,7 +61,7 @@ chatRecipient.addEventListener("change", () => {
 // Load available users dynamically
 socket.on("updateOnlineUsers", (users) => {
     const onlineUsersList = document.getElementById("onlineUsers");
-    const privateRecipientDropdown = document.getElementById("privateRecipient");
+    const privateRecipientDropdown = document.getElementById("chatRecipient");
 
     if (!onlineUsersList || !privateRecipientDropdown) return;
 
@@ -100,7 +100,7 @@ socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
 // Send message
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    const recipient = document.getElementById("privateRecipient").value.trim();
+    const recipient = document.getElementById("chatRecipient").value.trim();
     const message = document.getElementById("messageInput").value.trim();
 
     if (!recipient) {
