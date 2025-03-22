@@ -364,6 +364,124 @@ button:hover{
     max-height: 100%;
 }
 
+/* FAQ Section Styling */
+.faq-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    gap: 20px; /* Space between questions */
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.faq-item {
+    position: relative; /* Allows positioning of the image */
+    background-color: #fff1d1; /* Light yellow background for FAQ questions */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    transition: transform 0.3s ease-in-out; /* Hover effect */
+}
+
+.faq-item:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+/* Paw Image in FAQ Section */
+.faq-item img.faq-paw {
+    position: absolute; /* Position relative to FAQ item */
+    top: -20px; /* Place above the question */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Fine-tune centering */
+    width: 50px; /* Size the paw image */
+    height: auto;
+}
+
+/* FAQ Question Titles */
+.faq-item h3 {
+    color: #290d73; /* Purple color for titles */
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    margin-top: 40px;
+}
+
+/* Dark mode for FAQ item */
+.dark-mode .faq-item {
+    background-color: rgba(64, 38, 73, 0.89); /* Dark purple background for FAQ items */
+    color: #e8dbff; /* Lighter text color */
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1); /* Light shadow in dark mode */
+}
+
+/* Dark mode for FAQ titles */
+.dark-mode .faq-item h3 {
+    color: #d9cee3;; /* Lighter text color in dark mode */
+}
+
+/* FAQ text */
+.faq-item p {
+    color: #554e68;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Dark mode for FAQ text */
+.dark-mode .faq-item p {
+    color: #f0e5ff; /* Lighter text in dark mode */
+}
+
+/* Contact Us Section Styling */
+.contact-info {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #d9e9f3; /* Light blue background */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode for Contact Us section */
+.dark-mode .contact-info {
+    background-color: rgba(34, 49, 71, 0.89); /* Dark background for Contact Us section */
+    color: #f0e5ff; /* Lighter text color */
+}
+
+.contact-item p {
+    font-size: 18px;
+    color: #1d7774;
+}
+
+/* Dark mode for Contact Us text */
+.dark-mode .contact-item p {
+    color: #d9cee3; /* Lighter text in dark mode */
+}
+
+/* Contact Us Button Styling */
+.contact-button {
+    display: inline-block;
+    background-color: #e0a1e3; /* Pink background */
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Dark mode for Contact Us button */
+.dark-mode .contact-button {
+    background-color: #4f367a; /* Lighter purple background for button */
+    color: white;
+}
+
+.contact-button:hover {
+    background-color: #ab79ad; /* Darker pink on hover */
+}
+
+/* Dark mode hover for Contact Us button */
+.dark-mode .contact-button:hover {
+    background-color: #3e2b61; /* Darker purple on hover */
+}
+
+
 /* Text Blocks with Asymmetrical Layout */
 .wide {
     grid-column: span 2; /* Spans two columns */
