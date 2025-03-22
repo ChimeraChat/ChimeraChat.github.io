@@ -129,7 +129,7 @@ input[type="email"]{
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     height: 1000px;
-    /*overflow-y: auto; /* Scroll to see older messages */
+    overflow-y: auto; /* Scroll to see older messages */
 }
 .chatListCon{
     padding: 20px;

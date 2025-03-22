@@ -310,38 +310,6 @@ io.on("connection", (socket) => {
   });
 
 });
-/*
-app.get("/api/chat/history", async (req, res) => {
-  try {
-    // Get the public messages from chimerachat_messages table
-    const publicMessagesResult = await pool.query(
-        "SELECT sender_username, message FROM chimerachat_messages ORDER BY timestamp ASC"
-    );
-    const publicMessages = publicMessagesResult.rows.map((row) => ({
-      sender: row.sender_username, // Rename sender_username to sender
-      message: row.message,
-      recipient: undefined // No recipient for public messages
-    }));
-
-    // Get the private messages from chimerachat_private_messages table
-    const privateMessagesResult = await pool.query(
-        "SELECT sender_username, message, recipient_username FROM chimerachat_private_messages ORDER BY timestamp ASC"
-    );
-    const privateMessages = privateMessagesResult.rows.map((row) => ({
-      sender: row.sender_username, // Rename sender_username to sender
-      message: row.message,
-      recipient: row.recipient_username // Add the recipient
-
-      // Merge public and private messages
-    const messages = [...publicMessages, ...privateMessages];
-
-      res.json(messages);
-    } catch (error) {
-      console.error("Error fetching chat history:", error);
-      res.status(500).json({ message: "Failed to fetch chat history." });
-    }
-  });
- */
 
 
 app.get("/api/chat/history", async (req, res) => {
