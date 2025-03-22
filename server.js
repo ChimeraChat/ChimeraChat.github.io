@@ -239,21 +239,36 @@ io.on("connection", (socket) => {
 
   // When a user logs in, store their username
   socket.on("userLoggedIn", (username) => {
-    onlineUsers[username.username] = socket.id;
-    console.log(` ${username.username} is now online`);
-    io.emit("updateOnlineUsers", Object.keys(onlineUsers)); // Broadcast updated list
+    if (!username || !username.username) {
+      console.error("Invalid username data:", username);
+      return;
+    }
+    const name = username.username;
+    if (onlineUsers.has(name)) {
+      console.error('username already taken', name)
+      return;
+    }
+    onlineUsers.set(name, socket.id);
+    console.log(` ${name} is now online`);
+    io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Broadcast updated list
   });
-
-
-
+  
   // When a user disconnects
   socket.on("disconnect", () => {
     console.log("A user disconnected:", socket.id);
-    delete onlineUsers[socket.id];
-    io.emit("updateOnlineUsers", Object.values(onlineUsers)); // Update user list
+    let username = null;
+    for (const [user, sockId] of onlineUsers) {
+      if (sockId === socket.id) {
+        username = user;
+        break;
+      }
+    }
+
+    if (username) {
+      onlineUsers.delete(username);
+      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Update user list
+    }
   });
-
-
   console.log("User connected:", socket.id);
 
   socket.on("sendPublicMessage", async (messageData) => {

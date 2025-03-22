@@ -60,8 +60,8 @@ socket.on("updateOnlineUsers", (users) => {
 
     });
 });
-// Function to display messages
 
+// Function to display messages
 function displayMessage(message, type = "public") {
     const userString = sessionStorage.getItem("user");
     if (!userString) {
