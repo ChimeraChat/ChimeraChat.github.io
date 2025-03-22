@@ -76,7 +76,7 @@ async function loadChatHistory() {
             const response = await fetch('/api/chat/history');
             const messages = await response.json();
             console.log("Chat history loaded:", messages); // Debugging
-            messages.forEach(messages);
+            messages.forEach(displayMessage);
         }
     } catch (error) {
         console.error("Error loading chat history:", error);
@@ -140,6 +140,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
             senderId: user.id,
             senderUsername: user.username
         });
+        document.getElementById("messageInput").value = ""; // Clear input field
     } else {
         console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
 
@@ -149,8 +150,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
             senderId: user.id,
             senderUsername: user.username
         });
-
-    document.getElementById("messageInput").value = ""; // Clear input field
+        document.getElementById("messageInput").value = ""; // Clear input field
     }
 
 });
