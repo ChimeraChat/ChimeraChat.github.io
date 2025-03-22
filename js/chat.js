@@ -1,18 +1,6 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
 
-const messageInput = document.getElementById("messageInput");
-const onlineUsersList = document.getElementById("onlineUsers");
-
-
-
-// Check if the elements exist before using them
-// Check if the elements exist before using them
-if ( !messageInput || !onlineUsersList) {
-    console.error("Some chat elements are missing in the HTML.");
-}
-
-
 // Load chat history
 async function loadChatHistory() {
     try {
@@ -60,15 +48,18 @@ socket.on("updateOnlineUsers", (users) => {
 
     users.forEach((username) => {
         // Update sidebar list
-        const listItem = document.createElement("li");
-        listItem.textContent = username;
-        onlineUsersList.appendChild(listItem);
-
+        if (!username) {
+            const listItem = document.createElement("li");
+            listItem.textContent = username;
+            onlineUsersList.appendChild(listItem);
+        }
         // Add to dropdown for private chat
-        const option = document.createElement("option");
-        option.value = username;
-        option.textContent = username;
-        privateRecipientDropdown.appendChild(option);
+        if (!username) {
+            const option = document.createElement("option");
+            option.value = username;
+            option.textContent = username;
+            privateRecipientDropdown.appendChild(option);
+        }
     });
 });
 // Function to display messages
