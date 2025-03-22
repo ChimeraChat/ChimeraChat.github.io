@@ -2,7 +2,6 @@ import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
 
 const chatBox = document.getElementById("chatBox");
-const privateRecipient = document.getElementById("privateRecipient");
 const messageInput = document.getElementById("messageInput");
 const onlineUsersList = document.getElementById("onlineUsers");
 
@@ -10,7 +9,7 @@ const onlineUsersList = document.getElementById("onlineUsers");
 
 // Check if the elements exist before using them
 // Check if the elements exist before using them
-if (!chatBox || !privateRecipient || !messageInput || !onlineUsersList) {
+if (!chatBox || !messageInput || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
 
@@ -102,7 +101,7 @@ socket.on("receivePrivateMessage", (data) => displayMessage(data, "private"));
 document.getElementById("chatForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = document.getElementById("privateRecipient").value.trim();
-    const message = document.getElementById("messageInputPrivate").value.trim();
+    const message = document.getElementById("messageInput").value.trim();
 
     if (!recipient) {
         alert("Please select a user to send a private message.");
