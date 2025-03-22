@@ -62,7 +62,12 @@ async function displayMessage(message, type = "public") {
         return;
     }
     const msgElement = document.createElement("p");
-    msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
+    if (user.username === message.sender_username) {
+        msgElement.classList.add("user-message");
+    } else {
+        msgElement.classList.add("other-message");
+    }
+    //msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
     chatBox.appendChild(msgElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
