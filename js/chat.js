@@ -1,20 +1,16 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
 
-// Load chat history
-async function loadChatHistory() {
-    try {
-        const response = await fetch('/api/chat/history');
-        const messages = await response.json();
-        console.log("Chat history loaded:", messages); // Debugging
-        messages.forEach(displayMessage);
-    } catch (error) {
-        console.error("Error loading chat history:", error);
+async function getUsername() {
+    // Let's say this is fetching from session storage
+    const userString = sessionStorage.getItem("user");
+    if (userString) {
+        const user = JSON.parse(userString);
+        return user.username;
+    } else {
+        return undefined;
     }
 }
-
-// Load history when the page loads
-loadChatHistory();
 
 //Emit a userLoggedIn event when a new connection is stablished.
 try {
@@ -48,8 +44,6 @@ socket.on("updateOnlineUsers", (users) => {
         option.value = username;
         option.textContent = username;
         privateRecipientDropdown.appendChild(option);
-
-
     });
 });
 
@@ -73,6 +67,24 @@ async function displayMessage(message, type = "public") {
     chatBox.appendChild(msgElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
 }
+
+// Load chat history
+async function loadChatHistory() {
+    try {
+        const username = await getUsername();
+        if (username) {
+            const response = await fetch('/api/chat/history');
+            const messages = await response.json();
+            console.log("Chat history loaded:", messages); // Debugging
+            messages.forEach(messages);
+        }
+    } catch (error) {
+        console.error("Error loading chat history:", error);
+    }
+}
+
+// Load history when the page loads
+loadChatHistory();
 
 // Listen for messages
 socket.on("other-message", (data) => {
