@@ -310,7 +310,7 @@ io.on("connection", (socket) => {
           [senderId, senderUsername, message]);
 
       // Broadcast to everyone
-      io.emit("receiveMessage", messageData);
+      io.emit("other-message", messageData);
     } catch (error) {
       console.error("Error saving message:", error);
     }
@@ -329,7 +329,7 @@ io.on("connection", (socket) => {
       const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipient)?.[0];
 
       if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receivePrivateMessage", { senderUsername, message, recipient });
+        io.to(recipientSocketId).emit("user-message", { senderUsername, message, recipient });
       } else {
         console.log(`Recipient ${recipient} is offline.`);
       }

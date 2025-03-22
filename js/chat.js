@@ -1,5 +1,6 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
+import sanitizeHtml from 'sanitize-html';
 
 const chatBox = document.getElementById("chatBox");
 const messageInput = document.getElementById("messageInput");
@@ -25,15 +26,6 @@ async function loadChatHistory() {
     }
 }
 
-
-// Listen for incoming messages
-socket.on("receiveMessage", (data) => {
-    displayMessage(data, "public");
-});
-
-socket.on("receivePrivateMessage", (data) => {
-    displayMessage(data, "private");
-});
 
 // Load history when the page loads
 loadChatHistory();
@@ -86,6 +78,10 @@ socket.on("updateOnlineUsers", (users) => {
 function displayMessage(message, type = "public") {
     if (type === "private" && message.recipient !== sessionStorage.getItem("user").username) return; // Ignore if not meant for user
 
+    // Sanitize the message and sender before displaying
+    const sanitizedMessage = sanitizeHtml(message.message);
+    const sanitizedSender = sanitizeHtml(message.sender);
+
     const msgElement = document.createElement("p");
     msgElement.classList.add(message.sender === sessionStorage.getItem("user").username ? "user-message" : "other-message");
     msgElement.innerHTML = `<strong>${message.sender}:</strong> ${message.message}`;
@@ -103,31 +99,43 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
     const recipient = document.getElementById("chatRecipient").value.trim();
     const message = document.getElementById("messageInput").value.trim();
 
+    if (!message) {
+        return;
+    }
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
     if (!recipient) {
         alert("Please select a user to send a private message.");
         return;
     }
 
-    if (message) {
-        const user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user || !user.userid || !user.username) {
+        console.error("Error: User data is missing from sessionStorage.");
+        alert("Error: Please log in again.");
+        return;
+    }
 
-        if (!user || !user.userid || !user.username) {
-            console.error("Error: User data is missing from sessionStorage.");
-            alert("Error: Please log in again.");
-            return;
-        }
+    if (recipient === "public") {
+        console.log(`Public message from ${user.username}:`, message); // Debugging
 
-        console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
-
-        socket.emit("sendPrivateMessage", {
-            recipient,
+        socket.emit("sendPublicMessage", {
             message,
             senderId: user.userid,
             senderUsername: user.username
         });
+    } else {
+        console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
+
+    socket.emit("sendPrivateMessage", {
+        recipient,
+        message,
+        senderId: user.userid,
+        senderUsername: user.username
+    });
 
         document.getElementById("messageInput").value = ""; // Clear input field
     }
+
 });
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
