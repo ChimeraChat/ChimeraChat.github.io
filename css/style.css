@@ -117,7 +117,7 @@ input[type="email"]{
     overflow-y: auto; /* Scroll to see older messages */
     border: 3px solid #1c9bb1; /*for testing only will not be red when bug free*/
     border-radius: 8px;
-    width: 100%;
+    width: 90%;
 }
 
 .chatBox p:last-child {
@@ -129,6 +129,11 @@ input[type="email"]{
     padding: 15px;
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: 700px;
+    display: flex;
+    justify-content: space-between;
+    overflow-y: auto; /* Scroll to see older messages */
+    flex-direction: column; /* Normal top-to-bottom stacking */
 }
 .chatListCon{
     padding: 20px;
