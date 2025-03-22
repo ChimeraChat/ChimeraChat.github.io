@@ -58,7 +58,7 @@ socket.on("updateOnlineUsers", (users) => {
 
     // Clear lists before updating
     onlineUsersList.innerHTML = "";
-    privateRecipientDropdown.innerHTML = '<option value="">Select a user</option>';
+    //privateRecipientDropdown.innerHTML = '<option value="">Select a user</option>';
 
     users.forEach((username) => {
         // Update sidebar list
