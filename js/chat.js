@@ -4,15 +4,14 @@ const socket = io();
 const chatBoxPublic = document.getElementById("chatBoxPublic");
 const chatBoxPrivate = document.getElementById("chatBoxPrivate");
 const privateRecipient = document.getElementById("privateRecipient");
-const messageInputPublic = document.getElementById("messageInputPublic");
-const messageInputPrivate = document.getElementById("messageInputPrivate");
+const messageInputPrivate = document.getElementById("messageInput");
 const onlineUsersList = document.getElementById("onlineUsers");
 
 
 
 // Check if the elements exist before using them
 // Check if the elements exist before using them
-if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPublic || !messageInputPrivate || !onlineUsersList) {
+if (!chatBoxPublic || !chatBoxPrivate || !privateRecipient || !messageInputPrivate || !onlineUsersList) {
     console.error("Some chat elements are missing in the HTML.");
 }
 /*
@@ -72,7 +71,7 @@ async function loadChatHistory() {
         console.error("Error loading chat history:", error);
     }
 }
-
+/*
 // Send a new message
 document.getElementById("chatFormPublic").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -94,13 +93,13 @@ document.getElementById("chatFormPublic").addEventListener("submit", (event) => 
 
         messageInputPublic.value = ""; // Clear input
     }
-});
-/*
+});*/
+
 // Event listener for private chat
 document.getElementById("chatFormPrivate").addEventListener("submit", (event) => {
     event.preventDefault();
     const recipient = privateRecipient.value.trim();
-    const message = messageInputPrivate.value.trim();
+    const message = messageInput.value.trim();
 
     try {
         const user = JSON.parse(sessionStorage.getItem("user"));
@@ -242,7 +241,7 @@ document.getElementById("chatForm").addEventListener("submit", (event) => {
             senderUsername: user.username
         });
 
-        document.getElementById("messageInputPrivate").value = ""; // Clear input field
+        document.getElementById("messageInput").value = ""; // Clear input field
     }
 });
 document.addEventListener("DOMContentLoaded", () => {
