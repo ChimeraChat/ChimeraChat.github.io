@@ -172,10 +172,9 @@ input[type="email"]{
     display: flex;
     gap: 5px; /* Spacing between input and button */
 }
-#chat-container{
-    grid-column: span 2;
-    grid-row: span 2;
-    background: #e4fcff; /* Light blue */
+.chat-container{
+grid-column: span 2; /* Spans two columns */
+background: #42ace1; /* Light blue */
 }
 #messageInput {
     flex: 1; /* Flexible input size */
