@@ -178,7 +178,9 @@ input[type="email"]{
 .chat-container{
     grid-column: span 2; /* Spans two columns */
     grid-row: span 2;
-    background: #4585a8; /* Light blue */
+}
+#chat-con.chat-container {
+    background: rgba(218, 243, 255, 0.94); /* Light blue */
 }
 #messageInput {
     flex: 1; /* Flexible input size */
