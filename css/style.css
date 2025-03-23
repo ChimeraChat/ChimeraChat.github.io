@@ -520,13 +520,6 @@ button:hover{
     background-color: #ab79ad; /* Darker pink on hover */
 }
 
-
-/* Dark mode hover for Contact Us button */
-.dark-mode .contact-button:hover {
-    background-color: #3e2b61; /* Darker purple on hover */
-}
-
-
 /* Text Blocks with Asymmetrical Layout */
 .wide {
     grid-column: span 2; /* Spans two columns */
@@ -713,19 +706,18 @@ a{
     textarea{
         background-color: rgba(255, 255, 255, 0.3);
     }
-    textarea p{
+    #messageInput, #chatRecipient, #chatRecipient option{
         color: white;
     }
-    select p{
-        color: white;
+    h1{
+        color: #ff7fe2;
     }
-}
-
-/* Adjust Headings for Dark Mode */
-.dark-mode h1,
-.dark-mode h2,
-.dark-mode h3{
-    color: #d9cee3;
+    h2, h3, h4{
+        color: #ffe0fd;
+    }
+    .contact-button:hover {
+        background-color: #3e2b61; /* Darker purple on hover */
+    }
 }
 
 #darkModeToggle {
