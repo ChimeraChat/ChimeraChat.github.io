@@ -108,20 +108,59 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-#chatListCon {
+#chatBox {
     display: flex;
-    flex-direction: column-reverse;
-    max-height: 250px;
-    overflow-y: auto; /* Add scroll for overflow */
+    flex-direction: column-reverse; /* NEW: Stack messages from the bottom */
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     padding: 10px;
-    border: 1px solid #ccc;
     background-color: #f9f9f9;
 }
 
-#chatBox {
+/* Chat Messages */
+#chatBox p {
+    background-color: #e6f7e6;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content; /* Prevents full-width stretching */
+    max-width: 70%; /* Limits message width for a cleaner look */
+}
+
+#chatBox p:last-child {
+    margin-bottom: auto; /* Ensures messages hug the bottom */
+}
+
+#chatBox p strong {
+    color: #4CAF50;
+}
+.chat-container {
+    border-radius: 12px;
+    padding: 15px;
+    max-width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.chatListcontainer{
+    padding: 20px;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
     display: flex;
-    flex-direction: column;
+}
+
+.chat-box {
+    width: 60%;
+    padding: 10px;
+    flex-direction: column; /* Stack messages vertically */
+    align-items: flex-start; /* Align messages to the left */
     gap: 5px; /* Adds spacing between messages */
+    margin: 8px 0;
+    border: 1px solid #c8e7ed;
+    border-radius: 3px;
+    font-size: 16px;
+    background-color: white;
 }
 
 .user-message {
@@ -153,9 +192,9 @@ input[type="email"]{
     text-align: center;
     justify-content: flex-start;
 }
-#messageInput {
-    flex: 1; /* Flexible input size */
-    padding: 8px;
+.messageInput {
+    display: flex;
+    flex-direction: column;
 }
 
 button[type="submit"] {
