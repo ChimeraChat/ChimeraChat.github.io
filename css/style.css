@@ -213,16 +213,20 @@ input[type="email"]{
     background-color: rgba(149, 71, 237, 0.52);
     color: white;
 }
+#chatReply {
+     margin: 5px;
+ }
 select {
     width: 50%; /* Make it responsive to container width */
     padding: 5px; /* Add some padding inside */
-    border: 2px solid #2ba7bd; /* Green border */
+    border: 2px solid #95e3f1; /* Green border */
     border-radius: 5px; /* Round the edges */
     background-color: #f9f9f9; /* Light background color */
     font-size: 16px; /* Font size */
     color: #333; /* Text color */
     cursor: pointer; /* Add pointer cursor on hover */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 10px;
 }
 
 /* Styling the options inside the dropdown */
