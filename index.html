@@ -8,14 +8,14 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animate.css">
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/main.js" ></script>
     <script type="module" src="js/login.js"></script>
-    <script type="module" src="js/signup.js"></script>
     <script src="js/darkMode.js"></script>
 
 </head>
+<body>
 <header>
-    <div class="grid-container">
+    <div class="header-container">
     <a href="index.html">
         <img src="img/logo.png" alt="Logo Image" id="headerImage">
     </a>
@@ -27,19 +27,18 @@
     <button id="darkModeToggle">🌙</button>
     <nav>
         <div class="container">
-                <a href="" >Home</a>
-                <a href="chat.html" >Chat</a>
-                <a href="files.html" >Files</a>
-                <a href="faq.html" >Faq</a>
-                <a href="contact_us.html" >Contact</a>
-                <a href="about_us.html" >About us</a>
-                <a href="signup.html" >Sign up</a>
-                <a href="login.html" >Log in</a>
+            <a href="" >Home</a>
+            <a href="chat.html" >Chat</a>
+            <a href="files.html" >Files</a>
+            <a href="faq.html" >Faq</a>
+            <a href="contact_us.html" >Contact</a>
+            <a href="about_us.html" >About us</a>
+            <a href="signup.html" >Sign up</a>
+            <a href="login.html" >Log in</a>
         </div>
     </nav>
 </header>
 
-<body>
 <main>
     <section class="grid-container">
         <!-- Mixed text and image grid items -->
@@ -92,11 +91,14 @@
 
         <div class="grid-item small">
             <h3>Upload files</h3>
-            <img src="img/share_pic_group.png" alt="Image 1">
+            <a href="files.html">
+                <img src="img/share_pic_group.png" alt="Image 1">
+            </a>
         </div>
 
     </section>
 </main>
-    <script src="js/footer.js"></script>
+<script src="js/footer.js"></script>
+<script type="module" src="/js/main.js" ></script>
 </body>
 </html>

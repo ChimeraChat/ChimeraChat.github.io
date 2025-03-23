@@ -1,19 +1,38 @@
+//server.js
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import express from 'express';
 import path from 'path';
 import pkg from 'pg';
+import pgSession from 'connect-pg-simple';
 import dotenv from 'dotenv';
+dotenv.config();
+dotenv.config({ path: 'googledrive.env' });
+
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
-import { uploadMiddleware, uploadFileToDrive, createUserFolder, drive } from "./config/googleDrive.js";
 import { dbConfig } from './config/db.js';
-dotenv.config({ path: 'googledrive.env' });
-dotenv.config();
+import session from 'express-session';
+import {drive, uploadMiddleware, uploadFileToDrive} from "./config/googleDrive.js";
 
 const { Pool } = pkg;
 const pool = new Pool(dbConfig);
+
+const PgSession = pgSession(session);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
+
+const server = createServer(app); // Wrap Express with HTTP
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+// Store online users
+let onlineUsers = new Map();
 
 // Hantera __dirname i ESM-modul
 const __filename = fileURLToPath(import.meta.url);
@@ -22,190 +41,297 @@ const __dirname = dirname(__filename);
 // Lägg till denna rad för att servera statiska filer (HTML, CSS, bilder):
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+app.use(express.static('public'));
 
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET ? "Loaded secret" : "Not Found sec");
 
-async function getUserFolderId(userId) {
-  const query = 'SELECT userfolderid FROM chimerachat_accounts WHERE userid = $1';
-  const result = await pool.query(query, [userId]);
-  if (result.rows.length > 0) {
-    return result.rows[0].userfolderid;
-  } else {
-    throw new Error('User folder ID not found.');
+// Add express-session middleware
+app.use(session({
+  store: new PgSession({
+    pool: pool, // Use your PostgreSQL pool connection
+    tableName: 'session' // This is the default table name; change it if needed
+  }),
+  secret: process.env.SESSION_SECRET, // Use the secret stored in GitHub Secrets
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
+    httpOnly: true
   }
-}
+}));
 
-// Registrerings route
+console.log("🔍 GOOGLE_APPLICATION_CREDENTIALS:", process.env.GOOGLE_APPLICATION_CREDENTIALS);
+app.set('trust proxy', 1); // Trust first proxy
+
+// Signup route
 app.post('/signup', async (req, res) => {
-  console.log("👉 Mottaget POST /signup:", req.body);
+  console.log("Received POST /signup:", req.body);
   const { email, username, password } = req.body;
-  const client = await pool.connect();  // Hämta en klient från poolen
 
+  if (!email || !username || !password) {
+    return res.status(400).json({ message: "All fields must be filled." });
+  }
+  console.log("Email:", email, "Username:", username, "Password:", password);
+
+  const client = await pool.connect();
   try {
-    await client.query('BEGIN');  // Starta en transaktion
+      await client.query('BEGIN');
+      const userExists = await client.query('SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2', [email, username]);
 
-    if (!email || !username || !password) {
-      return res.status(400).json({ message: "Alla fält måste fyllas i." });
-    }
-
-    const existingUser = await pool.query(
-        'SELECT userid FROM chimerachat_accounts WHERE email = $1 OR username = $2',
-        [email, username]
-    );
-
-    if (existingUser.rows.length > 0) {
+    if (userExists.rows.length > 0) {
       await client.query('ROLLBACK');
-      return res.status(400).json({ message: "E-post eller användarnamn används redan!" });
+      return res.status(400).json({ message: "Email or username already exists!" });
     }
 
-    // Skapa användare
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("🔑 Hashed Password:", hashedPassword);
-    const userResult = await client.query(
-        'INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid',
-        [email, username]
-    );
+    const userResult = await client.query('INSERT INTO chimerachat_accounts(email, username) VALUES ($1, $2) RETURNING userid', [email, username]);
 
     if (userResult.rows.length === 0) {
-      throw new Error("Misslyckades med att skapa användaren i databasen.");
+      throw new Error("Failed to create user in the database.");
     }
-    // Lägg till användare i databasen tillsammans med deras folder ID
+
     const { userid } = userResult.rows[0];
-    // Skapa en mapp på Google Drive
-    const userFolderId = await createUserFolder(username);
 
-    // Add user to the database together with their folder ID
-    await client.query(
-        'UPDATE chimerachat_accounts SET userFolderId = $1 WHERE userid = $2',
-        [userFolderId, userid]
-    );
+    await client.query('INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)', [userid, hashedPassword]);
+    await client.query('COMMIT');
 
-    // Spara det krypterade lösenordet
-    await client.query(
-        'INSERT INTO encrypted_passwords(userid, hashpassword) VALUES ($1, $2)',
-        [userid, hashedPassword]
-    );
-
-    console.log("✅ Användare skapad och lösenord sparat!");
-
-    await client.query('COMMIT'); // Fullfölj transaktionen
-    res.status(201).json({
-      message: 'Ditt konto har skapats! Omdirigerar till inloggningssidan...',
-    });
-
+    res.status(201).json({ message: 'Your account has been created! Redirecting to the login page...', redirect: '/login.html' });
   } catch (err) {
-    await client.query('ROLLBACK'); // Ångra alla ändringar om ett fel inträffar
-    console.error("Fel vid registrering:", err);
-      res.status(500).json({
-        message: "Registrering misslyckades.",
-        error: err.message // Lägg till detaljerat felmeddelande
-    });
+    await client.query('ROLLBACK');
+    console.error("Error during registration:", err);
+    res.status(500).json({ message: "Registration failed.", error: err.message });
   } finally {
-    client.release(); // Släpp anslutningen tillbaka till poolen
+    client.release();
   }
 });
 
 // login route
 app.post('/login', async (req, res) => {
+  const { username, password } = req.body; // Ensure username and password exist
   try {
-    const { username, password } = req.body;
+      const query = `
+              SELECT chimerachat_accounts.userid, chimerachat_accounts.username, 
+                     chimerachat_accounts.email, encrypted_passwords.hashpassword 
+              FROM chimerachat_accounts
+              JOIN encrypted_passwords ON chimerachat_accounts.userid = encrypted_passwords.userid
+              WHERE chimerachat_accounts.username = $1
+          `;
+      const result = await pool.query(query, [username]);
 
-    const query = `
-            SELECT chimerachat_accounts.userid, chimerachat_accounts.username, 
-                   chimerachat_accounts.email, encrypted_passwords.hashpassword 
-            FROM chimerachat_accounts
-            JOIN encrypted_passwords ON chimerachat_accounts.userid = encrypted_passwords.userid
-            WHERE chimerachat_accounts.username = $1
-        `;
-    const result = await pool.query(query, [username]);
+      if (result.rows.length === 0) {
+        return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      }
 
-    if (result.rows.length === 0) {
-      return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      const user = result.rows[0];
+      // Verifiera lösenordet
+      const isMatch = await bcrypt.compare(password, user.hashpassword);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
+      }
+      // Ta bort lösenord innan vi skickar tillbaka data
+      delete user.hashpassword;
+
+      // Store user in session
+      req.session.user = {
+        id: user.userid,
+        username: user.username
+      };
+
+      console.log("Session after login:", req.session); // Debugging
+
+      res.json({
+        message: "Login successful!",
+        user: {
+          id: user.userid,
+          username: user.username,
+          email: user.email
+        },
+        redirect: "home.html"
+      });
+
+    } catch (err) {
+      console.error("Inloggningsfel:", err);
+      res.status(500).json("Serverfel vid inloggning");
     }
-
-    const user = result.rows[0];
-    // Verifiera lösenordet
-    const isMatch = await bcrypt.compare(password, user.hashpassword);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Felaktigt användarnamn eller lösenord" });
-    }
-    // Ta bort lösenord innan vi skickar tillbaka data
-    delete user.hashpassword;
-
-    res.json({
-      message: "Inloggning lyckades!", user,
-      redirect: "home.html"
-    });
-
-  } catch (err) {
-    console.error("Inloggningsfel:", err);
-    res.status(500).json("Serverfel vid inloggning");
-  }
 });
 
 //Logout route
 app.post('/logout', (req, res) => {
-  try {
-    //clearing the user's session
-    req.session.destroy();
-
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error during logout:", err);
+        return res.status(500).json({ message: "Failed to log out" });
+      }
+      res.status(200).json({ message: "Utloggning lyckades",
+        redirect: "index.html"
+      });
+    });
+  } else {
     res.status(200).json({ message: "Utloggning lyckades",
       redirect: "index.html"
     });
-  } catch (error) {
-    console.error("Fel vid utloggning:", error);
-    res.status(500).json({ message: "Fel vid utloggning" });
   }
 });
 
-//Get user folder ID from database
-app.get('/api/user/files', async (req, res) => {
-  const userId = req.session.userId; // Användarens ID från sessionen
-
+app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
-    const userFolderId = await getUserFolderId(userId); // Hämta mapp-ID från databasen
+    if (!req.session.user || !req.session.user.id) {
+      return res.status(401).json({ message: "You are not logged in" });
+    }
+
+    const file = req.file;
+    console.log("Uploading file:", file.originalname, "to shared folder.");
+
+    // Upload file to Google Drive
+    const uploadResult = await uploadFileToDrive(file.buffer, file.originalname, file.mimetype);
+
+    if (!uploadResult) {
+      return res.status(500).json({ message: "File upload failed" });
+    }
+
+    res.status(200).json({ message: "File uploaded successfully", fileId: uploadResult.fileId, downloadLink: uploadResult.fileLink });
+
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Upload failed", error: error.message });
+  }
+});
+
+// Get files from a user's Google Drive folder
+app.get('/api/files', async (req, res) => {
+  try {
     const driveResponse = await drive.files.list({
-      pageSize: 10,
-      fields: 'nextPageToken, files(id, name)',
-      q: `'${userFolderId}' in parents`  // Listar filer i användarens mapp
+      q: `'${process.env.GOOGLE_DRIVE_SHARED_FOLDER_ID}' in parents`,
+      fields: 'files(id, name, mimeType, webViewLink, webContentLink)',
+      pageSize: 50
     });
 
     const files = driveResponse.data.files;
+    console.log("Files found:", files);
     res.status(200).json(files);
+
   } catch (error) {
-    console.error("Error fetching files from Drive:", error);
+    console.error("Error fetching files from Google Drive:", error);
     res.status(500).json({ message: "Failed to fetch files." });
   }
 });
 
-app.get('/api/user/id', async (req, res) => {
+app.get('/api/download/:fileId', async (req, res) => {
   try {
-    const userId = req.session.userId;
-    const userFolderId = await getUserFolderId(userId);
-    res.json({ id: userFolderId });
+    const fileId = req.params.fileId;
+    if (!fileId) {
+      return res.status(400).json({ message: "File ID is required" });
+    }
+
+    const fileUrl = `https://drive.google.com/uc?id=${fileId}&export=download`;
+    res.json({ url: fileUrl });
   } catch (error) {
-    console.error('Error fetching userFolderId:', error);
-    res.status(500).json({ message: 'Failed to fetch userFolderId' });
+    console.error("Error generating download link:", error);
+    res.status(500).json({ message: "Failed to generate download link." });
   }
 });
 
-app.get('/api/files', async (req, res) => {
-  try {
-    const userId = req.session.userId;  // Användarens ID från sessionen, se till att sessionen är korrekt inställd
-    const userFolderId = await getUserFolderId(userId);  // Hämta användarens Google Drive mapp ID från databasen
+// WebSocket Connection
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
 
-    const driveResponse = await drive.files.list({
-      q: `'${userFolderId}' in parents`,  // Filtrera för filer som ligger i den specifika användarmappen
-      fields: 'nextPageToken, files(id, name, mimeType, webViewLink, webContentLink)',  // Ange vilka fält som ska returneras
-      pageSize: 100  // Antal filer att returnera
-    });
+  // When a user logs in, store their username
+  socket.on("userLoggedIn", (username) => {
+    if (!username || !username.username) {
+      console.error("Invalid username data:", username);
+      return;
+    }
+    const name = username.username;
+    if (onlineUsers.has(name)) {
+      console.error('username already taken', name)
+      return;
+    }
+    onlineUsers.set(name, socket.id);
+    console.log(` ${name} is now online`);
+    io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Broadcast updated list
+  });
 
-    const files = driveResponse.data.files;
-    res.status(200).json(files);
-  } catch (error) {
-    console.error("Error fetching files from Drive:", error);
-    res.status(500).json({ message: "Failed to fetch files.", error: error.message });
-  }
+  // When a user disconnects
+  socket.on("disconnect", () => {
+    console.log("A user disconnected:", socket.id);
+    let username = null;
+    for (const [user, sockId] of onlineUsers) {
+      if (sockId === socket.id) {
+        username = user;
+        break;
+      }
+    }
+
+    if (username) {
+      onlineUsers.delete(username);
+      io.emit("updateOnlineUsers", Array.from(onlineUsers.keys())); // Update user list
+    }
+  });
+  console.log("User connected:", socket.id);
+
+  socket.on("sendPublicMessage", async (messageData) => {
+    try {
+      const {senderId, senderUsername, message} = messageData;
+      console.log("Public Message from:", senderUsername, message);
+
+      // Save to database
+      await pool.query('INSERT INTO chimerachat_messages(sender_id, sender_username, message) VALUES ($1, $2, $3)',
+          [senderId, senderUsername, message]);
+
+        // Broadcast to everyone
+        io.emit("other-message", { sender: senderUsername, message: message });
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  });
+
+  socket.on("sendPrivateMessage", async (data) => {
+    try {
+      const { recipient, message, senderId, senderUsername } = data;
+      console.log(`Private message from ${senderUsername} to ${recipient}: ${message}`);
+      // Save private message to database
+      await pool.query('INSERT INTO chimerachat_private_messages(sender_id, sender_username, recipient_username, message) VALUES ($1, $2, $3, $4)',
+          [senderId, senderUsername, recipient, message]);
+      io.emit("user-message", { sender: senderUsername, message: message, recipient: recipient });
+
+      // Find recipient socket ID
+      const recipientSocketId = [...onlineUsers.entries()].find(([socketId, username]) => username === recipient)?.[0];
+
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("user-message", { sender: senderUsername, message: message, recipient: recipient });
+      } else {
+        console.log(`Recipient ${recipient} is offline.`);
+      }
+    } catch (error) {
+      console.error("Error saving private message:", error);
+    }
+  });
+
 });
+
+app.get("/api/chat/history", async (req, res) => {
+  console.log("Fetching chat history..."); //Check if code enters in this block
+  try {
+      const result = await pool.query(`
+    SELECT sender_username, message, recipient_username, timestamp FROM chimerachat_messages
+    UNION ALL
+    SELECT sender_username, message, recipient_username, timestamp FROM chimerachat_private_messages
+    ORDER BY timestamp ASC
+  `);
+      const messages = result.rows.map((row) => ({
+        sender: row.sender_username,
+        message: row.message,
+        recipient: row.recipient_username,
+      }));
+
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      res.status(500).json({ message: "Failed to fetch chat history.", error: error.message });
+    }
+  });
 
 
 // Standard route
@@ -213,8 +339,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Servern körs på port ${port}`);
+server.listen(port, () => {
+  console.log(`servern körs på port ${port}`);
 });
 
 

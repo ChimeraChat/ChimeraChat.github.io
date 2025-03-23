@@ -35,12 +35,20 @@ header {
     margin-bottom: 20px;
     width: 100%;
 }
-
+.header-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    gap: 15px; /* Space between grid items */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 #headerImage, #headerImage2 {
     max-width: 25%;
     height: auto;
     border-radius: 4px;
 }
+
 nav .container {
     display: flex;
     flex-wrap: wrap;
@@ -62,7 +70,7 @@ nav a:hover {
     background-color: rgba(235, 198, 243, 0.52);
     color: #2b069e;
 }
-#loginForm,#signupForm,#contactForm {
+#loginForm,#signupForm,#contactForm{
     width: 100%;
     padding: 20px;
     background: #f3fffe;
@@ -77,6 +85,9 @@ nav a:hover {
     align-items: center;
     max-width: 60%;
 }
+li{
+    text-align: left;
+}
 /* Main content styling */
 textarea,input[type="text"],
 input[type="password"],
@@ -87,6 +98,168 @@ input[type="email"]{
     border: 1px solid #c8e7ed;
     border-radius: 3px;
     font-size: 16px;
+}
+
+.online-user {
+    color: green;
+    font-weight: bold;
+}
+
+#online{
+    flex-direction: column; /* Ensures items stack vertically */
+    align-items: center;    /* Horizontally centers content */
+    justify-content: flex-start; /* Positions content at the top */
+    text-align: center;     /* Centers text inside the div */
+    background-color: #e6ffd4;
+}
+#chatGuide{
+    background-color: #fff6bd;
+}
+.chatListcontainer {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px;
+    width: 80%;
+
+    overflow-y: scroll; /* Add scroll for overflow */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer/Edge */
+
+    /* For Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    overflow-x: hidden; /* Hides horizontal scroll */
+
+    padding: 10px;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+.chat-box {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: scroll;
+    background-color: #ffffff;
+    margin-top: 20px;
+}
+
+#chatBox p {
+    margin: 5px 0;
+    padding: 8px;
+    background-color: #e6f7ff;
+    border-left: 4px solid #0078FF;
+    border-radius: 4px;
+}
+#chatBox {
+    display: flex;
+    flex-direction: column;
+    max-height: 400px; /* Limit height with vertical scrolling */
+
+    overflow-y: auto;  /* Vertical scrolling only */
+
+    overflow-x: hidden; /* Hides horizontal scroll */
+
+    /* Optional for better aesthetics */
+    word-wrap: break-word; /* Break long words */
+    white-space: normal;   /* Ensure text wraps naturally */
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.user-message {
+    background-color: #d1e7ff; /* Light blue for user's messages */
+    color: #004080;            /* Darker text for contrast */
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    align-self: flex-end;      /* Align user's messages to the right */
+    text-align: right;
+    max-width: 70%;
+}
+
+.other-message {
+    background-color: #e6f7e6; /* Light green for other users */
+    color: #006600;            /* Darker text for contrast */
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    align-self: flex-start;    /* Align received messages to the left */
+    text-align: left;
+    max-width: 70%;
+}
+
+#chatForm {
+    display: flex;
+    gap: 5px; /* Spacing between input and button */
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.chat-container{
+    grid-column: span 2; /* Spans two columns */
+    grid-row: span 2;
+}
+#chat-con.chat-container {
+    background: rgba(234, 249, 255, 0.94); /* Light blue */
+}
+#messageInput {
+    border: 2px solid #b5d5e3;
+    padding: 8px 10px;
+    height: 50px;          /* Starting height */
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 4px;
+}
+#chatForm button{
+    background-color: rgba(225, 173, 241, 0.56);
+    color: rgba(35, 7, 126, 0.97);
+}
+
+#chatForm button:hover{
+    background-color: rgba(149, 71, 237, 0.52);
+    color: white;
+}
+#chatReply {
+     margin: 5px;
+ }
+select {
+    width: 50%; /* Make it responsive to container width */
+    padding: 5px; /* Add some padding inside */
+    border: 2px solid #b5d5e3;
+    border-radius: 5px; /* Round the edges */
+    background-color: #f9f9f9; /* Light background color */
+    font-size: 16px; /* Font size */
+    color: #333; /* Text color */
+    cursor: pointer; /* Add pointer cursor on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 10px;
+}
+
+/* Styling the options inside the dropdown */
+option {
+    background-color: #fff; /* White background for options */
+    color: #333; /* Text color for options */
+    padding: 5px; /* Padding for options */
+}
+
+/* Optional: Add hover effect for select */
+select:hover {
+    border-color: #45a049; /* Darker green border on hover */
+}
+
+/* Optional: Add focus effect for accessibility */
+select:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #45a049; /* Highlight border color on focus */
+    box-shadow: 0 0 5px rgba(69, 160, 73, 0.5); /* Greenish glow */
 }
 
 /* Center the submit button */
@@ -116,6 +289,12 @@ label{
     font-weight: bold;
     font-family: 'Roboto', sans-serif;
 }
+h5{
+    color: #134e4c;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+}
 main {
     width: 100%;
     display: flex;
@@ -142,6 +321,16 @@ footer {
     color: #453e59;
 }
 
+.social-links a {
+    margin: 0 10px;
+    text-decoration: none;
+}
+.social-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain; /* Ensures uniform scaling */
+}
+
 /* Input Section Styling */
 .input {
     text-align: center;
@@ -161,7 +350,7 @@ footer {
 .grid-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-    grid-template-rows: repeat(5, auto); /* 5 rows */
+    grid-template-rows: repeat(10, auto); /* 5 rows */
     gap: 15px; /* Space between grid items */
     width: 90%;
     max-width: 1200px;
@@ -178,9 +367,21 @@ footer {
     font-size: 16px;
     cursor: pointer;
 }
+.grid-item:hover{
+    transform: translateY(-3px); /* Lift effect on hover */
+}
+#chatForm button{
+    background-color: rgba(225, 173, 241, 0.56);
+    color: rgba(35, 7, 126, 0.97);
+}
+
+button:hover{
+    background-color: rgba(149, 71, 237, 0.52);
+    color: white;
+}
 /* General Grid Item Styling */
 .grid-item {
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
@@ -191,6 +392,7 @@ footer {
     justify-content: center;
     font-variant-caps: titling-caps;
     font-family: Bahnschrift, Arial, sans-serif;
+    transition: transform 0.3s ease-in-out;
 }
 
 /* Image Styling */
@@ -318,11 +520,6 @@ footer {
     background-color: #ab79ad; /* Darker pink on hover */
 }
 
-/* Dark mode hover for Contact Us button */
-.dark-mode .contact-button:hover {
-    background-color: #3e2b61; /* Darker purple on hover */
-}
-
 /* Text Blocks with Asymmetrical Layout */
 .wide {
     grid-column: span 2; /* Spans two columns */
@@ -331,10 +528,8 @@ footer {
 
 .tall {
     grid-row: span 2; /* Spans two rows */
-    background: #f4f8e1; /* Light pink */
-    font-weight: bold;
+    background: #e5f6d5;
 }
-
 .wide-tall{
     grid-column: span 2;
     grid-row: span 2;
@@ -437,32 +632,41 @@ a{
     background-size: cover;
 
     main, footer, header{
-        background-color: rgba(35, 29, 74, 0.91);
+        background-color: rgba(20, 16, 69, 0.93);
     }
     .wide {
-        background: rgba(70, 47, 90, 0.94); /* Light blue */
+        background: rgba(70, 13, 117, 0.94);
     }
-
+    .wide-tall{
+        background: rgba(114, 12, 120, 0.68);
+    }
     .tall {
-        background: rgba(80, 42, 78, 0.84); /* Light pink */
+        background: rgba(104, 15, 101, 0.84);
     }
-
+    .cat{
+        background: rgba(0, 90, 117, 0.78);
+    }
     .medium {
-        background: rgba(64, 38, 73, 0.89); /* Light purple */
+        background: rgba(83, 16, 110, 0.8);
     }
 
     .large {
-        background: rgba(43, 43, 83, 0.86);
+        background: rgba(10, 10, 83, 0.8);
     }
 
     .small{
-        background: rgba(34, 49, 71, 0.89);
+        background: rgba(10, 44, 101, 0.89);
     }
-
+    .chat-container{
+        background: rgba(79, 50, 104, 0.94);
+    }
     #loginForm,#signupForm,#contactForm {
         background-color: rgba(87, 63, 138, 0.91);
         border-color: rgba(125, 89, 191, 0.86);
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+    }
+    .profile{
+        background-color: rgba(93, 16, 99, 0.84);
     }
     label{
         color: white;
@@ -475,15 +679,26 @@ a{
         background-color: rgba(44, 12, 85, 0.52);
         color: #e8dbff;
     }
-    input[type="submit"],input[type="reset"] {
+    #chatForm button:hover {
+        background-color: rgba(44, 12, 85, 0.52);
+        color: #e8dbff;
+    }
+    #chatForm button,[type="submit"],input[type="reset"] {
         background-color: rgb(78, 75, 177);
         color: rgba(255, 255, 255, 0.97);
         border: 2px solid rgba(192, 185, 255, 0.97);
+    }
+    button:hover {
+        background-color: rgba(44, 12, 85, 0.52);
+        color: #e8dbff;
     }
     a {
         color: #8ab4f8; /* Light blue for links */
     }
     p{
+        color: #f7ebff;
+    }
+    h5{
         color: #f7ebff;
     }
     li{
@@ -492,13 +707,48 @@ a{
     a:hover {
         color: #bb86fc; /* Softer purple on hover */
     }
-}
-
-/* Adjust Headings for Dark Mode */
-.dark-mode h1,
-.dark-mode h2,
-.dark-mode h3{
-    color: #d9cee3;
+    #online{
+        background: rgba(24, 0, 71, 0.88);
+    }
+    #chat-con{
+        background: rgba(64, 24, 96, 0.94);
+        color: white;
+    }
+    .chatListcontainer{
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .user-message {
+        color: #d1e7ff; /* Light blue for user's messages */
+        background-color: #004080;            /* Darker text for contrast */
+    }
+    .other-message {
+        color: #e6f7e6; /* Light green for other users */
+        background-color: #006600;            /* Darker text for contrast */
+    }
+    #chatGuide{
+        background-color: rgba(120, 0, 54, 0.63);
+    }
+    h6{
+        color: #d9cee3;
+    }
+    select{
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    textarea{
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    #messageInput, #chatRecipient, #chatRecipient option{
+        color: white;
+    }
+    h1{
+        color: #ff7fe2;
+    }
+    h2, h3, h4{
+        color: #ffe0fd;
+    }
+    .contact-button:hover {
+        background-color: #3e2b61; /* Darker purple on hover */
+    }
 }
 
 #darkModeToggle {

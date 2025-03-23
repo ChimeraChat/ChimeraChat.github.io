@@ -8,17 +8,14 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animate.css">
-  <script type="module" src="js/main.js"></script>
+  <script src="js/main.js" defer></script>
   <script type="module" src="js/login.js"></script>
-  <script type="module" src="js/signup.js"></script>
-  <script type="module" src="js/chat.js"></script>
-  <script type="module" src="js/search.js"></script>
-  <script type="module" src="js/darkMode.js"></script>
-  <script type="module" src="server.js"></script>
+  <script src="js/darkMode.js"></script>
 
 </head>
+<body>
 <header>
-  <div class="grid-container">
+  <div class="header-container">
     <a href="index.html">
       <img src="img/logo.png" alt="Logo Image" id="headerImage">
     </a>
@@ -42,49 +39,54 @@
   </nav>
 </header>
 
-<body>
+
 <main>
   <div class="grid-container">
-    <div class="grid-item wide">
-      <label for="searchUser">Search for online users</label>
-      <input type="text" id="searchUser" placeholder="Search online users..." />
-      <button id="searchButton">Search</button>
-      <p id="errorMessage" style="color: red;"></p>
-      <ul id="userList"></ul>
+    <div id="chat-con" class="grid-item chat-container">
+      <h5 id="chatWithTitle">Public Chat</h5>
+
+      <label for="chatRecipient">Send to:</label>
+      <select id="chatRecipient">
+        <option id="public" value="public">Everyone (Public Chat)</option>
+      </select>
+
+      <div id="chatListCon" class="chatListcontainer">
+        <div id="chatBox" class="chat-box"></div> <!-- Messages will be displayed here -->
+      </div>
+
+      <form id="chatForm" class="chat-form">
+        <label for="messageInput"></label>
+        <textarea type="text" id="messageInput" placeholder="Enter your message here"></textarea>
+        <button type="submit">Send</button>
+      </form>
     </div>
 
-    <div class="grid-item tall">
-      <h3>Continue chatting...</h3>
-      <p>chat with Misse</p>
-      <p>chat with Molly</p>
-      <p>chat with Nova</p>
-      <p>chat with Luna</p>
-      <p>chat with Bean</p>
-      <ul id="chatId"></ul>
+    <div id="online" class="grid-item tall">
+      <h5>Online users</h5>
+      <ul id="onlineUsers"></ul>
     </div>
 
-    <div class="grid-item wide chat-container">
-      <h3>Chat</h3>
-      <p>Your messages will appear here...</p>
+    <div id="chatGuide" class="grid-item wide">
+      <h5>Chat Guidelines</h5>
+      <p>Please be respectful towards each-other. </p>
+      <p>Don't give out personal information.</p>
+      <p>If you are under the age of 18 you should get a parents permission before chatting.</p>
+      <p>Be careful with revealing your real age.</p>
+      <p>Lastly, treat other as you want to be treated</p>
+      <p>Users who violate these values will be banned</p>
+      <h6>If you need to report inappropriate behavior you can contact us <a href="contact_us.html">here</a></h6>
     </div>
 
-    <div class="grid-item small">
-      <h3>Upload files</h3>
-      <a href="files.html">
-        <img src="img/share_pic_group.png" alt="Image 1">
-      </a>
-    </div>
-
-    <div class="grid-item wide">
-      <a href="chat.html">
-        <img src="img/communicating.png" alt="Our Vision">
+    <div id="ourteam" class="grid-item medium">
+      <h5>Our DEV team</h5>
+      <a href="about_us.html">
+        <img src="img/temp_logo.png" alt="Meet our DEV team">
       </a>
     </div>
 
   </div>
 </main>
-<footer>
-  <p>&copy; 2025 ChimeraChat. Alla rättigheter förbehållna.</p>
-</footer>
+<script src="js/footer.js"></script>
+<script type="module" src="js/chat.js"></script>
 </body>
 </html>

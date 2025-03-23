@@ -1,5 +1,6 @@
-import { loginUser } from './api.js';
-const API_BASE_URL = "https://your-api-base-url";
+//login.js
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io("https://chimerachat.onrender.com/");
 
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
@@ -27,7 +28,7 @@ async function logout() {
     const user = JSON.parse(sessionStorage.getItem("user"));
     if (user) {
         try {
-            const response = await fetch(`${API_BASE_URL}/logout`, {
+            const response = await fetch('/logout', {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({userId: user.userid})
@@ -39,27 +40,26 @@ async function logout() {
             }
 
             sessionStorage.removeItem("user");
-            const message = document.createElement("div");
-            message.textContent = "You've been logged out!";
-            document.body.prepend(message);
-            setTimeout(()=>{
-                message.remove();
-                window.location.href = "index.html";
-            }, 3000)
-
+            displayMessage("You've been logged out!");
+            window.location.href = "index.html";
+            updateLoginButton();
             updateLoginButton();
 
         } catch (error) {
             console.error("Logout error:", error);
-            const message = document.createElement("div");
-            message.textContent = error.message || "Logout failed: An unexpected error occured.";
-            document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000)
+            displayMessage(error.message || "Logout failed: An unexpected error occurred.");
         }
     }
 }
 
-
+function displayMessage(text) {
+    const message = document.createElement("div");
+    message.textContent = text;
+    document.body.prepend(message);
+    setTimeout(() => {
+        message.remove();
+    }, 3000);
+}
 
 async function handleLogin(event) {
     event.preventDefault();
@@ -68,30 +68,37 @@ async function handleLogin(event) {
     const password = document.getElementById("password").value;
 
     try {
-        const data = await loginUser({ username, password });
-        if (data.ok) {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        console.log("Login Response:", data); // Debugging
+
+        if (response.ok && data.user) {
+            console.log("Login Response:", data);
             sessionStorage.setItem("user", JSON.stringify(data.user));
-            const message = document.createElement("div");
-            message.textContent = "Login success!";
-            document.body.prepend(message);
-            setTimeout(()=>{
-                message.remove();
-            }, 3000)
+            // Emit userLoggedIn event with username after successful login
+            socket.emit("userLoggedIn", { username: data.user.username });
+
+            displayMessage("Login success!");
             updateLoginButton();
-            setupRestrictedLinks();
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1000);
 
         } else {
-            const message = document.createElement("div");
-            message.textContent = data.message || "Login failed.";
-            document.body.prepend(message);
-            setTimeout(()=>message.remove(),3000)
+            console.error("Login failed:", data.message);
+            displayMessage(data.message || "Login failed.");
         }
     } catch (error) {
-        console.error("Fel vid inloggning:", error);
-        const message = document.createElement("div");
-        message.textContent = data.message || "Login failed, Server error.";
-        document.body.prepend(message);
-        setTimeout(()=>message.remove(),3000)
+        console.error("Error during login:", error);
+        alert("Login failed due to server error.");
     }
 }
 
@@ -99,12 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
     updateLoginButton();
-    setupRestrictedLinks();
 
     if (loginForm) {
         loginForm.addEventListener("submit", handleLogin);
-    } else {
-        console.error("Login form not found in DOM");
     }
 });
 

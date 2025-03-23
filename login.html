@@ -8,16 +8,13 @@
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animate.css">
-  <script type="module" src="js/main.js"></script>
-  <script type="module" src="js/login.js"></script>
-  <script type="module" src="js/signup.js"></script>
+  <script type="module" src="/js/main.js"></script>
   <script src="js/darkMode.js"></script>
 
-
 </head>
-
+<body>
 <header>
-  <div class="grid-container">
+  <div class="header-container">
     <a href="index.html">
       <img src="img/logo.png" alt="Logo Image" id="headerImage">
     </a>
@@ -41,10 +38,9 @@
   </nav>
 </header>
 
-<body>
 <main>
   <div class="wrap">
-      <form id="loginForm">
+      <form id="loginForm" autocomplete="off">
         <h2>Log in</h2>
         <div>
           <label for="username">Username:</label>
@@ -52,7 +48,7 @@
         </div>
         <div>
           <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required>
+          <input type="password" id="password" autocomplete="current-password" required>
         </div>
         <div>
           <p>
@@ -66,7 +62,8 @@
       <br><p id="message"></p>
     </div>
 </main>
-  <script src="js/footer.js"></script>
+<script type="module" src="/js/login.js"></script>
+<script src="js/footer.js"></script>
 </body>
 </html>
 

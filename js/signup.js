@@ -1,55 +1,46 @@
-import { signupUser } from "./api.js";
-import { drive, createUserFolder } from '../config/googleDrive.js';
+//signup.js
 
-function updateMessage (message, isSuccess) {
+async function handleSignup(username, password, email) {
+    try {
+        const response = await fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password, email }) // Send as username, password, email
+        });
+
+        const data = await response.json();
+        updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 3000);
+
+        updateMessage(data.message || "Registrering misslyckades.", false);
+
+    } catch (error) {
+        updateMessage("Serverfel vid registrering.", false);
+        console.error("Signup error:", error);
+    }
+}
+
+function updateMessage(message, isSuccess) {
     const messageElement = document.getElementById("message");
     messageElement.textContent = message;
     messageElement.style.color = isSuccess ? "green" : "red";
 }
+document.addEventListener("DOMContentLoaded", () => {
+    const signupForm = document.getElementById("signupForm");
 
-async function handleSignup(event) {
-    event.preventDefault();
-    console.log("Signup form submitted");
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const email = document.getElementById("email").value;
-    let newUser;
-
-    try {
-        const data = await signupUser({username, password, email});
-
-        if (data.ok) {
-            newUser = {
-                username: username,
-                password: password,
-                email: email
-            };
-            const folderId = await createUserFolder(newUser.username);
-            newUser.folderId = folderId;
-            updateMessage("Registrering lyckades. Du blir strax omdirigerad till inloggningssidan", true);
-            setTimeout(() => {
-            }, 300);
-            // Rensar fälten efter lyckad signup.
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
-            document.getElementById("email").value = "";
-        } else {
-            setTimeout(() => {
-                updateMessage(data.message || "Registrering misslyckades.", false);
-            }, 3000);
-            // Rensar fälten
-            document.getElementById("username").value = "";
-            document.getElementById("password").value = "";
-            document.getElementById("email").value = "";
-        }
-    } catch (error) {
-        alert("Serverfel vid registrering.");
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-        document.getElementById("email").value = "";
+    if (signupForm) {
+        signupForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent page reload
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value;
+            await handleSignup(username, password, email);
+            signupForm.reset(); // Clear the form after signup attempt
+        });
     }
-}
-
-document.getElementById('signupForm').addEventListener('submit', handleSignup);
-
+});
 

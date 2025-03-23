@@ -1,7 +1,7 @@
 @keyframes headerAnimation {
-    0% { transform: scale(1); color: rgb(214, 80, 185); }
-    50% { transform: scale(1.1); color: rgb(213, 64, 208); }
-    100% { transform: scale(1); color: rgba(248, 72, 216, 0.88); }
+    0% { transform: scale(1); color: rgb(250, 125, 225); }
+    50% { transform: scale(1.05); color: rgb(250, 125, 225); }
+    100% { transform: scale(1); color: rgb(250, 125, 225); }
 }
 .animated-video {
     width: 100%;         /* Ensures it scales with the grid */
