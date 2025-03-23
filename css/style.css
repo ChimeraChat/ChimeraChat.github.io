@@ -125,7 +125,7 @@ input[type="email"]{
 
 .chat-container {
     display: flex;
-    max-height: 600px;
+    max-height: 800px;
     flex-direction: column;
     border-radius: 12px;
     padding: 15px;
@@ -149,7 +149,6 @@ input[type="email"]{
     align-self: flex-end;      /* Align user's messages to the right */
     text-align: right;
     max-width: 50%;
-    flex-basis: auto;
     word-wrap: break-word;
 }
 
@@ -163,7 +162,6 @@ input[type="email"]{
     align-self: flex-start;    /* Align received messages to the left */
     text-align: left;
     max-width: 50%;
-    flex-basis: auto;
     word-wrap: break-word;
 }
 
