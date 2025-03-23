@@ -691,7 +691,7 @@ a{
         color: white;
     }
     .chatListcontainer{
-        background-color: rgba(121, 115, 154, 0.87);
+        background-color: rgba(255, 255, 255, 0.3);
     }
     .user-message {
         color: #d1e7ff; /* Light blue for user's messages */
@@ -706,6 +706,18 @@ a{
     }
     h6{
         color: #d9cee3;
+    }
+    select{
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    textarea{
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    textarea p{
+        color: white;
+    }
+    select p{
+        color: white;
     }
 }
 
