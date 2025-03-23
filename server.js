@@ -217,7 +217,7 @@ app.get('/api/files', async (req, res) => {
     res.status(500).json({ message: "Failed to fetch files." });
   }
 });
-
+// download files from a user's Google Drive folder
 app.get('/api/download/:fileId', async (req, res) => {
   try {
     const fileId = req.params.fileId;
