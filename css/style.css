@@ -120,7 +120,7 @@ input[type="email"]{
     flex-direction: column;
     max-height: 300px;
     width: 80%;
-    overflow-y: auto; /* Add scroll for overflow */
+    overflow-y: scroll; /* Add scroll for overflow */
     padding: 10px;
     border: 1px solid #ffffff;
     background-color: #ffffff;
