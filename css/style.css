@@ -385,7 +385,22 @@ footer {
         grid-column: span 1; /* Adjust for smaller screens */
     }
     .faq-container {
-        grid-template-columns: 1fr 1fr; /* Two columns on smaller screens */
+        grid-template-columns: 1fr; /* Single column layout for smaller screens */
+        gap: 10px; /* Add some space between FAQ items */
+    }
+    .faq-item {
+        width: 100%; /* Ensure the FAQ items take up full width */
+        padding: 15px; /* Reduce padding for better fit */
+    }
+    /* Adjust Contact Us section */
+    .contact-info {
+        width: 100%; /* Ensure the Contact Us section takes full width */
+        padding: 15px; /* Adjust padding for mobile */
+    }
+    .contact-button {
+        width: 100%; /* Make button full width on smaller screens */
+        padding: 12px 0; /* Increase padding for better click area */
+        text-align: center;
     }
 }
 
@@ -395,6 +410,16 @@ footer {
     }
     .faq-container {
         grid-template-columns: 1fr; /* Single column on mobile */
+    }
+    .faq-item {
+        padding: 10px; /* Reduce padding further for small screens */
+    }
+    /* Adjust Contact Us section for small screens */
+    .contact-info {
+        padding: 10px; /* Slightly less padding on small screens */
+    }
+    .contact-button {
+        padding: 10px 0; /* Adjust padding for smaller buttons */
     }
 }
 
