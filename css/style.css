@@ -111,8 +111,7 @@ input[type="email"]{
 #chatListCon {
     display: flex;
     flex-direction: column-reverse;
-    width: 80%;
-    max-height: 80%;
+    max-height: 250px;
     overflow-y: auto; /* Add scroll for overflow */
     padding: 10px;
     border: 1px solid #ccc;
