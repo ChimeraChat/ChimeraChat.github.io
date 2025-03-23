@@ -684,14 +684,14 @@ a{
         color: #bb86fc; /* Softer purple on hover */
     }
     #online{
-        background: rgba(0, 71, 63, 0.73);
+        background: rgba(24, 0, 71, 0.88);
     }
     #chat-con{
         background: rgba(64, 24, 96, 0.94);
         color: white;
     }
     .chatListcontainer{
-        background-color: rgba(97, 97, 97, 0.8);
+        background-color: rgba(121, 115, 154, 0.87);
     }
     .user-message {
         color: #d1e7ff; /* Light blue for user's messages */
@@ -702,14 +702,18 @@ a{
         background-color: #006600;            /* Darker text for contrast */
     }
     #chatGuide{
-        background-color: rgba(120, 70, 0, 0.63);
+        background-color: rgba(120, 0, 54, 0.63);
     }
     h6{
         color: #d9cee3;
     }
     select{
         color: #0d0442;
-        background-color: rgba(164, 143, 225, 0.87);
+        background-color: rgba(121, 115, 154, 0.87);
+    }
+    textarea{
+        color: #0d0442;
+        background: rgba(121, 115, 154, 0.87);
     }
 }
 
