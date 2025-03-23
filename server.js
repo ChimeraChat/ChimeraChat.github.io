@@ -177,7 +177,7 @@ app.post('/logout', (req, res) => {
 
 app.post('/api/upload', uploadMiddleware, async (req, res) => {
   try {
-    if (!req.session.user || !req.session.user.userid) {
+    if (!req.session.user || !req.session.user.id) {
       return res.status(401).json({ message: "You are not logged in" });
     }
 
