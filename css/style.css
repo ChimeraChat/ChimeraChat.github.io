@@ -148,7 +148,16 @@ input[type="email"]{
     display: flex;
     flex-direction: column;
     max-height: 400px; /* Limit height with vertical scrolling */
+
     overflow-y: auto;  /* Vertical scrolling only */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer/Edge */
+
+    /* For Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     overflow-x: hidden; /* Hides horizontal scroll */
 
     /* Optional for better aesthetics */
