@@ -108,14 +108,12 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-#chatListCon {
+.chatListcontainer {
+    padding: 20px;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
     display: flex;
-    flex-direction: column-reverse;
-    max-height: 250px;
-    overflow-y: auto; /* Add scroll for overflow */
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
 }
 
 #chatBox {
