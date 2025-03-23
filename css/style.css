@@ -691,13 +691,12 @@ a{
         color: white;
     }
     .chatListcontainer{
-        background-color: rgba(93, 56, 96, 0.89);
+        background-color: rgba(97, 97, 97, 0.8);
     }
     .user-message {
         color: #d1e7ff; /* Light blue for user's messages */
         background-color: #004080;            /* Darker text for contrast */
     }
-
     .other-message {
         color: #e6f7e6; /* Light green for other users */
         background-color: #006600;            /* Darker text for contrast */
@@ -706,7 +705,11 @@ a{
         background-color: rgba(179, 101, 2, 0.77);
     }
     h6{
-        color: white;
+        color: #d9cee3;
+    }
+    select{
+        color: #0d0442;
+        background-color: rgba(164, 143, 225, 0.87);
     }
 }
 
