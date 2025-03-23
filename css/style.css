@@ -108,88 +108,61 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
+#chatListCon {
+    display: flex;
+    flex-direction: column-reverse; /* Newest message at the bottom */
+    max-height: 150px; /* Adjust height for two rows */
+    overflow-y: auto; /* Add scroll for overflow */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
 #chatBox {
     display: flex;
     flex-direction: column;
-}
-#chatListCon p:last-child {
-    scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
+    gap: 5px; /* Adds spacing between messages */
 }
 
-#chatListCon {
-    width: 80%;
-    max-height: 80%;
-    padding: 10px;
-    background-color: #fdf2ff;
-    border: 2px solid #e5ccf6;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-.chatListCon{
-    padding: 20px;
-    width: 80%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-}
 .user-message {
-    background-color: #d7e7fd; /* Light blue for user's messages */
-    color: #688bd1;            /* Darker text for contrast */
+    align-self: flex-end; /* Align user messages to the right */
+    background-color: #d1e7dd; /* Light green for user messages */
     padding: 8px 12px;
-    border-radius: 10px;
-    margin: 5px 0;
-    align-self: flex-end;      /* Align user's messages to the right */
-    text-align: right;
-    max-width: 50%;
+    border-radius: 12px;
+    max-width: 70%; /* Flexible width */
+    word-wrap: break-word; /* Prevents overflow text */
 }
 
-/* Style for other users' messages */
 .other-message {
-    background-color: #d9f8d9; /* Light green for other users */
-    color: #56b356;            /* Darker text for contrast */
+    align-self: flex-start; /* Align other messages to the left */
+    background-color: #e2e3e5; /* Light grey for others */
     padding: 8px 12px;
-    border-radius: 10px;
-    margin: 5px 0;
-    align-self: flex-start;    /* Align received messages to the left */
-    text-align: left;
-    max-width: 50%;
+    border-radius: 12px;
+    max-width: 70%; /* Flexible width */
+    word-wrap: break-word; /* Prevents overflow text */
 }
 
-#chatForm{
+#chatForm {
     display: flex;
-    padding: 10px;
-    margin-top: 10px;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+    gap: 5px; /* Spacing between input and button */
 }
 
-#chatListCon p {
-    display: flex;
-    flex-direction: column;
+#messageInput {
+    flex: 1; /* Flexible input size */
+    padding: 8px;
 }
 
-#chatForm input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-}
-
-#chatForm button {
-    padding: 8px 15px;
-    background-color: #5a5ac9;
-    color: white;
+button[type="submit"] {
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
-#chatForm button:hover {
-    background-color: #4444a0;
+button[type="submit"]:hover {
+    background-color: #45a049;
 }
 select {
     width: 50%; /* Make it responsive to container width */
