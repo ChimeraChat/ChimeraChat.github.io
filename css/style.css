@@ -115,8 +115,9 @@ input[type="email"]{
     width: 80%;
     overflow-y: auto; /* Add scroll for overflow */
     padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    border: 1px solid #ffffff;
+    background-color: #ffffff;
+    border-radius: 5px;
 }
 .chat-box {
     border: 2px solid #ddd;
@@ -124,7 +125,7 @@ input[type="email"]{
     padding: 15px;
     max-height: 300px;
     overflow-y: auto;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     margin-top: 20px;
 }
 
@@ -138,8 +139,14 @@ input[type="email"]{
 #chatBox {
     display: flex;
     flex-direction: column;
-    max-height: 400px;
-    overflow-y: auto;
+    max-height: 400px; /* Limit height with vertical scrolling */
+    overflow-y: auto;  /* Vertical scrolling only */
+    overflow-x: hidden; /* Hides horizontal scroll */
+
+    /* Optional for better aesthetics */
+    word-wrap: break-word; /* Break long words */
+    white-space: normal;   /* Ensure text wraps naturally */
+
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
@@ -180,7 +187,7 @@ input[type="email"]{
     grid-row: span 2;
 }
 #chat-con.chat-container {
-    background: rgba(218, 243, 255, 0.94); /* Light blue */
+    background: rgba(234, 249, 255, 0.94); /* Light blue */
 }
 #messageInput {
     border: 1px solid #ccc;
@@ -189,18 +196,13 @@ input[type="email"]{
     width: 100%;
     box-sizing: border-box;
     outline: none;
-
-    /* Mimic multi-line behavior */
-    white-space: pre;       /* Preserves spaces and line breaks */
-    overflow-y: auto;       /* Enables scrolling */
-    resize: vertical;       /* Not supported in `<input>`, but helps visually */
 }
 #chatForm button{
     background-color: rgba(225, 173, 241, 0.56);
     color: rgba(35, 7, 126, 0.97);
 }
 
-button:hover{
+#chatForm button:hover{
     background-color: rgba(149, 71, 237, 0.52);
     color: white;
 }
