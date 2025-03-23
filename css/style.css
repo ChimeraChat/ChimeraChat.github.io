@@ -108,10 +108,11 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-#chatListCon {
+.chatListcontainer {
     display: flex;
-    flex-direction: column-reverse;
-    max-height: 250px;
+    flex-direction: column;
+    max-height: 300px;
+    width: 80%;
     overflow-y: auto; /* Add scroll for overflow */
     padding: 10px;
     border: 1px solid #ccc;
@@ -142,41 +143,46 @@ input[type="email"]{
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
 }
 
 .user-message {
-    align-self: flex-end; /* Align user messages to the right */
-    background-color: #d1e7dd; /* Light green for user messages */
+    background-color: #d1e7ff; /* Light blue for user's messages */
+    color: #004080;            /* Darker text for contrast */
     padding: 8px 12px;
-    border-radius: 12px;
-    max-width: 70%; /* Flexible width */
-    word-wrap: break-word; /* Prevents overflow text */
+    border-radius: 10px;
+    margin: 5px 0;
+    align-self: flex-end;      /* Align user's messages to the right */
+    text-align: right;
+    max-width: 70%;
 }
 
 .other-message {
-    align-self: flex-start; /* Align other messages to the left */
-    background-color: #e2e3e5; /* Light grey for others */
+    background-color: #e6f7e6; /* Light green for other users */
+    color: #006600;            /* Darker text for contrast */
     padding: 8px 12px;
-    border-radius: 12px;
-    max-width: 70%; /* Flexible width */
-    word-wrap: break-word; /* Prevents overflow text */
+    border-radius: 10px;
+    margin: 5px 0;
+    align-self: flex-start;    /* Align received messages to the left */
+    text-align: left;
+    max-width: 70%;
 }
 
 #chatForm {
     display: flex;
     gap: 5px; /* Spacing between input and button */
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .chat-container{
-    grid-column: span 2;
-    grid-row: span 2;
-    background: #e4fcff; /* Light blue */
+grid-column: span 2; /* Spans two columns */
+background-color: #42ace1; /* Light blue */
 }
 #messageInput {
     flex: 1; /* Flexible input size */
     padding: 8px;
 }
-
 button[type="submit"] {
     padding: 8px 20px;
     background-color: #4CAF50;
