@@ -182,17 +182,14 @@ input[type="email"]{
     flex: 1; /* Flexible input size */
     padding: 8px;
 }
-button[type="submit"] {
-    padding: 8px 20px;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+#chatForm button{
+    background-color: rgba(225, 173, 241, 0.56);
+    color: rgba(35, 7, 126, 0.97);
 }
 
-button[type="submit"]:hover {
-    background-color: #45a049;
+button:hover{
+    background-color: rgba(149, 71, 237, 0.52);
+    color: white;
 }
 select {
     width: 50%; /* Make it responsive to container width */
