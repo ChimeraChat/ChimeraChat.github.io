@@ -171,6 +171,9 @@ input[type="email"]{
 #chatForm {
     display: flex;
     gap: 5px; /* Spacing between input and button */
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 .chat-container{
 grid-column: span 2; /* Spans two columns */
