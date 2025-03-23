@@ -116,10 +116,17 @@ input[type="email"]{
     display: flex;
 }
 
-#chatBox {
-    display: flex;
-    flex-direction: column;
+.chat-box {
+    width: 60%;
+    padding: 10px;
+    flex-direction: column; /* Stack messages vertically */
+    align-items: flex-start; /* Align messages to the left */
     gap: 5px; /* Adds spacing between messages */
+    margin: 8px 0;
+    border: 1px solid #c8e7ed;
+    border-radius: 3px;
+    font-size: 16px;
+    background-color: white;
 }
 
 .user-message {
