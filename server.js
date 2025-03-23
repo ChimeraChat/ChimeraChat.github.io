@@ -311,7 +311,6 @@ io.on("connection", (socket) => {
 
 });
 
-
 app.get("/api/chat/history", async (req, res) => {
   console.log("Fetching chat history..."); //Check if code enters in this block
   try {

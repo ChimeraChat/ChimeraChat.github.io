@@ -74,13 +74,12 @@ async function displayMessage(message, type = "public") {
         msgElement.classList.add("other-message");
     }
     //msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
-    if (message.recipient && message.recipient !== "public") {
-        msgElement.innerHTML = `<strong>${message.sender} --- ➤  ${message.recipient}:</strong> ${message.message}`;
-        chatBox.appendChild(msgElement);
-    } else {
-        msgElement.innerHTML = `<strong>${message.sender} --- ➤  Public Chat:</strong> ${message.message}`;
-        chatBox.appendChild(msgElement);
-    }
+    const recipientLabel = message.recipient && message.recipient !== "public"
+        ? message.recipient
+        : "Public Chat";
+
+    msgElement.innerHTML = `<strong>${message.sender} ➤ ${recipientLabel}:</strong> ${message.message}`;
+
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
 }
 
@@ -124,55 +123,55 @@ socket.on("user-message", (data) => {
 });
 
 // Send message
-document.getElementById("chatForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const recipient = document.getElementById("chatRecipient").value.trim();
-    const message = document.getElementById("messageInput").value.trim();
-
-    if (!message) {
-        return;
-    }
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    console.log("User from sessionStorage: ", user); // ADDED LINE: Inspect retrieved data
-
-    if (!user || !user.id || !user.username) {
-        console.error("Error: User data is missing from sessionStorage.");
-        alert("Error: Please log in again.");
-        return;
-    }
-
-    if (recipient === "public") {
-        console.log(`Public message from ${user.username}:`, message); // Debugging
-
-        socket.emit("sendPublicMessage", {
-            message,
-            senderId: user.id,
-            senderUsername: user.username
-        });
-        document.getElementById("messageInput").value = ""; // Clear input field
-    } else {
-        console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
-
-        socket.emit("sendPrivateMessage", {
-            recipient,
-            message,
-            senderId: user.id,
-            senderUsername: user.username
-        });
-        document.getElementById("messageInput").value = ""; // Clear input field
-    }
-
-});
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(sessionStorage.getItem("user"));
 
     if (!user || !user.id || !user.username) {
         console.error("Error: User or user ID is missing from sessionStorage.");
-        alert("Please log in again.");
+        alert("Please log in.");
+        window.location.href = "login.html";
         return;
     }
-
     console.log("User loaded from session:", user);
+
+    document.getElementById("chatForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const recipient = document.getElementById("chatRecipient").value.trim();
+        const message = document.getElementById("messageInput").value.trim();
+
+        if (!message) {
+            return;
+        }
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("User from sessionStorage: ", user); // ADDED LINE: Inspect retrieved data
+
+        if (!user || !user.id || !user.username) {
+            console.error("Error: User data is missing from sessionStorage.");
+            alert("Error: Please log in again.");
+            return;
+        }
+
+        if (recipient === "public") {
+            console.log(`Public message from ${user.username}:`, message); // Debugging
+
+            socket.emit("sendPublicMessage", {
+                message,
+                senderId: user.id,
+                sender: user.username
+            });
+            document.getElementById("messageInput").value = ""; // Clear input field
+        } else {
+            console.log(`Private message from ${user.username} to ${recipient}:`, message); // Debugging
+
+            socket.emit("sendPrivateMessage", {
+                recipient,
+                message,
+                senderId: user.id,
+                sender: user.username
+            });
+            document.getElementById("messageInput").value = ""; // Clear input field
+        }
+    });
 });
 
 const Userdata = {
