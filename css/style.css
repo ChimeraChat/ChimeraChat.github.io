@@ -496,6 +496,7 @@ button:hover{
 }
 .chat-container{
     grid-column: span 2; /* Spans two columns */
+    grid-row: span 2;
     background: #f3fffe;
     text-align: center;
 }
