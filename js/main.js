@@ -1,6 +1,4 @@
 //main.js
-console.log("✅ main.js loaded!");
-
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded, running setupRestrictedLinks()");
     setupRestrictedLinks();

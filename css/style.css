@@ -125,19 +125,18 @@ input[type="email"]{
 
 .chat-container {
     display: flex;
+    max-height: 600px;
     flex-direction: column;
     border-radius: 12px;
     padding: 15px;
-    max-width: 80%;
+    max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 .chatListCon{
     display: flex;
     padding: 20px;
     width: 100%;
-    max-height: 400px;
-    overflow-y: auto;
-    justify-content: center;
+    justify-content: space-between;
     box-sizing: border-box;
     flex-direction: column;
 }
@@ -149,8 +148,8 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-end;      /* Align user's messages to the right */
     text-align: right;
-    width: 50%;
-    /*flex-basis: auto;*/
+    max-width: 50%;
+    flex-basis: auto;
     word-wrap: break-word;
 }
 
@@ -163,7 +162,7 @@ input[type="email"]{
     margin: 5px 0;
     align-self: flex-start;    /* Align received messages to the left */
     text-align: left;
-    width: 50%;
+    max-width: 50%;
     flex-basis: auto;
     word-wrap: break-word;
 }

@@ -73,7 +73,7 @@ async function displayMessage(message, type = "public") {
     } else {
         msgElement.classList.add("other-message");
     }
-    
+
     //msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
     if (message.recipient && message.recipient !== "public") {
         msgElement.innerHTML = `<strong>${message.sender} --- ➤  ${message.recipient}:</strong> ${message.message}`;
