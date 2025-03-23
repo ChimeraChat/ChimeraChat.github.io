@@ -613,11 +613,15 @@ a{
     .wide {
         background: rgba(65, 7, 113, 0.94);
     }
-
+    .wide-tall{
+        background: rgba(142, 2, 151, 0.68);
+    }
     .tall {
         background: rgba(115, 8, 111, 0.84);
     }
-
+    .cat{
+        background: rgba(0, 90, 117, 0.78);
+    }
     .medium {
         background: rgba(106, 23, 138, 0.89);
     }
@@ -697,6 +701,12 @@ a{
     .other-message {
         color: #e6f7e6; /* Light green for other users */
         background-color: #006600;            /* Darker text for contrast */
+    }
+    #chatGuide{
+        background-color: rgba(179, 101, 2, 0.77);
+    }
+    h6{
+        color: white;
     }
 }
 
