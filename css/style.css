@@ -183,8 +183,17 @@ input[type="email"]{
     background: rgba(218, 243, 255, 0.94); /* Light blue */
 }
 #messageInput {
-    flex: 1; /* Flexible input size */
-    padding: 8px;
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    height: 40px;          /* Starting height */
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+
+    /* Mimic multi-line behavior */
+    white-space: pre;       /* Preserves spaces and line breaks */
+    overflow-y: auto;       /* Enables scrolling */
+    resize: vertical;       /* Not supported in `<input>`, but helps visually */
 }
 #chatForm button{
     background-color: rgba(225, 173, 241, 0.56);
