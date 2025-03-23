@@ -611,27 +611,27 @@ a{
         background-color: rgba(20, 16, 69, 0.93);
     }
     .wide {
-        background: rgba(65, 7, 113, 0.94);
+        background: rgba(70, 13, 117, 0.94);
     }
     .wide-tall{
-        background: rgba(142, 2, 151, 0.68);
+        background: rgba(114, 12, 120, 0.68);
     }
     .tall {
-        background: rgba(115, 8, 111, 0.84);
+        background: rgba(104, 15, 101, 0.84);
     }
     .cat{
         background: rgba(0, 90, 117, 0.78);
     }
     .medium {
-        background: rgba(106, 23, 138, 0.89);
+        background: rgba(83, 16, 110, 0.8);
     }
 
     .large {
-        background: rgba(10, 10, 129, 0.86);
+        background: rgba(10, 10, 83, 0.8);
     }
 
     .small{
-        background: rgba(12, 59, 135, 0.89);
+        background: rgba(10, 44, 101, 0.89);
     }
     .chat-container{
         background: rgba(79, 50, 104, 0.94);
