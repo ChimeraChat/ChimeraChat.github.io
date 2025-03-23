@@ -684,7 +684,7 @@ a{
         color: #bb86fc; /* Softer purple on hover */
     }
     #online{
-        background: rgba(29, 80, 29, 0.91);
+        background: rgba(0, 71, 63, 0.73);
     }
     #chat-con{
         background: rgba(64, 24, 96, 0.94);
@@ -702,7 +702,7 @@ a{
         background-color: #006600;            /* Darker text for contrast */
     }
     #chatGuide{
-        background-color: rgba(179, 101, 2, 0.77);
+        background-color: rgba(120, 70, 0, 0.63);
     }
     h6{
         color: #d9cee3;
