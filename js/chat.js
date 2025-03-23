@@ -2,7 +2,7 @@ import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io("https://chimerachat.onrender.com/");
 
 async function getUsername() {
-    // Let's say this is fetching from session storage
+    //
     const userString = sessionStorage.getItem("user");
     if (userString) {
         const user = JSON.parse(userString);

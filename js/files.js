@@ -1,4 +1,7 @@
 //files.js
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io("https://chimerachat.onrender.com/");
+
 async function handleFileUpload() {
     const fileInput = document.getElementById("fileupload");
     const file = fileInput.files[0];
@@ -86,3 +89,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
+socket.on("updateOnlineUsers", (users) => {
+    const onlineUsersList = document.getElementById("onlineUsers");
+    if (!onlineUsersList) return;
+
+    // Clear lists before updating
+    onlineUsersList.innerHTML = "";
+
+    users.forEach((username) => {
+        // Update sidebar list
+        const listItem = document.createElement("li");
+        listItem.textContent = username;
+        onlineUsersList.appendChild(listItem);
+
+    });
+});
