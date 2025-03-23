@@ -707,14 +707,6 @@ a{
     h6{
         color: #d9cee3;
     }
-    select{
-        color: #0d0442;
-        background-color: rgba(121, 115, 154, 0.87);
-    }
-    textarea{
-        text-decoration-color: #0d0442;
-        background: rgba(121, 115, 154, 0.87);
-    }
 }
 
 /* Adjust Headings for Dark Mode */
