@@ -108,14 +108,14 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-#chatListCon {
+.chat #chatListCon {
     display: flex;
-    flex-direction: column-reverse; /* Newest message at the bottom */
-    max-height: 150px; /* Adjust height for two rows */
+    flex-direction: column;
+    max-height: 300px;
     overflow-y: auto; /* Add scroll for overflow */
     padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    border: 1px solid #bdf7ff;
+    background-color: #fcfeff;
 }
 
 #chatBox {
@@ -493,7 +493,7 @@ button:hover{
     height: 100%;
     width: 100%;
 }
-.chat-container, .chat-search{
+.chat-container{
     grid-column: span 2; /* Spans two columns */
     background: #f3fffe;
     text-align: center;
