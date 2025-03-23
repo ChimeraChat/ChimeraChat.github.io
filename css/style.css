@@ -120,8 +120,17 @@ input[type="email"]{
     flex-direction: column;
     max-height: 300px;
     width: 80%;
+
     overflow-y: scroll; /* Add scroll for overflow */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer/Edge */
+
+    /* For Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+        display: none;
+    }
     overflow-x: hidden; /* Hides horizontal scroll */
+
     padding: 10px;
     border: 1px solid #ffffff;
     background-color: #ffffff;
@@ -150,13 +159,6 @@ input[type="email"]{
     max-height: 400px; /* Limit height with vertical scrolling */
 
     overflow-y: auto;  /* Vertical scrolling only */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer/Edge */
-
-    /* For Webkit browsers (Chrome, Safari) */
-    &::-webkit-scrollbar {
-        display: none;
-    }
 
     overflow-x: hidden; /* Hides horizontal scroll */
 
