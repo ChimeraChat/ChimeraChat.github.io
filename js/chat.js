@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             socket.emit("sendPublicMessage", {
                 message,
                 senderId: user.id,
-                sender: user.username
+                senderUsername: user.username
             });
             document.getElementById("messageInput").value = ""; // Clear input field
         } else {
@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 recipient,
                 message,
                 senderId: user.id,
-                sender: user.username
+                senderUsername: user.username
             });
             document.getElementById("messageInput").value = ""; // Clear input field
         }
