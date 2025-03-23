@@ -712,7 +712,7 @@ a{
         background-color: rgba(121, 115, 154, 0.87);
     }
     textarea{
-        color: #0d0442;
+        text-decoration-color: #0d0442;
         background: rgba(121, 115, 154, 0.87);
     }
 }
