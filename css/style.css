@@ -147,7 +147,13 @@ input[type="email"]{
     display: flex;
     gap: 5px; /* Spacing between input and button */
 }
-
+#chat-container{
+    grid-column: span 2; /* Spans two columns */
+    grid-row: span 2;
+    background: #f3fffe;
+    text-align: center;
+    justify-content: flex-start;
+}
 #messageInput {
     flex: 1; /* Flexible input size */
     padding: 8px;
@@ -493,13 +499,6 @@ button:hover{
 .small img{
     height: 100%;
     width: 100%;
-}
-.chat-container{
-    grid-column: span 2; /* Spans two columns */
-    grid-row: span 2;
-    background: #f3fffe;
-    text-align: center;
-    justify-content: flex-start;
 }
 .profile{
     background-color: rgb(253, 241, 255);
