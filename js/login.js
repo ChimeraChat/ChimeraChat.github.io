@@ -1,4 +1,7 @@
 //login.js
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io("https://chimerachat.onrender.com/");
+
 function updateLoginButton() {
     const loginButton = document.querySelector('nav a[href="login.html"]');
     const signupButton = document.querySelector('nav a[href="signup.html"]');
