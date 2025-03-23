@@ -137,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("User loaded from session:", user);
 
     document.getElementById("chatForm").addEventListener("submit", (event) => {
-        event.preventDefault();
         const recipient = document.getElementById("chatRecipient").value.trim();
         const message = document.getElementById("messageInput").value.trim();
 
