@@ -111,7 +111,8 @@ input[type="email"]{
 .chatListcontainer {
     display: flex;
     flex-direction: column;
-    max-height: 250px;
+    max-height: 300px;
+    width: 80%;
     overflow-y: auto; /* Add scroll for overflow */
     padding: 10px;
     border: 1px solid #ccc;
@@ -171,7 +172,7 @@ input[type="email"]{
     display: flex;
     gap: 5px; /* Spacing between input and button */
 }
-.chat-container{
+#chat-container{
     grid-column: span 2;
     grid-row: span 2;
     background: #e4fcff; /* Light blue */
