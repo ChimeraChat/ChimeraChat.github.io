@@ -367,6 +367,9 @@ footer {
     font-size: 16px;
     cursor: pointer;
 }
+.grid-item:hover{
+    transform: translateY(-3px); /* Lift effect on hover */
+}
 #chatForm button{
     background-color: rgba(225, 173, 241, 0.56);
     color: rgba(35, 7, 126, 0.97);
@@ -389,6 +392,7 @@ button:hover{
     justify-content: center;
     font-variant-caps: titling-caps;
     font-family: Bahnschrift, Arial, sans-serif;
+    transition: transform 0.3s ease-in-out;
 }
 
 /* Image Styling */
@@ -674,6 +678,25 @@ a{
     }
     a:hover {
         color: #bb86fc; /* Softer purple on hover */
+    }
+    #online{
+        background: rgba(29, 80, 29, 0.91);
+    }
+    #chat-con{
+        background: rgba(64, 24, 96, 0.94);
+        color: white;
+    }
+    .chatListcontainer{
+        background-color: rgba(93, 56, 96, 0.89);
+    }
+    .user-message {
+        color: #d1e7ff; /* Light blue for user's messages */
+        background-color: #004080;            /* Darker text for contrast */
+    }
+
+    .other-message {
+        color: #e6f7e6; /* Light green for other users */
+        background-color: #006600;            /* Darker text for contrast */
     }
 }
 
