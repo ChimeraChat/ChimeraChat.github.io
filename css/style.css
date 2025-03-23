@@ -192,9 +192,9 @@ input[type="email"]{
     text-align: center;
     justify-content: flex-start;
 }
-#messageInput {
-    flex: 1; /* Flexible input size */
-    padding: 8px;
+.messageInput {
+    display: flex;
+    flex-direction: column;
 }
 
 button[type="submit"] {
