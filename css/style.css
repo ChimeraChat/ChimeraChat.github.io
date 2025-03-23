@@ -108,7 +108,41 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-.chatListcontainer {
+#chatBox {
+    display: flex;
+    flex-direction: column-reverse; /* NEW: Stack messages from the bottom */
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Chat Messages */
+#chatBox p {
+    background-color: #e6f7e6;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin: 5px 0;
+    width: fit-content; /* Prevents full-width stretching */
+    max-width: 70%; /* Limits message width for a cleaner look */
+}
+
+#chatBox p:last-child {
+    margin-bottom: auto; /* Ensures messages hug the bottom */
+}
+
+#chatBox p strong {
+    color: #4CAF50;
+}
+.chat-container {
+    border-radius: 12px;
+    padding: 15px;
+    max-width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.chatListcontainer{
     padding: 20px;
     width: 80%;
     justify-content: center;
