@@ -143,7 +143,7 @@ input[type="email"]{
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
 }
 
 .user-message {
@@ -177,13 +177,12 @@ input[type="email"]{
 }
 .chat-container{
 grid-column: span 2; /* Spans two columns */
-background: #42ace1; /* Light blue */
+background-color: #42ace1; /* Light blue */
 }
 #messageInput {
     flex: 1; /* Flexible input size */
     padding: 8px;
 }
-
 button[type="submit"] {
     padding: 8px 20px;
     background-color: #4CAF50;
