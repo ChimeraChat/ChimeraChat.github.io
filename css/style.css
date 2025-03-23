@@ -176,7 +176,7 @@ input[type="email"]{
     align-items: center;
 }
 .chat-container{
-    background: rgb(237, 251, 255);
+    background: rgb(105, 187, 211);
 }
 #messageInput {
     flex: 1; /* Flexible input size */
