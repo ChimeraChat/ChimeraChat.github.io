@@ -499,6 +499,7 @@ button:hover{
     grid-row: span 2;
     background: #f3fffe;
     text-align: center;
+    justify-content: flex-start;
 }
 .profile{
     background-color: rgb(253, 241, 255);
