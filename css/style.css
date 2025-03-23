@@ -108,15 +108,11 @@ input[type="email"]{
 #chatGuide{
     background-color: #fff6bd;
 }
-/* #chatBox {
+#chatBox {
     display: flex;
-    background-color: rgba(242, 250, 250, 0.77);
     flex-direction: column;
-    width: 100%;
     overflow-y: auto;
-    border: 3px solid #1c9bb1;
-    border-radius: 8px;
-}*/
+}
 #chatListCon p:last-child {
     scroll-margin-bottom: 10px; /* Ensures the latest message is visible */
 }
