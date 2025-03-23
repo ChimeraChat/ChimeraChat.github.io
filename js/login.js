@@ -89,7 +89,7 @@ async function handleLogin(event) {
             updateLoginButton();
 
             setTimeout(() => {
-                window.location.href = "chat.html";
+                window.location.href = "index.html";
             }, 1000);
 
         } else {
