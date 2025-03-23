@@ -35,7 +35,14 @@ header {
     margin-bottom: 20px;
     width: 100%;
 }
-
+.header-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+    gap: 15px; /* Space between grid items */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 #headerImage, #headerImage2 {
     max-width: 25%;
     height: auto;
@@ -579,7 +586,7 @@ a{
     background-size: cover;
 
     main, footer, header{
-        background-color: rgba(33, 16, 147, 0.91);
+        background-color: rgba(20, 16, 69, 0.93);
     }
     .wide {
         background: rgba(65, 7, 113, 0.94);
