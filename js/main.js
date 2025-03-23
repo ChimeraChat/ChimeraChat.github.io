@@ -1,6 +1,12 @@
 //main.js
 console.log("✅ main.js loaded!");
-export function  setupRestrictedLinks() {
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded, running setupRestrictedLinks()");
+    setupRestrictedLinks();
+});
+
+function  setupRestrictedLinks() {
     setTimeout(() => {  // Delay to ensure sessionStorage is updated
         const userString = sessionStorage.getItem("user");
         let user = null;
@@ -25,9 +31,4 @@ export function  setupRestrictedLinks() {
         }
     }, 500); // Delay 500ms to let sessionStorage update
 }
-console.log("main.js is loaded");
 
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM fully loaded, running setupRestrictedLinks()");
-    setupRestrictedLinks();
-});
