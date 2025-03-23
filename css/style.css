@@ -197,12 +197,14 @@ input[type="email"]{
     background: rgba(234, 249, 255, 0.94); /* Light blue */
 }
 #messageInput {
-    border: 1px solid #ccc;
+    border: 2px solid #8fdeef;
     padding: 8px 10px;
-    height: 40px;          /* Starting height */
+    height: 50px;          /* Starting height */
     width: 100%;
+    font-size: 16px;
     box-sizing: border-box;
     outline: none;
+    border-radius: 4px;
 }
 #chatForm button{
     background-color: rgba(225, 173, 241, 0.56);
