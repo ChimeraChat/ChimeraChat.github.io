@@ -52,37 +52,33 @@ async function displayMessage(message, type = "public") {
     const userString = sessionStorage.getItem("user");
     if (!userString) {
         console.error('Error: user not found in sessionStorage');
-        return
+        return;
     }
 
     const user = JSON.parse(userString);
-
     if (type === "private" && message.recipient !== user.username && message.sender ) return; // Ignore if not meant for user or is not sent by user
-    const chatBox = document.getElementById('chatListCon');
+
+    const chatBox = document.getElementById("chatListCon"); //
+
     if (!chatBox) {
-        console.error("Error: chatListCon not found. Cannot display message.")
+        console.error("Chatbox not found.");
         return;
     }
 
     const msgElement = document.createElement("p");
     const isSender = user.username === message.sender;
+
     msgElement.classList.add(isSender ? "user-message" : "other-message");
 
-    if (user.username === message.sender) {
-        msgElement.classList.add("user-message");
-    } else {
-        msgElement.classList.add("other-message");
-    }
+    const senderSpan = document.createElement("strong");
+    senderSpan.textContent = `${message.sender} ➤ ${message.recipient && message.recipient !== "public" ? message.recipient : "Public"}: `;
 
-    //msgElement.classList.add(message.sender === user.username ? "user-message" : "other-message");
-    if (message.recipient && message.recipient !== "public") {
-        msgElement.innerHTML = `<strong>${message.sender} --- ➤  ${message.recipient}:</strong> ${message.message}`;
-        chatBox.appendChild(msgElement);
-    } else {
-        msgElement.innerHTML = `<strong>${message.sender} --- ➤  Public Chat:</strong> ${message.message}`;
-        chatBox.appendChild(msgElement);
-    }
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    const messageText = document.createTextNode(message.message);
+
+    msgElement.appendChild(senderSpan);
+    msgElement.appendChild(messageText);
+    chatBox.appendChild(msgElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // Load chat history
